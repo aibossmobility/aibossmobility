@@ -1,0 +1,8 @@
+{
+  "name":"ai-boss-mobility-site",
+  "version":"1.0.0",
+  "private":true,
+  "description":"AI Boss Mobility — practical AI strategy, automation, training, and human-centered implementation.",
+  "scripts":{"start":"node server.js"},
+  "engines":{"node":">=20"}
+}
