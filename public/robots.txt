@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aibossmobility.example/sitemap.xml
