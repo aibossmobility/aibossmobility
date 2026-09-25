@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://aibossmobility.example/sitemap.xml
+Sitemap: https://ai.briankeithhill.com/sitemap.xml
