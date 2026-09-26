@@ -17,6 +17,8 @@ Use this file as the master reference when filling profiles, bios, applications,
 - YouTube: https://www.youtube.com/channel/UC_etyzPwAS0W8GWWwFT9sow
 - TikTok: https://www.tiktok.com/@bossmobilitylifecoach
 - Threads: https://www.threads.net/@papalifecoach
+- Facebook: https://www.facebook.com/BrianKeithHillPapaLife3
+- Twitch: https://www.twitch.tv/papalifecoach
 
 ## Other profile / business links
 - Papa Life: https://papalifecoach.com
@@ -26,6 +28,5 @@ Use this file as the master reference when filling profiles, bios, applications,
 - Alignable: https://bit.ly/3QV1Dx0
 
 ## Notes
-- Facebook exact profile URL has not yet been captured in this canonical record.
 - Prefer this file over guessing a handle.
 - When a platform handle changes, update this file first so future forms use the current value.
