@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Media & AI Permission | AI Boss Mobility</title>
+<meta name="description" content="Give clear permission for AI Boss Mobility to use selected photos, video, voice, likeness, testimonials, or project materials.">
+<meta name="robots" content="noindex,follow">
+<link rel="stylesheet" href="/styles.css">
+<style>
+.consent-wrap{max-width:820px;margin:0 auto;padding:54px 20px 80px}
+.consent-card{background:#111;color:#fff;border:1px solid #333;border-radius:18px;padding:28px}
+.consent-card h1,.consent-card h2{color:#ffd400}
+.consent-card label{display:block;margin:12px 0}
+.consent-card input[type=text],.consent-card input[type=email],.consent-card textarea{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:9px;border:1px solid #555;background:#050505;color:#fff;font:inherit}
+.consent-choice{display:flex!important;gap:11px;align-items:flex-start;padding:11px;border:1px solid #333;border-radius:9px;background:#171717}
+.consent-choice input{margin-top:4px;width:19px;height:19px}
+.statement{border-left:5px solid #e53935;background:#1b1010;padding:14px 16px;border-radius:7px}
+.all{border-color:#1fa75b;background:#0d2014}
+.consent-card button{width:100%;padding:15px;border:0;border-radius:10px;background:#ffd400;color:#111;font-weight:800;font-size:1.05rem;cursor:pointer}
+.consent-card button:disabled{opacity:.6}
+#status{margin-top:14px;font-weight:700}
+.small{font-size:.9rem;color:#bbb}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="/">AI <span>Boss Mobility</span></a><nav class="nav"><a href="/">Home</a><a href="/glossary">Free AI Guide</a></nav></div></header>
+<main class="consent-wrap">
+  <div class="eyebrow">Clear permission. Human-centered AI.</div>
+  <div class="consent-card">
+    <h1>Media & AI Permission</h1>
+    <p>Please choose exactly what you give Brian Keith Hill / AI Boss Mobility / Papa Life permission to use. Nothing is pre-selected.</p>
+    <form id="consent-form">
+      <h2>Your information</h2>
+      <label>Full name<input required name="full_name" type="text" autocomplete="name"></label>
+      <label>Email<input required name="email" type="email" autocomplete="email"></label>
+      <label>Project or purpose (optional)<input name="project_or_purpose" type="text"></label>
+
+      <h2>What may be used?</h2>
+      <label class="consent-choice"><input type="checkbox" name="allow_photo"><span>My photographs or images</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_video"><span>My video recordings</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_voice"><span>My voice or audio recordings</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_name_likeness"><span>My name and likeness</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_testimonial"><span>My testimonial, interview, story, or written comments</span></label>
+
+      <h2>How may it be used?</h2>
+      <label class="consent-choice"><input type="checkbox" name="allow_website_social"><span>Website and social media</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_education_training"><span>Educational presentations and training</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_marketing"><span>Promotional or marketing materials</span></label>
+      <label class="consent-choice"><input type="checkbox" name="allow_ai_assisted_editing"><span>AI-assisted editing or content creation</span></label>
+      <label class="consent-choice all"><input id="approve-all" type="checkbox" name="consent_all"><span><strong>I approve all categories and uses listed above.</strong></span></label>
+
+      <h2>Consent statement</h2>
+      <div class="statement" id="consent-statement">I give Brian Keith Hill / AI Boss Mobility / Papa Life permission to use the materials I voluntarily provide, only for the categories and purposes I select above. I understand that approved materials may be edited, adapted, or processed with artificial-intelligence tools for the selected uses. I confirm that I have authority to grant this permission.</div>
+
+      <h2>Signature</h2>
+      <label>Type your full name as your signature<input required name="typed_signature" type="text"></label>
+      <label class="consent-choice"><input required type="checkbox" name="affirm"><span>I have read the statement above and agree to the permissions I selected.</span></label>
+      <p class="small">Submitting this form creates a dated record of your choices and the consent language shown above.</p>
+      <button id="submit-button" type="submit">Give Permission</button>
+      <div id="status" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</main>
+<footer class="footer"><div class="container footer-grid"><div><strong>AI Boss Mobility</strong><br>Practical AI Strategy & Human-Centered Implementation</div><div>Founded by Brian Keith Hill<br>© 2026 AI Boss Mobility</div></div></footer>
+<script>
+const form=document.getElementById("consent-form");
+const all=document.getElementById("approve-all");
+const submit=document.getElementById("submit-button");
+const status=document.getElementById("status");
+const choices=[...form.querySelectorAll('input[type="checkbox"]')].filter(x=>!["consent_all","affirm"].includes(x.name));
+all.addEventListener("change",()=>choices.forEach(x=>x.checked=all.checked));
+form.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(form).entries());
+  for(const input of choices) data[input.name]=input.checked;
+  data.consent_all=all.checked;
+  data.consent_text=document.getElementById("consent-statement").textContent.trim();
+  submit.disabled=true; status.textContent="Recording permission…";
+  try{
+    const r=await fetch("/api/media-ai-consent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+    const j=await r.json();
+    if(!r.ok||!j.ok) throw new Error(j.error||"Unable to record permission.");
+    status.textContent="Thank you. Your permission has been recorded.";
+    form.reset();
+  }catch(err){status.textContent=err.message||"Unable to record permission.";}
+  finally{submit.disabled=false;}
+});
+</script>
+</body></html>
