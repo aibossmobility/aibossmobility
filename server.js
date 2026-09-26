@@ -63,8 +63,61 @@ async function handleGuideLead(req,res){
   }
 }
 
+async function handleMediaAiConsent(req,res){
+  try{
+    const raw=await readBody(req);
+    const body=JSON.parse(raw||"{}");
+    const full_name=String(body.full_name||"").trim().slice(0,160);
+    const email=String(body.email||"").trim().slice(0,254).toLowerCase();
+    const typed_signature=String(body.typed_signature||"").trim().slice(0,160);
+    const consent_text=String(body.consent_text||"").trim().slice(0,5000);
+    if(!full_name || !email || !email.includes("@") || !typed_signature || !consent_text){
+      return json(res,400,{ok:false,error:"Name, valid email, signature, and consent are required."});
+    }
+    const flags=[
+      "allow_photo","allow_video","allow_voice","allow_name_likeness","allow_testimonial",
+      "allow_website_social","allow_education_training","allow_marketing","allow_ai_assisted_editing","consent_all"
+    ];
+    const record={
+      record_type:"media_ai_consent",
+      consent_version:"2026-09-26-v1",
+      full_name,email,
+      project_or_purpose:String(body.project_or_purpose||"").trim().slice(0,500),
+      typed_signature,consent_text,
+      submitted_at:new Date().toISOString(),
+      ip_address:String(req.headers["x-forwarded-for"]||req.socket.remoteAddress||"").split(",")[0].trim().slice(0,120),
+      user_agent:String(req.headers["user-agent"]||"").slice(0,500)
+    };
+    for(const key of flags) record[key]=Boolean(body[key]);
+    const hasMaterialPermission=record.consent_all||record.allow_photo||record.allow_video||record.allow_voice||record.allow_name_likeness||record.allow_testimonial;
+    if(!hasMaterialPermission) return json(res,400,{ok:false,error:"Select at least one type of material you permit us to use."});
+
+    const dataDir=path.join(__dirname,"data");
+    try{
+      fs.mkdirSync(dataDir,{recursive:true});
+      fs.appendFileSync(path.join(dataDir,"media-ai-consents.ndjson"),JSON.stringify(record)+"\n","utf8");
+    }catch(fileErr){
+      console.error("Consent local record failed",fileErr);
+    }
+
+    const hook=process.env.AIRTABLE_CONSENT_WEBHOOK||process.env.AIRTABLE_GUIDE_WEBHOOK;
+    if(hook){
+      try{
+        const response=await fetch(hook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(record)});
+        if(!response.ok) console.error("Consent webhook failed",response.status);
+      }catch(hookErr){
+        console.error("Consent webhook error",hookErr);
+      }
+    }
+    return json(res,200,{ok:true,consent_version:record.consent_version,submitted_at:record.submitted_at});
+  }catch(err){
+    console.error("Consent error",err);
+    return json(res,400,{ok:false,error:"Unable to record permission."});
+  }
+}
+
 http.createServer(async(req,res)=>{
-  if(req.method==="POST" && (req.url||"").split("?")[0]==="/api/guide") return handleGuideLead(req,res);
+  if(req.method==="POST" && (req.url||"").split("?")[0]==="/api/guide") return handleGuideLead(req,res);\n  if(req.method==="POST" && (req.url||"").split("?")[0]==="/api/media-ai-consent") return handleMediaAiConsent(req,res);
   if(req.method!=="GET" && req.method!=="HEAD") return json(res,405,{ok:false,error:"Method not allowed"});
 
   const file=resolveFile(req.url);
