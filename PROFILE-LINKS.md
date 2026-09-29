@@ -22,7 +22,7 @@ Use this file as the master reference when filling profiles, bios, applications,
 
 ## Other profile / business links
 - Papa Life: https://papalifecoach.com
-- AI Boss Mobility: https://ai.briankeithhill.com
+- AI Boss Mobility: https://ai.bossmobilelifecoach.com
 - Personal domain: https://briankeithhill.com
 - Meetn: https://meetn.com/briankeithhill
 - Alignable: https://www.alignable.com/san-leandro-ca/papa-life-fatherhood-life-coach-ambassador-of-the-east-bay-ca?preview=true&user=11616493
