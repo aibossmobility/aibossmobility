@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Media & AI Consents | AI Boss Mobility Back Office</title>
+<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/styles.css">
+<style>
+.admin{max-width:1180px;margin:0 auto;padding:42px 20px 80px}.panel{background:#111;color:#fff;border:1px solid #333;border-radius:16px;padding:22px;margin-bottom:18px}
+.panel h1,.panel h2{color:#ffd400}.login{display:flex;gap:10px;flex-wrap:wrap}.login input{flex:1;min-width:240px;padding:12px;border-radius:8px;border:1px solid #555;background:#050505;color:#fff}
+button{padding:12px 16px;border:0;border-radius:8px;background:#ffd400;color:#111;font-weight:800;cursor:pointer}.muted{color:#aaa;font-size:.92rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:10px;border-bottom:1px solid #333;text-align:left;vertical-align:top}th{color:#ffd400;position:sticky;top:0;background:#111}
+.wrap{overflow:auto;max-height:68vh}.yes{color:#65d48a;font-weight:800}.no{color:#888}.pill{display:inline-block;padding:3px 7px;border:1px solid #444;border-radius:999px;margin:2px;font-size:.82rem}
+#status{margin-top:10px;font-weight:700}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+</style></head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="/">AI <span>Boss Mobility</span></a><nav class="nav"><a href="/">Site Home</a><a href="/consent">Permission Form</a></nav></div></header>
+<main class="admin">
+<div class="panel"><div class="eyebrow">Private back office</div><h1>Media & AI Consents</h1>
+<p>Review who submitted permission, what they approved, and when they signed it.</p>
+<div class="login"><input id="token" type="password" placeholder="Private access code" autocomplete="current-password"><button id="load">Open Records</button></div>
+<div id="status" role="status"></div></div>
+<div class="panel" id="records-panel" hidden>
+<div class="actions"><button id="refresh">Refresh</button><button id="csv">Download CSV</button></div>
+<p class="muted" id="count"></p><div class="wrap"><table><thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Project / Purpose</th><th>Materials Approved</th><th>Uses Approved</th><th>Signature</th></tr></thead><tbody id="rows"></tbody></table></div>
+</div></main>
+<script>
+const fieldsMaterials=[["allow_photo","Photo"],["allow_video","Video"],["allow_voice","Voice"],["allow_name_likeness","Name & likeness"],["allow_testimonial","Testimonial"]];
+const fieldsUses=[["allow_website_social","Website/social"],["allow_education_training","Education/training"],["allow_marketing","Marketing"],["allow_ai_assisted_editing","AI-assisted editing"]];
+let current=[];
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function pills(r,arr){return arr.filter(([k])=>r[k]).map(([,label])=>'<span class="pill">'+esc(label)+'</span>').join("")||'<span class="no">None</span>'}
+async function load(){
+ const token=document.getElementById("token").value.trim(); if(!token){status.textContent="Enter the private access code.";return}
+ localStorage.setItem("mediaConsentAdminToken",token); status.textContent="Loading…";
+ try{const res=await fetch("/api/media-ai-consents",{headers:{"x-admin-token":token}});const j=await res.json();if(!res.ok||!j.ok)throw new Error(j.error||"Unable to load records.");
+ current=j.records||[];document.getElementById("records-panel").hidden=false;document.getElementById("count").textContent=current.length+" consent record"+(current.length===1?"":"s");
+ document.getElementById("rows").innerHTML=current.map(r=>'<tr><td>'+esc(new Date(r.submitted_at).toLocaleString())+'</td><td><strong>'+esc(r.full_name)+'</strong></td><td>'+esc(r.email)+'</td><td>'+esc(r.project_or_purpose||"—")+'</td><td>'+pills(r,fieldsMaterials)+'</td><td>'+pills(r,fieldsUses)+'</td><td>'+esc(r.typed_signature)+'</td></tr>').join("");
+ status.textContent=current.length?"Records loaded.":"No submissions yet.";
+ }catch(e){document.getElementById("records-panel").hidden=true;status.textContent=e.message||"Unable to load records."}
+}
+document.getElementById("load").onclick=load;document.getElementById("refresh").onclick=load;
+const saved=localStorage.getItem("mediaConsentAdminToken");if(saved){document.getElementById("token").value=saved;load()}
+document.getElementById("csv").onclick=()=>{const keys=["submitted_at","full_name","email","project_or_purpose","allow_photo","allow_video","allow_voice","allow_name_likeness","allow_testimonial","allow_website_social","allow_education_training","allow_marketing","allow_ai_assisted_editing","consent_all","typed_signature","consent_version"];const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';const csv=[keys.join(","),...current.map(r=>keys.map(k=>q(r[k])).join(","))].join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="media-ai-consents.csv";a.click();URL.revokeObjectURL(a.href)}
+</script></body></html>
