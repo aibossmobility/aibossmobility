@@ -11,4 +11,4 @@ Practical AI strategy, automation, training, AI agents/digital twins, organizati
 - Shared infrastructure: digital twin, knowledge systems, automation, unified orchestration
 
 ## Migration
-This build is independent of the former Stampede Hosting implementation. Deploy to Railway first, verify, then attach the final AI Boss Mobility domain and update robots/sitemap canonical URLs.
+This build is independent of the former Stampede Hosting implementation. Production domain: https://ai.bossmobilelifecoach.com. Keep canonical URLs, robots.txt, sitemap.xml, and public profile links aligned to this domain.
