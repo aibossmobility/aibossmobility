@@ -4,6 +4,7 @@ Primary website: https://ai.bossmobilelifecoach.com
 Founder: Brian Keith Hill
 Location: San Leandro, California
 Primary services: AI strategy consulting; workflow automation; AI training; AI agents and Digital Twins; knowledge and productivity systems.
+Responsible AI practice: AI supports human judgment, dignity, consent, privacy, accountability, and authentic relationships. High-impact decisions stay under human responsibility.
 Key public pages:
 - https://ai.bossmobilelifecoach.com/
 - https://ai.bossmobilelifecoach.com/human-centered-ai-strategy
@@ -11,4 +12,5 @@ Key public pages:
 - https://ai.bossmobilelifecoach.com/journey
 - https://ai.bossmobilelifecoach.com/glossary
 - https://ai.bossmobilelifecoach.com/site-directory
+- https://ai.bossmobilelifecoach.com/responsible-ai
 Related fatherhood mission: https://papalifecoach.com
