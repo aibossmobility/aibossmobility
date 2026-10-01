@@ -73,7 +73,7 @@
       </ol>
       <div class="next-actions">
         <a class="btn btn-primary" id="path-cta" href="#digital-twin">Let’s talk this through</a>
-        <button class="btn btn-secondary-dark" id="capture-interest" type="button">Save where I am</button>
+        <button class="btn btn-secondary-dark" id="capture-interest" type="button">Ask Brian for a Next Step</button>
       </div>
       <p class="boundary">Use this space for everyday questions and next steps. If something involves money, contracts, pricing, or a major commitment, Brian steps in personally.</p>
     </aside>
@@ -157,15 +157,15 @@
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="interest-title">
     <button class="modal-close" id="modal-close" aria-label="Close">×</button>
     <div class="eyebrow">Keep the conversation moving</div>
-    <h2 id="interest-title">Save where I am</h2>
-    <p>Share where you would like me to follow up so you do not have to start over the next time we talk.</p>
+    <h2 id="interest-title">Ask Brian for a Next Step</h2>
+    <p>Tell Brian what you are trying to understand, fix, or build. Your request goes into Brian’s private review queue so he can decide the right next step. This form does not trigger an automatic sales message.</p>
     <form id="interest-form">
       <label>Name<input name="name" required autocomplete="name"></label>
       <label>Email<input name="email" type="email" required autocomplete="email"></label>
       <label>Organization<input name="organization" autocomplete="organization"></label>
       <label>What would you like us to understand together?<textarea name="need" id="interest-need" rows="4"></textarea></label>
       <input type="hidden" name="path" id="interest-path" value="stop">
-      <button class="btn btn-primary" type="submit">Keep This for Our Next Step</button>
+      <button class="btn btn-primary" type="submit">Send My Request to Brian</button>
       <p class="form-status" id="form-status"></p>
     </form>
   </div>
@@ -204,7 +204,7 @@ document.getElementById('interest-form').addEventListener('submit',async e=>{
  e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
  button.disabled=true; status.textContent='Saving…';
  const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
- try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!r.ok)throw new Error('save failed');status.textContent='Saved. Your next step is in the AI Boss operating flow.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='I could not save that yet. You can still continue with the Digital Twin or book a conversation.';}finally{button.disabled=false;}
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!r.ok)throw new Error('save failed');status.textContent='Got it. Your request is now in Brian’s review queue.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='I could not save that yet. You can still continue with the Digital Twin or book a conversation.';}finally{button.disabled=false;}
 });
 </script>
 </body>

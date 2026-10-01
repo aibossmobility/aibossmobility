@@ -14,7 +14,7 @@ function resolveFile(url){
 }
 function json(res,status,payload){res.writeHead(status,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"});res.end(JSON.stringify(payload));}
 function readBody(req){return new Promise((resolve,reject)=>{let raw="";req.on("data",chunk=>{raw+=chunk;if(raw.length>25000){reject(new Error("payload too large"));req.destroy();}});req.on("end",()=>resolve(raw));req.on("error",reject);});}
-async function postWebhook(url,payload,label){if(!url)return false;try{const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)console.error(`${label} webhook failed`,response.status);return response.ok;}catch(err){console.error(`${label} webhook error`,err);return false;}}
+async function postWebhook(url,payload,label,extraHeaders={}){if(!url)return false;try{const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(payload)});if(!response.ok)console.error(`${label} webhook failed`,response.status);return response.ok;}catch(err){console.error(`${label} webhook error`,err);return false;}}
 
 async function handleGuideLead(req,res){
   try{
@@ -36,12 +36,21 @@ async function handleBusinessIntake(req,res){
     try{const dataDir=path.join(__dirname,"data");fs.mkdirSync(dataDir,{recursive:true});fs.appendFileSync(path.join(dataDir,"business-intake.ndjson"),JSON.stringify(lead)+"\n","utf8");}catch(err){console.error("Business intake local record failed",err);}
     const urls=[
       [process.env.GOOGLE_HUB_WEBHOOK,"Google Hub"],
-      [process.env.GHL_INTAKE_WEBHOOK,"GoHighLevel"],
       [process.env.AI_BOSS_LEAD_WEBHOOK,"AI Boss lead"],
       [process.env.AIRTABLE_GUIDE_WEBHOOK,"Current lead fallback"]
     ].filter(([url],index,arr)=>url&&arr.findIndex(([candidate])=>candidate===url)===index);
     const results=await Promise.all(urls.map(([url,label])=>postWebhook(url,lead,label)));
-    return json(res,200,{ok:true,routed:results.filter(Boolean).length});
+    if(process.env.GHL_INTAKE_WEBHOOK){
+      const secret=String(process.env.AI_BOSS_INTAKE_SECRET||"").trim();
+      const ghlOk=await postWebhook(
+        process.env.GHL_INTAKE_WEBHOOK,
+        lead,
+        "GoHighLevel",
+        secret?{"X-AI-Boss-Intake-Secret":secret}:{}
+      );
+      results.push(ghlOk);
+    }
+    return json(res,200,{ok:true,routed:results.filter(Boolean).length,ghl_connected:Boolean(process.env.GHL_INTAKE_WEBHOOK)});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
