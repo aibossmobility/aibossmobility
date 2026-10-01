@@ -14,7 +14,7 @@ function resolveFile(url){
 }
 function json(res,status,payload){res.writeHead(status,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"});res.end(JSON.stringify(payload));}
 function readBody(req){return new Promise((resolve,reject)=>{let raw="";req.on("data",chunk=>{raw+=chunk;if(raw.length>25000){reject(new Error("payload too large"));req.destroy();}});req.on("end",()=>resolve(raw));req.on("error",reject);});}
-async function postWebhook(url,payload,label,extraHeaders={}){if(!url)return false;try{const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(payload)});if(!response.ok)console.error(`${label} webhook failed`,response.status);return response.ok;}catch(err){console.error(`${label} webhook error`,err);return false;}}
+async function postWebhook(url,payload,label,extraHeaders={}){if(!url)return false;try{const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(payload)});if(!response.ok){let detail="";try{const raw=await response.text();try{const parsed=JSON.parse(raw);detail=String(parsed.error||parsed.message||"");}catch{detail=String(raw||"");}}catch{}console.error(`${label} webhook failed`,response.status,detail.slice(0,240));}return response.ok;}catch(err){console.error(`${label} webhook error`,err);return false;}}
 
 async function handleGuideLead(req,res){
   try{
