@@ -58,7 +58,7 @@
         <button class="need-card" data-path="tech"><span>⚙</span><b>Help me make sense of my technology</b><small>Find what is getting in the way and what to do next</small></button>
         <button class="need-card" data-path="ai"><span>AI</span><b>Build an AI assistant</b><small>Decide what AI should own and what humans keep</small></button>
         <button class="need-card" data-path="productivity"><span>✓</span><b>Improve productivity</b><small>Automate, delegate, simplify, remove</small></button>
-        <button class="need-card" data-path="talk"><span>●</span><b>Talk it through</b><small>Ask a real question and let Brian's Digital Twin help you sort it out</small></button>
+        <button class="need-card" data-path="talk"><span>●</span><b>Talk it through</b><small>Ask Brian a real question and describe what you want to move forward</small></button>
       </div>
     </div>
 
@@ -85,10 +85,10 @@
     <div>
       <div class="eyebrow">Talk it through</div>
       <h2>Ask the question in your own words.</h2>
-      <p class="lead">Brian’s Digital Twin gives you a place to say what you are trying to understand, what feels confusing, or what you want to move forward. You do not have to know the technical language first.</p>
+      <p class="lead">A conversation with Brian gives you a place to say what you are trying to understand, what feels confusing, or what you want to move forward. You do not have to know the technical language first.</p>
       <div class="buttons">
-        <a class="btn btn-primary" href="https://papalifecoach.com/ai-coach">Talk it through with Brian’s Digital Twin</a>
-        <a class="btn btn-secondary" href="https://calendly.com/briankeithhill">Book a business conversation</a>
+        <a class="btn btn-primary" href="mailto:brian@bossmobility.net?subject=AI%20Boss%20Mobility%20question">Talk it through with Brian</a>
+        <a class="btn btn-secondary" href="mailto:brian@bossmobility.net?subject=Request%20a%20business%20conversation">Request a business conversation</a>
       </div>
     </div>
     <div class="operator-box">
@@ -115,7 +115,7 @@
       <details><summary>Training & Workshops <span>+</span></summary><p>Hands-on learning for leaders and teams that need confidence and practical use cases.</p></details>
       <details><summary>Knowledge & Productivity Systems <span>+</span></summary><p>Create one source of truth across Google Workspace, AI tools and operating workflows.</p></details>
       <details><summary>Pricing & Ways to Start <span>+</span></summary>
-        <p>Start free with the Digital Twin. Choose a paid starting point when you are ready. Implementation and Digital Twin builds are scoped based on the work. Brian approves pricing changes and custom financial commitments.</p>
+        <p>Email Brian with your question, or choose a paid starting point when you are ready. Implementation and Digital Twin builds are scoped based on the work. </p>
         <div class="buttons">
           <a class="btn btn-primary" href="https://www.paypal.com/ncp/payment/MTF4T7ZQBE3X6" target="_blank" rel="noopener">AI Clarity Session — $149 · Pay with PayPal</a>
           <a class="btn btn-secondary-dark" href="https://www.paypal.com/ncp/payment/59ESXXC7W7PAG" target="_blank" rel="noopener">AI Quick Start — $495 · Pay with PayPal</a>
@@ -146,8 +146,8 @@
   <div class="container">
     <h2>Start with the question. When a human decision is needed, Brian steps in.</h2>
     <div class="buttons">
-      <a class="btn" href="https://papalifecoach.com/ai-coach">Talk It Through</a>
-      <a class="btn" href="https://calendly.com/briankeithhill">Schedule a Conversation</a>
+      <a class="btn" href="mailto:brian@bossmobility.net?subject=AI%20Boss%20Mobility%20question">Email Brian Your Question</a>
+      <a class="btn" href="mailto:brian@bossmobility.net?subject=Request%20a%20business%20conversation">Request a Business Conversation</a>
     </div>
   </div>
 </section>
@@ -158,7 +158,7 @@
     <button class="modal-close" id="modal-close" aria-label="Close">×</button>
     <div class="eyebrow">Keep the conversation moving</div>
     <h2 id="interest-title">Ask Brian for a Next Step</h2>
-    <p>Tell Brian what you are trying to understand, fix, or build. Your request goes into Brian’s private review queue so he can decide the right next step. This form does not trigger an automatic sales message.</p>
+    <p>Tell Brian what you are trying to understand, fix, or build. Submit your question or email Brian directly at brian@bossmobility.net. This form does not trigger an automatic sales message.</p>
     <form id="interest-form">
       <label>Name<input name="name" required autocomplete="name"></label>
       <label>Email<input name="email" type="email" required autocomplete="email"></label>
@@ -166,7 +166,8 @@
       <label>What would you like us to understand together?<textarea name="need" id="interest-need" rows="4"></textarea></label>
       <input type="hidden" name="path" id="interest-path" value="stop">
       <button class="btn btn-primary" type="submit">Send My Request to Brian</button>
-      <p class="form-status" id="form-status"></p>
+      <p class="form-status" id="form-status" role="status"></p>
+      <p><a href="mailto:brian@bossmobility.net?subject=AI%20Boss%20Mobility%20question">Email Brian directly</a> if you prefer.</p>
     </form>
   </div>
 </div>
@@ -175,15 +176,15 @@
 
 <script>
 const paths={
- stop:{title:'Something is stuck',copy:'Tell the Digital Twin what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask the Digital Twin'},
+ stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
  decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
  go:{title:'I am ready to move',copy:'Turn the goal into the next action, follow-up, booking or implementation step.',cta:'Start the next step'},
  grow:{title:'Grow my business',copy:'Find the next practical way to create conversations, traffic, appointments and revenue.',cta:'Build my growth path'},
  followup:{title:'Follow up with leads',copy:'Organize warm leads, unanswered conversations and the next best follow-up without blasting people.',cta:'Plan my follow-up'},
- tech:{title:'Fix my technology',copy:'Describe what is failing. The Digital Twin will help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
+ tech:{title:'Fix my technology',copy:'Describe what is failing. Brian can help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
  ai:{title:'Build an AI assistant',copy:'Start with the job you want AI to own, the decisions you want to keep and the tools it should connect to.',cta:'Design my AI operator'},
  productivity:{title:'Improve productivity',copy:'Turn repeat work into a simpler routine and decide what should be automated, delegated or removed.',cta:'Simplify my workflow'},
- talk:{title:"Talk with Brian's Digital Twin",copy:'Ask a real question and get a direct response instead of searching through another long page.',cta:'Start the conversation'}
+ talk:{title:"Talk with Brian",copy:'Describe your question so Brian can help you choose a practical next step.',cta:'Start the conversation'}
 };
 let selected='stop';
 function selectPath(key){
@@ -204,7 +205,7 @@ document.getElementById('interest-form').addEventListener('submit',async e=>{
  e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
  button.disabled=true; status.textContent='Saving…';
  const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
- try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!r.ok)throw new Error('save failed');status.textContent='Got it. Your request is now in Brian’s review queue.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='I could not save that yet. You can still continue with the Digital Twin or book a conversation.';}finally{button.disabled=false;}
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
 });
 </script>
 </body>
