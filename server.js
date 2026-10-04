@@ -33,7 +33,7 @@ async function handleBusinessIntake(req,res){
     const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().toLowerCase().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),need=String(body.need||"").trim().slice(0,3000),pathKey=String(body.path||"").trim().slice(0,80);
     if(!name||!email||!email.includes("@"))return json(res,400,{ok:false,error:"Name and valid email are required."});
     const lead={record_type:"ai_boss_business_intake",name,email,organization,need,path:pathKey,source:"AI Boss Mobility Interactive Homepage",site:"https://ai.bossmobilelifecoach.com",submitted_at:new Date().toISOString()};
-    try{const dataDir=path.join(__dirname,"data");fs.mkdirSync(dataDir,{recursive:true});fs.appendFileSync(path.join(dataDir,"business-intake.ndjson"),JSON.stringify(lead)+"\n","utf8");}catch(err){console.error("Business intake local record failed",err);}
+    try{const dataDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");fs.mkdirSync(dataDir,{recursive:true});fs.appendFileSync(path.join(dataDir,"business-intake.ndjson"),JSON.stringify(lead)+"\n","utf8");}catch(err){console.error("Business intake local record failed");}
     const urls=[
       [process.env.GOOGLE_HUB_WEBHOOK,"Google Hub"],
       [process.env.AI_BOSS_LEAD_WEBHOOK,"AI Boss lead"],
@@ -50,7 +50,9 @@ async function handleBusinessIntake(req,res){
       );
       results.push(ghlOk);
     }
-    return json(res,200,{ok:true,routed:results.filter(Boolean).length,ghl_connected:Boolean(process.env.GHL_INTAKE_WEBHOOK)});
+    const routed=results.filter(Boolean).length;
+    if(!routed)return json(res,503,{ok:false,error:"Your request could not be delivered yet. Please email brian@bossmobility.net directly."});
+    return json(res,200,{ok:true,routed});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
