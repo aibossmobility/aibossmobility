@@ -19,7 +19,7 @@
   <div class="container header-inner">
     <a class="brand" href="/">AI <span>Boss Mobility</span></a>
     <nav class="nav" aria-label="Primary">
-      <a href="#start">Start Here</a><a href="#needs">Find Your Next Step</a><a href="#digital-twin">Talk It Through</a><a href="#solutions">Ways I Can Help</a><a href="#contact">Talk With Brian</a>
+      <a href="#start">Start Here</a><a href="#needs">Find Your Next Step</a><a href="#digital-twin">Talk It Through</a><a href="#solutions">Ways I Can Help</a><a href="#digital-twin" data-ai-chat>Talk With Brian’s AI</a>
     </nav>
   </div>
 </header>
@@ -72,7 +72,7 @@
         <li>Take the next action, book, or continue the conversation.</li>
       </ol>
       <div class="next-actions">
-        <a class="btn btn-primary" id="path-cta" href="#digital-twin">Let’s talk this through</a>
+        <a class="btn btn-primary" id="path-cta" href="#digital-twin" data-ai-chat>Let’s talk this through</a>
         <button class="btn btn-secondary-dark" id="capture-interest" type="button">Ask Brian for a Next Step</button>
       </div>
       <p class="boundary">Use this space for everyday questions and next steps. If something involves money, contracts, pricing, or a major commitment, Brian steps in personally.</p>
@@ -85,14 +85,14 @@
     <div>
       <div class="eyebrow">Talk it through</div>
       <h2>Ask the question in your own words.</h2>
-      <p class="lead">A conversation with Brian gives you a place to say what you are trying to understand, what feels confusing, or what you want to move forward. You do not have to know the technical language first.</p>
+      <p class="lead">Talk with Brian’s AI digital assistant using his voice. Ask about AI, learn step by step, or explore the services on this website. This is an AI assistant, not the live Brian; you can book a personal conversation when you need him.</p>
       <div class="buttons">
-        <a class="btn btn-primary" href="mailto:brian@bossmobility.net?subject=AI%20Boss%20Mobility%20question">Talk it through with Brian</a>
+        <a class="btn btn-primary" href="#digital-twin" data-ai-chat>Talk with Brian’s AI Boss Consulting</a>
         <a class="btn btn-secondary" href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Book a 30-minute Business Conversation</a>
       </div>
     </div>
     <div class="operator-box">
-      <h3>What we can work through together</h3>
+      <h3>AI Boss Consulting — Brian’s digital assistant</h3><p>Use the telephone button at the bottom right to start a voice conversation, or choose “Talk with Brian’s AI” to open the assistant. Review our <a href="/privacy">privacy policy</a> before sharing personal information.</p>
       <ul class="checklist">
         <li>Make services, tools, and choices easier to understand</li>
         <li>Sort out an AI, technology, or workflow problem</li>
@@ -207,6 +207,14 @@ document.getElementById('interest-form').addEventListener('submit',async e=>{
  const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
  try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
 });
+</script>
+<elevenlabs-convai id="brian-consulting-ai" agent-id="agent_6401m46s2w7tezt9qfacnyhj9vkj" action-text="Talk with Brian’s AI" start-call-text="Talk to AI Boss Consulting" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,calendar.app.google,paypal.com,www.paypal.com" dismissible="true"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>
+document.querySelectorAll('[data-ai-chat]').forEach(link => link.addEventListener('click', () => {
+  const widget = document.getElementById('brian-consulting-ai');
+  widget.setAttribute('variant', 'expanded');
+}));
 </script>
 </body>
 </html>
