@@ -39,10 +39,18 @@
   <div class="twin-conversation-prompt">
    <p class="eyebrow">Your turn — try it now</p>
    <h2>Ask Brian’s Digital Twin</h2>
-   <p>Ask a question and hear an AI response. Select <strong>Start conversation</strong> in the voice assistant to begin. Your microphone is never started automatically.</p>
-  <div class="twin-voice-access" aria-label="AI voice assistant control">
-   <elevenlabs-convai id="homepage-brian-twin" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" variant="expanded" action-text="Talk with Brian’s Digital Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai>
-  </div>
+   <p>Ask a question and hear an AI response. Check the privacy notice and select <strong>Start free voice conversation</strong>. Your microphone is never started automatically.</p>
+<section class="google-voice-pilot" id="google-voice-pilot" data-google-voice aria-label="Free Google AI voice conversation">
+  <p class="eyebrow">Google AI Studio · Free-tier pilot</p>
+  <h3>Have a real voice conversation</h3>
+  <p>Speak to Brian’s <strong>AI Digital Twin</strong>, ask follow-up questions, and hear a reply. AI, not Brian live. Sessions end automatically after two minutes.</p>
+  <label class="voice-check"><input type="checkbox" data-voice-adult> I am at least 18 years old.</label>
+  <label class="voice-check"><input type="checkbox" data-voice-consent> I understand Google may use voice inputs and AI responses to improve its services, including human review. I will not share passwords or private, medical, financial or confidential information. <a href="/privacy">Privacy details</a>.</label>
+  <div class="voice-actions"><button class="btn btn-primary" type="button" data-voice-start disabled>Start free voice conversation</button><button class="btn btn-secondary-dark" type="button" data-voice-stop disabled>End conversation</button></div>
+  <p class="voice-status" data-voice-status role="status" aria-live="polite">Checking the free voice pilot…</p>
+  <p class="voice-small">Microphone access is requested only after you press Start. No recording is saved by this website. Daily session limits apply.</p>
+</section>
+  <details class="voice-alternative"><summary>Use the existing voice assistant instead (limited allowance)</summary><div class="twin-voice-access" aria-label="Existing AI voice assistant"><elevenlabs-convai id="homepage-brian-twin" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" variant="expanded" action-text="Existing Digital Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai></div></details>
    <p class="twin-disclosure">The voice assistant is AI—not Brian live. It listens only when you choose to start. Please avoid sharing private financial, medical, or account information.</p>
    <p><a class="btn btn-secondary" href="/ask-brian">Open the dedicated conversation page</a></p>
   </div>
@@ -325,6 +333,7 @@ document.getElementById('interest-form').addEventListener('submit',async e=>{
  try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
 });
 </script>
+<script src="/gemini-voice.js" defer></script>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>

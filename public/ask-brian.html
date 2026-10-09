@@ -42,7 +42,7 @@
 <h1>Come with your question. We'll find a place to start.</h1>
 <p class="lead">Talk with Brian's AI Digital Twin. You can ask about learning AI, your business, family relationships, or a next step when you're feeling stuck. You don't need to know the technical words.</p>
 <div class="twin-actions">
-<button type="button" class="btn btn-primary" id="start-twin">Talk with Brian's Digital Twin</button>
+<button type="button" class="btn btn-primary" id="start-twin">Explore free voice conversation</button>
 <a class="btn btn-secondary" href="/#digital-twin">Go straight to AI business help</a>
 </div>
 <p class="twin-note">This is an AI assistant representing Brian's approach—not Brian speaking live. The conversation is handled by an AI service; please avoid sharing passwords, banking details, or sensitive records. Read our <a href="/privacy">privacy policy</a>.</p>
@@ -62,11 +62,22 @@
 <p class="twin-note">Need a conversation directly with Brian? <a href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Schedule a business appointment</a>.</p>
 </div></section>
 </main>
-<elevenlabs-convai id="brian-digital-twin" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's Digital Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai>
+<section class="google-voice-pilot" id="google-voice-pilot" data-google-voice aria-label="Free Google AI voice conversation">
+  <p class="eyebrow">Google AI Studio · Free-tier pilot</p>
+  <h3>Have a real voice conversation</h3>
+  <p>Speak to Brian’s <strong>AI Digital Twin</strong>, ask follow-up questions, and hear a reply. AI, not Brian live. Sessions end automatically after two minutes.</p>
+  <label class="voice-check"><input type="checkbox" data-voice-adult> I am at least 18 years old.</label>
+  <label class="voice-check"><input type="checkbox" data-voice-consent> I understand Google may use voice inputs and AI responses to improve its services, including human review. I will not share passwords or private, medical, financial or confidential information. <a href="/privacy">Privacy details</a>.</label>
+  <div class="voice-actions"><button class="btn btn-primary" type="button" data-voice-start disabled>Start free voice conversation</button><button class="btn btn-secondary-dark" type="button" data-voice-stop disabled>End conversation</button></div>
+  <p class="voice-status" data-voice-status role="status" aria-live="polite">Checking the free voice pilot…</p>
+  <p class="voice-small">Microphone access is requested only after you press Start. No recording is saved by this website. Daily session limits apply.</p>
+</section>
+<details class="voice-alternative"><summary>Existing voice assistant (limited allowance)</summary><elevenlabs-convai id="brian-digital-twin" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's Digital Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai></details>
+<script src="/gemini-voice.js" defer></script>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <script>
 document.getElementById('start-twin').addEventListener('click',function(){
-  document.getElementById('brian-digital-twin').setAttribute('variant','expanded');
+  document.getElementById('google-voice-pilot').scrollIntoView({behavior:'smooth',block:'center'});
 });
 </script>
 </body></html>
