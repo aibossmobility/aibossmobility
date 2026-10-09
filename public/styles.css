@@ -174,3 +174,5 @@ body{font-size:17px}
 .homepage-voice-entry.voice-attention{outline:4px solid #ffd400;outline-offset:4px}
 
 .homepage-voice-hint{font-size:.86rem;line-height:1.35;margin:0 0 8px;color:#f9e995}
+
+.homepage-voice-starters{margin:5px 0 10px;color:#fff;border-top:1px solid #819d86;padding-top:7px}.homepage-voice-starters summary{cursor:pointer;color:#ffe16b;font-weight:750;font-size:.91rem}.homepage-voice-starters ul{padding-left:20px;margin:8px 0;font-size:.88rem;line-height:1.4}.homepage-voice-starters li{margin-bottom:6px}.homepage-voice-starters p{font-size:.88rem;line-height:1.4;margin:5px 0}
