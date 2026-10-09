@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talk with Brian's Digital Twin | AI Boss Mobility Consulting</title>
+<meta name="description" content="Ask Brian's AI Digital Twin a question, explore trusted guidance, and find the right AI business or fatherhood specialist.">
+<link rel="canonical" href="https://ai.bossmobilelifecoach.com/ask-brian">
+<link rel="stylesheet" href="/styles.css">
+<style>
+.twin-intro{padding:4.5rem 0 2.5rem}
+.twin-page-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:2rem;align-items:start}
+.twin-guide{border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:1.6rem;background:rgba(255,255,255,.065)}
+.twin-guide ul{padding-left:1.3rem;line-height:1.7}
+.twin-guide li{margin:.45rem 0}
+.twin-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.6rem}
+.twin-note{font-size:.95rem;opacity:.88;line-height:1.6;margin-top:1.5rem}
+.help-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;margin-top:1.75rem}
+.help-paths article{border:1px solid #d9dfe4;border-radius:14px;padding:1.5rem}
+.help-paths h3{margin-top:0}
+@media(max-width:750px){.twin-page-grid,.help-paths{grid-template-columns:1fr}.twin-intro{padding-top:2.5rem}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner">
+<a class="brand" href="/">AI <span>Boss Mobility</span></a>
+<nav class="nav" aria-label="Primary"><a href="/">Home</a><a href="/meet-brian">Meet Brian</a><a href="/#digital-twin">AI Business Help</a><a href="https://papalifecoach.com">Papa Life</a></nav>
+</div></header>
+<main>
+<section class="section-dark twin-intro"><div class="container twin-page-grid">
+<div>
+<div class="eyebrow">Brian's Digital Twin</div>
+<h1>Come with your question. We'll find a place to start.</h1>
+<p class="lead">Talk with Brian's AI Digital Twin. You can ask about learning AI, your business, family relationships, or a next step when you're feeling stuck. You don't need to know the technical words.</p>
+<div class="twin-actions">
+<button type="button" class="btn btn-primary" id="start-twin">Talk with Brian's Digital Twin</button>
+<a class="btn btn-secondary" href="/#digital-twin">Go straight to AI business help</a>
+</div>
+<p class="twin-note">This is an AI assistant representing Brian's approach—not Brian speaking live. The conversation is handled by an AI service; please avoid sharing passwords, banking details, or sensitive records. Read our <a href="/privacy">privacy policy</a>.</p>
+</div>
+<aside class="twin-guide" aria-label="How it works">
+<h2>What can I ask?</h2>
+<ul><li>“I'm new to AI. Where should I start?”</li><li>“I need help making my website easier for customers.”</li><li>“I'm trying to reconnect with my adult child.”</li><li>“I have a question, but I don't know who can help.”</li></ul>
+<p>Your first conversation is for understanding the need—not a sales pitch. The Twin does not have direct access to your private inbox, CRM, or records. For written estimates, agreements, payments, or major decisions, Brian reviews them himself.</p>
+</aside>
+</div></section>
+<section class="compact-section"><div class="container">
+<div class="eyebrow">Specialized help</div><h2>Already know what you need?</h2>
+<div class="help-paths">
+<article><h3>AI Boss Consulting</h3><p>Explore AI learning, websites, business technology, and workflow questions through AI Boss Mobility services.</p><a class="btn btn-primary" href="/#digital-twin">Explore AI Boss Mobility</a></article>
+<article><h3>Papa Life</h3><p>For fathers of adult children and questions about relationship repair and reconciliation, visit the dedicated Papa Life coaching space.</p><a class="btn btn-primary" href="https://papalifecoach.com/">Visit Papa Life</a></article>
+</div>
+<p class="twin-note">Need a conversation directly with Brian? <a href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Schedule a business appointment</a>.</p>
+</div></section>
+</main>
+<elevenlabs-convai id="brian-digital-twin" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's Digital Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>
+document.getElementById('start-twin').addEventListener('click',function(){
+  document.getElementById('brian-digital-twin').setAttribute('variant','expanded');
+});
+</script>
+</body></html>
