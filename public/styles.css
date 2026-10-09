@@ -163,3 +163,10 @@ body{font-size:17px}
 .voice-alternative summary{font-weight:800;cursor:pointer;padding:12px 0;text-decoration:underline;text-underline-offset:4px}
 .voice-alternative .twin-voice-access{margin-top:12px}
 @media(max-width:600px){.google-voice-pilot{border-radius:28px 12px 28px 12px}.voice-actions .btn{width:100%;text-align:center}}
+
+/* Homepage voice entry: preserve the approved welcome video and make the voice control easy to find. */
+.homepage-voice-entry{position:fixed;right:20px;bottom:20px;z-index:1000;max-width:min(340px,calc(100vw - 32px));padding:14px 16px;background:#102c20;color:white;border:1px solid #e5c734;border-radius:20px;box-shadow:0 12px 35px #0007}
+.homepage-voice-label{font-weight:800;color:#ffdf4b;font-size:1.07rem;margin:0 0 4px}
+.homepage-voice-note{font-size:.89rem;line-height:1.35;margin:0 0 8px}
+.homepage-voice-entry elevenlabs-convai{display:block;min-height:60px}
+@media(max-width:600px){.homepage-voice-entry{right:8px;bottom:8px;padding:10px 12px;max-width:min(280px,calc(100vw - 16px))}.homepage-voice-note{font-size:.82rem}}
