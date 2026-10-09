@@ -19,7 +19,7 @@
   <div class="container header-inner">
     <a class="brand" href="/">AI <span>Boss Mobility</span></a>
     <nav class="nav" aria-label="Primary">
-      <a href="#start">Start Here</a><a href="/meet-brian">Meet Brian</a><a href="#needs">Find Your Next Step</a><a href="#digital-twin">Talk It Through</a><a href="#solutions">Ways I Can Help</a><a href="/ask-brian">Talk with Brian’s Digital Twin</a>
+      <a href="#start">Start Here</a><a href="#try-it">Try AI Yourself</a><a href="/meet-brian">Meet Brian</a><a href="#needs">Find Your Next Step</a><a href="#digital-twin">Talk It Through</a><a href="#solutions">Ways I Can Help</a><a href="/ask-brian">Talk with Brian’s Digital Twin</a>
     </nav>
   </div>
 </header>
@@ -43,6 +43,36 @@
       <button class="traffic-choice red active" data-path="stop"><span class="light"></span><b>RED LIGHT</b><small>Something is stuck</small></button>
       <button class="traffic-choice yellow" data-path="decide"><span class="light"></span><b>YELLOW LIGHT</b><small>Help me understand my options</small></button>
       <button class="traffic-choice green" data-path="go"><span class="light"></span><b>GREEN LIGHT</b><small>I'm ready to move</small></button>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="experience-lab" id="try-it" aria-labelledby="lab-title">
+  <div class="container lab-flow">
+    <div class="lab-intro">
+      <p class="eyebrow">Don't just read about AI. Try it.</p>
+      <h2 id="lab-title">You make the decision. See what happens.</h2>
+      <p>Here's a real business situation. Choose what AI should do, then see Brian's practical guidance. No signup needed.</p>
+    </div>
+    <div class="lab-content">
+      <div class="lab-step">01 <span>THE SITUATION</span></div>
+      <h3>A customer sends you a frustrated message. What should happen next?</h3>
+      <div class="lab-choices" role="group" aria-label="Choose how to handle a customer message">
+        <button type="button" class="lab-choice" data-lab="automate">Let AI write and send a reply automatically</button>
+        <button type="button" class="lab-choice" data-lab="assist">Let AI draft a response, then I review and send it</button>
+        <button type="button" class="lab-choice" data-lab="human">Handle the entire response myself without AI</button>
+      </div>
+      <div class="lab-result" id="lab-result" aria-live="polite" hidden>
+        <div class="lab-step">02 <span>WHAT YOU LEARNED</span></div>
+        <h3 id="lab-result-title"></h3>
+        <p id="lab-result-copy"></p>
+        <div class="lab-next">
+          <button type="button" class="btn lab-reset" id="lab-reset">Try a different choice</button>
+          <a class="btn btn-primary" href="/ask-brian">Explore this with Brian's Digital Twin</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -229,6 +259,22 @@ status.textContent='Online delivery could not be confirmed. Please email brian@b
 });
 </script>
 <script>
+const lessons={
+ automate:{title:'Fast is not always thoughtful.',copy:'AI can save time, but automatically sending a reply to an upset customer risks missing the human context. Try using AI to prepare a draft while keeping the actual response under your control.'},
+ assist:{title:'You kept the human judgment.',copy:'Good decision. AI can help organize a clear, empathetic draft. You still check the facts, adjust the tone and decide whether to send it. That is responsible automation.'},
+ human:{title:'Personal attention has real value.',copy:'Responding yourself may be the best choice when trust is at stake. You can also let AI help privately with ideas or structure—without letting it speak for you.'}
+};
+document.querySelectorAll('[data-lab]').forEach(button=>button.addEventListener('click',()=>{
+ const lesson=lessons[button.dataset.lab];
+ document.querySelectorAll('[data-lab]').forEach(other=>{other.classList.toggle('chosen',other===button);other.setAttribute('aria-pressed',String(other===button));});
+ document.getElementById('lab-result-title').textContent=lesson.title;
+ document.getElementById('lab-result-copy').textContent=lesson.copy;
+ document.getElementById('lab-result').hidden=false;
+}));
+document.getElementById('lab-reset').addEventListener('click',()=>{
+ document.querySelectorAll('[data-lab]').forEach(button=>{button.classList.remove('chosen');button.setAttribute('aria-pressed','false');});
+ document.getElementById('lab-result').hidden=true;
+});
 const paths={
  stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
  decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
