@@ -63,8 +63,8 @@
    <h3 id="guide-answer-title"></h3>
    <p id="guide-answer-copy"></p>
    <p id="guide-answer-question"></p>
-   <div class="guide-actions"><a class="btn btn-primary" href="#homepage-voice-entry" id="guide-voice">Talk this through with Brian’s AI Twin</a><button class="btn guide-request" type="button" id="guide-request">Ask Brian about this service</button><a class="btn guide-book" href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Book a Conversation</a></div>
-   <p class="guide-note">Brian reviews custom services personally. A written estimate and agreement come before any invoice or deposit.</p>
+   <div class="guide-actions"><a class="btn btn-primary" href="#homepage-voice-entry" id="guide-voice">Talk this through with Brian’s AI Twin</a><button class="btn guide-request" type="button" id="guide-request">Let’s prepare my estimate</button><a class="btn guide-book" href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Book a Conversation</a></div>
+   <p class="guide-note"><strong>Before you pay anything:</strong> We help you understand your goal, what is included, and the choices available. When you feel ready, we prepare a written estimate request with your selected service and explanation. Brian reviews custom scope, deliverables, price, and payment schedule before an estimate is emailed. You can review the estimate and agreement before any invoice or deposit.</p>
   </div>
  </div>
 </section>
@@ -239,6 +239,12 @@ document.querySelectorAll('[data-guide]').forEach(btn=>btn.addEventListener('cli
 }));
 document.getElementById('guide-request').addEventListener('click',()=>{
  if(!selectedGuide)return;
+ const serviceName=document.querySelector('[data-guide="'+selectedGuide+'"]').querySelector('strong').textContent;
+ const estimate=document.getElementById('estimate-form');
+ estimate.elements.service.value='Not sure — help me choose';
+ estimate.elements.details.value='I selected: '+serviceName+'. I would like to understand the problem, proposed approach, deliverables, estimated price and schedule before making any purchase.';
+ document.getElementById('estimate').scrollIntoView({behavior:'smooth',block:'start'});
+ return;
  const entry=guideInfo[selectedGuide];document.getElementById('interest-path').value=selectedGuide;
  document.getElementById('interest-need').value='Interested in '+document.querySelector('[data-guide="'+selectedGuide+'"]').querySelector('strong').textContent+'. '+entry.question;
  const modal=document.getElementById('interest-modal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
@@ -277,7 +283,7 @@ try {
 const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details})});
 const data=await response.json();
 if(!response.ok||!data.ok||!(data.routed>0)) throw new Error('Delivery not confirmed');
-status.textContent='Your estimate request has been received for review. No payment is due.';
+status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
 form.reset();
 } catch(error) {
 status.textContent='Online delivery could not be confirmed. Please email brian@bossmobility.net with your request instead.';
