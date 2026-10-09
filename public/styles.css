@@ -86,3 +86,62 @@ body{font-size:17px}
 .need-card small,.traffic-choice small{font-size:.9rem}
 @media(max-width:800px){.lab-flow{grid-template-columns:1fr}.lab-intro h2{max-width:none}.lab-content{border-radius:36px 12px 36px 12px}.hero-interactive{border-radius:0 0 13% 4% / 0 0 2% 1%}}
 @media(prefers-reduced-motion:reduce){.lab-choice{transition:none}}
+
+/* 2026 shared human-centered hero and featured Twin */
+.site-hero{position:relative;isolation:isolate;overflow:hidden;color:white;padding:clamp(70px,7vw,115px) 0 95px;background-color:#103c2b;background-image:linear-gradient(90deg,rgba(5,35,22,.76) 0%,rgba(8,40,23,.55) 41%,rgba(3,25,14,.08) 78%),url('/images/ai-boss-african-header.webp');background-size:cover;background-position:center right}
+.site-hero:after{content:"";position:absolute;inset:auto -10% -48px;height:90px;border-radius:50% 50% 0 0;background:#fffaf0;pointer-events:none}
+.site-hero-body{position:relative;z-index:1;min-height:285px;display:flex;align-items:center}
+.site-hero-copy{max-width:min(56%,680px);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.site-hero-kicker{font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#f5d337;font-size:1rem}
+.site-hero h1{font-size:clamp(2.25rem,4.8vw,4.55rem);line-height:1.06;letter-spacing:-.035em;margin:12px 0}
+.site-hero p:not(.site-hero-kicker){font-size:clamp(1.1rem,1.8vw,1.35rem);line-height:1.5}
+.site-hero-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.site-hero .btn-secondary{background:rgba(0,0,0,.36)}
+.twin-conversation-stage{margin:24px auto 34px;max-width:950px;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.8fr);align-items:center;gap:clamp(22px,4vw,50px);padding:clamp(24px,3.8vw,42px);border-radius:44px 15px 44px 15px;background:#0f3729;color:white;text-align:left;box-shadow:0 16px 42px rgba(0,0,0,.24)}
+.twin-conversation-stage h2{font-size:clamp(2.1rem,3.3vw,3rem);line-height:1.08;margin:12px 0}
+.twin-conversation-stage p{font-size:1.1rem;color:#f1eee5}
+.twin-disclosure{font-size:.95rem!important;color:#ddd!important}
+.twin-voice-access{min-height:250px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(255,212,0,.20),transparent 70%);border-radius:50%}
+.twin-voice-access elevenlabs-convai{display:block;min-height:75px}
+.need-card,.accordion-grid details,.operator-box{border-top-width:0}
+.site-header .brand{white-space:nowrap}
+.nav{flex-wrap:wrap}
+@media(max-width:800px){.site-hero{background-position:67% center;padding:70px 0 80px;background-image:linear-gradient(90deg,rgba(4,25,17,.91),rgba(4,25,17,.61)),url('/images/ai-boss-african-header.webp')}.site-hero-copy{max-width:100%}.site-hero-body{min-height:290px}.twin-conversation-stage{grid-template-columns:1fr}.twin-voice-access{min-height:190px}.site-hero-links .btn{max-width:100%}}
+@media(max-width:420px){.site-hero{padding:48px 0 77px}.site-hero h1{font-size:2rem}.site-hero-links{gap:10px}.site-hero-links .btn{width:100%;text-align:center}}
+
+/* Layout refinements after desktop, tablet, mobile visual review */
+.site-header .brand{display:inline-flex;align-items:center;gap:.25rem;padding:8px 15px;border:2px solid rgba(255,255,255,.86);line-height:1.1}
+.site-hero-copy{max-width:min(47%,590px)}
+.site-hero h1{font-size:clamp(2.25rem,4vw,3.85rem)}
+.home-meet-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:22px;max-width:1170px;margin:34px auto;align-items:stretch;text-align:left}
+.home-meet-grid .welcome-video{margin:0;max-width:none;display:flex;flex-direction:column}
+.home-meet-grid .welcome-video video{flex:1;min-height:275px;object-fit:cover}
+.home-meet-grid .twin-conversation-stage{margin:0;max-width:none;display:flex;flex-direction:column;justify-content:space-between;gap:15px;padding:clamp(21px,2.9vw,34px);border-radius:42px 10px 42px 10px}
+.home-meet-grid .twin-conversation-stage h2{font-size:clamp(1.85rem,2.75vw,2.8rem)}
+.home-meet-grid .twin-conversation-stage p{font-size:1.03rem}
+.home-meet-grid .twin-voice-access{min-height:125px}
+.home-meet-grid .twin-conversation-prompt p:last-child{margin-bottom:0}
+.home-meet-grid .twin-voice-access elevenlabs-convai{min-width:240px}
+.cards article,.help-paths article,.card,.traffic-choice,.accordion-grid details,.case{border-radius:36px 12px 38px 12px!important}
+.cards article,.help-paths article{border-color:#eee5d6;box-shadow:0 10px 25px rgba(48,35,10,.07)}
+@media(max-width:850px){.home-meet-grid{grid-template-columns:1fr;max-width:660px}.site-hero-copy{max-width:60%}.site-hero h1{font-size:clamp(2rem,4.3vw,3rem)}}
+@media(max-width:600px){.site-hero{min-height:655px;padding:46px 0 250px!important;background-color:#103c2b;background-size:auto,auto 270px;background-repeat:no-repeat;background-position:center,right 45% bottom;background-image:linear-gradient(180deg,#103c2b 0%,#103c2b 47%,rgba(4,38,21,.18) 74%,rgba(4,38,21,.12) 100%),url('/images/ai-boss-african-header.webp')}.site-hero-body{min-height:0}.site-hero-copy{max-width:100%}.site-hero h1{font-size:clamp(2.05rem,8.5vw,2.65rem)}.site-hero p:not(.site-hero-kicker){font-size:1.03rem}.site-hero-links{margin-top:18px}.home-meet-grid .welcome-video video{min-height:220px}.home-meet-grid .twin-conversation-stage{border-radius:30px 10px 30px 10px}.home-meet-grid .twin-voice-access elevenlabs-convai{min-width:0}}
+
+@media(max-width:800px){
+ .header-inner{display:flex;flex-direction:column;align-items:stretch;gap:7px;padding:11px 0}
+ .site-header .nav{display:flex!important;flex-wrap:nowrap;width:100%;gap:18px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;-webkit-overflow-scrolling:touch;padding:6px 0 9px}
+ .site-header .nav a{flex:0 0 auto;font-size:.91rem}
+ .site-header .brand{width:max-content}
+}
+
+.welcome-portrait{min-height:375px;flex:1;background:#19402b url('/images/ai-boss-african-header.webp') 62% center / cover no-repeat}
+.home-meet-grid .welcome-video{background:#0d2519}
+.home-meet-grid .twin-conversation-prompt{display:flex;flex-direction:column;align-items:flex-start}
+.home-meet-grid .twin-voice-access{order:0;width:100%;min-height:80px;margin:2px 0 9px;justify-content:flex-start;border-radius:20px}
+.home-meet-grid .twin-disclosure{font-size:.87rem!important;line-height:1.45}
+.recorded-intro{max-width:900px;margin:12px auto 28px;color:#eee}
+.recorded-intro details{border:1px solid rgba(255,255,255,.23);padding:13px 18px;border-radius:22px;text-align:left}
+.recorded-intro summary{cursor:pointer;font-weight:800;color:#ffd400}
+.recorded-intro video{display:block;max-width:100%;width:650px;margin:16px auto 5px;border-radius:16px}
+.recorded-intro p{font-size:.94rem;opacity:.84}
+@media(max-width:800px){.welcome-portrait{min-height:clamp(200px,55vw,375px)}}
