@@ -47,6 +47,28 @@
   </div>
 </section>
 
+<section class="service-guide" id="how-brian-helps" aria-labelledby="guide-heading">
+ <div class="container service-guide-inner">
+  <p class="eyebrow">Let’s find your next step together</p>
+  <h2 id="guide-heading">What would you like Brian to help you with?</h2>
+  <p class="guide-lead">You don’t have to know the technical words. Choose what sounds closest to what you need, and I’ll help you take the next step.</p>
+  <div class="guide-options" role="group" aria-label="Choose a way Brian can help">
+   <button type="button" class="guide-choice" data-guide="clarity" aria-pressed="false"><strong>Clarity Conversation</strong><span>Talk through what’s confusing and leave with direction</span></button>
+   <button type="button" class="guide-choice" data-guide="website" aria-pressed="false"><strong>Website Design</strong><span>Create or improve a website people can actually use</span></button>
+   <button type="button" class="guide-choice" data-guide="twin" aria-pressed="false"><strong>AI Digital Twin</strong><span>Explore an AI guide who can welcome and assist visitors</span></button>
+   <button type="button" class="guide-choice" data-guide="operations" aria-pressed="false"><strong>AI Strategy & Training</strong><span>Learn practical AI and simplify everyday work</span></button>
+  </div>
+  <div class="guide-answer" id="guide-answer" hidden aria-live="polite">
+   <p class="guide-step">Here’s how we can begin</p>
+   <h3 id="guide-answer-title"></h3>
+   <p id="guide-answer-copy"></p>
+   <p id="guide-answer-question"></p>
+   <div class="guide-actions"><a class="btn btn-primary" href="#homepage-voice-entry" id="guide-voice">Talk this through with Brian’s AI Twin</a><button class="btn guide-request" type="button" id="guide-request">Ask Brian about this service</button><a class="btn guide-book" href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Book a Conversation</a></div>
+   <p class="guide-note">Brian reviews custom services personally. A written estimate and agreement come before any invoice or deposit.</p>
+  </div>
+ </div>
+</section>
+
 <section class="action-section" id="needs">
   <div class="container action-layout">
     <div>
@@ -199,6 +221,29 @@
   <elevenlabs-convai id="homepage-brian-voice" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's AI Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai>
 </aside>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>
+const guideInfo={
+ clarity:{title:'Let’s make the next step clearer.',copy:'Brian can listen to what you’re trying to accomplish, explain your options in plain language, and help you decide what matters first.',question:'Here’s a way to start: “I have a situation I’d like clarity on. Can you help me sort out my choices?”'},
+ website:{title:'Let’s talk about your website.',copy:'Brian can help plan a new website or improve one you already have, with clear messages, useful visitor paths, and practical next steps.',question:'Start with: “I want people to understand what I offer when they visit my website.”'},
+ twin:{title:'Let’s explore a Digital Twin.',copy:'Brian can help you decide what your AI Digital Twin should say, what questions it should answer, and when a real person should take over.',question:'Start with: “I’d like an AI guide to welcome visitors and help them find my services.”'},
+ operations:{title:'Let’s make AI useful in your everyday work.',copy:'Brian can help you understand AI tools, train your team, and identify repetitive tasks that technology could make easier.',question:'Start with: “I want to learn how AI could help me, but I’m not sure what to use.”'}
+};
+let selectedGuide='';
+document.querySelectorAll('[data-guide]').forEach(btn=>btn.addEventListener('click',()=>{
+ selectedGuide=btn.dataset.guide;const entry=guideInfo[selectedGuide];
+ document.querySelectorAll('[data-guide]').forEach(b=>{const picked=b===btn;b.classList.toggle('selected',picked);b.setAttribute('aria-pressed',String(picked));});
+ document.getElementById('guide-answer-title').textContent=entry.title;
+ document.getElementById('guide-answer-copy').textContent=entry.copy;
+ document.getElementById('guide-answer-question').textContent=entry.question;
+ const panel=document.getElementById('guide-answer');panel.hidden=false;panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}));
+document.getElementById('guide-request').addEventListener('click',()=>{
+ if(!selectedGuide)return;
+ const entry=guideInfo[selectedGuide];document.getElementById('interest-path').value=selectedGuide;
+ document.getElementById('interest-need').value='Interested in '+document.querySelector('[data-guide="'+selectedGuide+'"]').querySelector('strong').textContent+'. '+entry.question;
+ const modal=document.getElementById('interest-modal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+});
+</script>
 <script>document.querySelectorAll('a[href="#homepage-voice-entry"]').forEach(function(link){link.addEventListener('click',function(event){event.preventDefault();const panel=document.getElementById('homepage-voice-entry');panel.focus({preventScroll:true});panel.classList.add('voice-attention');setTimeout(()=>panel.classList.remove('voice-attention'),1800);});});</script>
 
 <div class="modal" id="interest-modal" aria-hidden="true">
