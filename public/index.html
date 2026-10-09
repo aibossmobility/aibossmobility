@@ -19,7 +19,7 @@
   <div class="container header-inner">
     <a class="brand" href="/">AI <span>Boss Mobility</span></a>
     <nav class="nav" aria-label="Primary">
-      <a href="#start">Start Here</a><a href="/meet-brian">Meet Brian</a><a href="#needs">Find Your Next Step</a><a href="#digital-twin">Talk It Through</a><a href="#solutions">Ways I Can Help</a><a href="/ask-brian">Talk with Brian’s Digital Twin</a>
+      <a href="#start">Start Here</a><a href="/meet-brian">Meet Brian</a><a href="#needs">Find Your Next Step</a><a href="#homepage-voice-entry">Talk with Brian’s AI Twin</a><a href="#solutions">Ways I Can Help</a><a href="#homepage-voice-entry">Talk with Brian’s AI Twin</a>
     </nav>
   </div>
 </header>
@@ -87,7 +87,7 @@
       <h2>Ask the question in your own words.</h2>
       <p class="lead">Start with Brian’s newly created Digital Twin, an AI conversation guide for understanding AI and thinking through your next steps. It is not Brian speaking live. Brian personally reviews requests for paid work.</p>
       <div class="buttons">
-        <a class="btn btn-primary" href="/ask-brian">Talk with Brian’s Digital Twin</a><a class="btn btn-secondary" href="#estimate">Request a Written Estimate</a>
+        <a class="btn btn-primary" href="#homepage-voice-entry">Talk with Brian’s AI Twin</a><a class="btn btn-secondary" href="#estimate">Request a Written Estimate</a>
         <a class="btn btn-secondary" href="https://calendar.app.google/Jcu2RaCp4jyC1zE36">Book a 30-minute Business Conversation</a>
       </div>
     </div>
@@ -191,12 +191,13 @@
 </main>
 
 <!-- Original conversational voice entry, restored independently of the October 8 welcome video. -->
-<aside aria-label="Talk with Brian's AI Digital Twin" class="homepage-voice-entry">
+<aside aria-label="Talk with Brian's AI Digital Twin" class="homepage-voice-entry" id="homepage-voice-entry" tabindex="-1">
   <p class="homepage-voice-label">Talk with Brian's AI Twin</p>
   <p class="homepage-voice-note">Tap the voice circle to start an AI conversation—not Brian live. Microphone permission is requested when you begin.</p>
   <elevenlabs-convai id="homepage-brian-voice" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's AI Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com,calendar.app.google" dismissible="true"></elevenlabs-convai>
 </aside>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>document.querySelectorAll('a[href="#homepage-voice-entry"]').forEach(function(link){link.addEventListener('click',function(event){event.preventDefault();const panel=document.getElementById('homepage-voice-entry');panel.focus({preventScroll:true});panel.classList.add('voice-attention');setTimeout(()=>panel.classList.remove('voice-attention'),1800);});});</script>
 
 <div class="modal" id="interest-modal" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="interest-title">
