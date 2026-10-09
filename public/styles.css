@@ -145,3 +145,21 @@ body{font-size:17px}
 .recorded-intro video{display:block;max-width:100%;width:650px;margin:16px auto 5px;border-radius:16px}
 .recorded-intro p{font-size:.94rem;opacity:.84}
 @media(max-width:800px){.welcome-portrait{min-height:clamp(200px,55vw,375px)}}
+
+/* Consent-first, no-new-billing Google Live voice pilot */
+.google-voice-pilot{max-width:780px;margin:26px auto;padding:clamp(20px,4vw,34px);border-radius:42px 14px 42px 14px;background:#193726;color:#fff;text-align:left;border:1px solid #70947a}
+.google-voice-pilot h3{font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.2;margin:10px 0}
+.google-voice-pilot p{font-size:1rem;line-height:1.55;color:#f5f6ee}
+.google-voice-pilot .eyebrow{color:#ffdb48}
+.voice-check{display:flex;align-items:flex-start;gap:12px;font-size:1rem;line-height:1.48;margin:13px 0;cursor:pointer}
+.voice-check input{width:22px;height:22px;flex:0 0 22px;accent-color:#e9c126}
+.voice-check a{color:#ffe66b}
+.voice-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.voice-actions .btn{border:1px solid #ffe677;cursor:pointer;font-size:1rem}
+.voice-actions .btn:disabled{opacity:.54;cursor:not-allowed}
+.voice-status{min-height:28px;font-weight:750}
+.google-voice-pilot .voice-small{font-size:.89rem;color:#d0e1d5}
+.voice-alternative{max-width:760px;margin:12px auto;color:inherit}
+.voice-alternative summary{font-weight:800;cursor:pointer;padding:12px 0;text-decoration:underline;text-underline-offset:4px}
+.voice-alternative .twin-voice-access{margin-top:12px}
+@media(max-width:600px){.google-voice-pilot{border-radius:28px 12px 28px 12px}.voice-actions .btn{width:100%;text-align:center}}

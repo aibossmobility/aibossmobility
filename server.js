@@ -101,8 +101,56 @@ async function handleConsentAdminList(req,res){
   }catch(err){console.error("Consent admin read error",err);return json(res,500,{ok:false,error:"Unable to load records."});}
 }
 
+
+// Google AI Studio free-tier voice pilot. Permanent API keys never leave the server.
+// Deliberately off until a free (not billed) API key and explicit pilot flag are set.
+const VOICE_MODEL="models/gemini-2.5-flash-native-audio-preview-12-2025";
+const voiceDaily=new Map();
+let voiceCount=0,voiceDay="";
+function voiceAvailable(){return process.env.GEMINI_FREE_VOICE_ENABLED==="true" && Boolean(process.env.GEMINI_API_KEY);}
+function voiceStatus(res){return json(res,200,{available:voiceAvailable(),model:"Gemini 2.5 Flash native audio",maxSessionSeconds:120});}
+async function voiceToken(req,res){
+  if(!voiceAvailable())return json(res,503,{ok:false,error:"The free voice pilot is not active yet. Use the existing conversation option."});
+  const origin=String(req.headers.origin||"");
+  if(origin){
+    try{const host=new URL(origin).host; if(host!==req.headers.host)return json(res,403,{ok:false,error:"Site origin not allowed."});}
+    catch{return json(res,403,{ok:false,error:"Site origin not allowed."});}
+  }
+  let payload;
+  try{payload=JSON.parse(await readBody(req)||"{}");}catch{return json(res,400,{ok:false,error:"Invalid request."});}
+  if(payload.agreeToGoogleReview!==true || payload.isAdult!==true){
+    return json(res,400,{ok:false,error:"Confirm that you are 18+ and accept Google's free-tier data-use notice."});
+  }
+  const today=new Date().toISOString().slice(0,10);
+  if(voiceDay!==today){voiceDaily.clear();voiceCount=0;voiceDay=today;}
+  const ip=String(req.headers["x-forwarded-for"]||req.socket.remoteAddress||"").split(",")[0].trim();
+  const used=voiceDaily.get(ip)||0;
+  // One replica. Deliberately conservative; AI Studio's own free-tier quota is an additional ceiling.
+  if(used>=2 || voiceCount>=12)return json(res,429,{ok:false,error:"Today's free voice pilot sessions are used. Please try again another day or book a conversation."});
+  const tokenRequest={
+    uses:1,
+    expireTime:new Date(Date.now()+4*60*1000).toISOString(),
+    newSessionExpireTime:new Date(Date.now()+50*1000).toISOString(),
+    liveConnectConstraints:{model:VOICE_MODEL,config:{responseModalities:["AUDIO"]}}
+  };
+  try{
+    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens",{
+      method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":process.env.GEMINI_API_KEY},
+      body:JSON.stringify(tokenRequest),signal:AbortSignal.timeout(12000)
+    });
+    if(!response.ok){console.error("Gemini voice token request failed: HTTP",response.status);return json(res,503,{ok:false,error:"Google's free voice service is currently unavailable. No payment is required."});}
+    const result=await response.json();
+    if(!result.name)return json(res,503,{ok:false,error:"Google did not return a session token."});
+    voiceDaily.set(ip,used+1);voiceCount++;
+    res.writeHead(200,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"});
+    return res.end(JSON.stringify({ok:true,token:result.name,model:VOICE_MODEL,maxSessionSeconds:120}));
+  }catch(err){console.error("Gemini voice token request could not complete");return json(res,503,{ok:false,error:"The free voice service could not connect. Please try again later."});}
+}
+
 http.createServer(async(req,res)=>{
   const route=(req.url||"").split("?")[0];
+  if(req.method==="GET"&&route==="/api/gemini-voice/status")return voiceStatus(res);
+  if(req.method==="POST"&&route==="/api/gemini-voice/session")return voiceToken(req,res);
   if(req.method==="POST"&&route==="/api/guide")return handleGuideLead(req,res);
   if(req.method==="POST"&&route==="/api/business-intake")return handleBusinessIntake(req,res);
   if(req.method==="POST"&&route==="/api/media-ai-consent")return handleMediaAiConsent(req,res);
