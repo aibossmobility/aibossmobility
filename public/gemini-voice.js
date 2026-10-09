@@ -88,7 +88,14 @@
         }}));
       };
       socket.onmessage=async event=>{
-        let packet;try{packet=JSON.parse(event.data);}catch{return;}
+        // Google Live can send either text or binary JSON websocket messages.
+        let packet;
+        try {
+          const raw=event.data instanceof Blob ? await event.data.text() :
+            event.data instanceof ArrayBuffer ? new TextDecoder().decode(event.data) : event.data;
+          packet=JSON.parse(raw);
+        }catch{return;}
+        if(packet.error){msg('Google could not complete this voice session. Please try the alternate assistant.');stop();return;}
         if(packet.setupComplete){
           inputContext=new AudioContext();
           source=inputContext.createMediaStreamSource(microphone);
