@@ -130,15 +130,19 @@ async function voiceToken(req,res){
   const tokenRequest={
     uses:1,
     expireTime:new Date(Date.now()+4*60*1000).toISOString(),
-    newSessionExpireTime:new Date(Date.now()+50*1000).toISOString(),
-    liveConnectConstraints:{model:VOICE_MODEL,config:{responseModalities:["AUDIO"]}}
+    newSessionExpireTime:new Date(Date.now()+50*1000).toISOString()
   };
   try{
     const response=await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens",{
       method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":process.env.GEMINI_API_KEY},
       body:JSON.stringify(tokenRequest),signal:AbortSignal.timeout(12000)
     });
-    if(!response.ok){console.error("Gemini voice token request failed: HTTP",response.status);return json(res,503,{ok:false,error:"Google's free voice service is currently unavailable. No payment is required."});}
+    if(!response.ok){
+      let detail="";try{const problem=await response.json();detail=String(problem.error?.status||"unknown")+" "+String(problem.error?.message||"").slice(0,180);}catch{}
+      detail=detail.replace(/AQ[.A-Za-z0-9_-]{15,}|AIza[A-Za-z0-9_-]{15,}/g,"[redacted]");
+      console.error("Gemini voice token request failed: HTTP",response.status,detail);
+      return json(res,503,{ok:false,error:"Google's free voice service is currently unavailable. No payment is required."});
+    }
     const result=await response.json();
     if(!result.name)return json(res,503,{ok:false,error:"Google did not return a session token."});
     voiceDaily.set(ip,used+1);voiceCount++;
