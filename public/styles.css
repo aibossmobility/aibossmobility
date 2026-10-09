@@ -172,3 +172,5 @@ body{font-size:17px}
 @media(max-width:600px){.homepage-voice-entry{right:8px;bottom:8px;padding:10px 12px;max-width:min(280px,calc(100vw - 16px))}.homepage-voice-note{font-size:.82rem}}
 
 .homepage-voice-entry.voice-attention{outline:4px solid #ffd400;outline-offset:4px}
+
+.homepage-voice-hint{font-size:.86rem;line-height:1.35;margin:0 0 8px;color:#f9e995}
