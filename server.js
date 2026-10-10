@@ -51,8 +51,13 @@ async function handleBusinessIntake(req,res){
       results.push(ghlOk);
     }
     const routed=results.filter(Boolean).length;
-    if(!routed)return json(res,503,{ok:false,error:"Your request could not be delivered yet. Please email brian@bossmobility.net directly."});
-    return json(res,200,{ok:true,routed});
+    const ghlConfigured=Boolean(process.env.GHL_INTAKE_WEBHOOK);
+    const ghlDelivered=ghlConfigured && results.length>0 && results[results.length-1]===true;
+    if(!ghlDelivered){
+      console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
+      return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
+    }
+    return json(res,200,{ok:true,crm_received:true});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
