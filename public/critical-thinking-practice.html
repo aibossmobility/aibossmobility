@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Critical Thinking with AI | AI Boss Mobility Consulting</title>
+<meta name="description" content="Interactive real-world examples of how Brian Keith Hill questions, checks and verifies AI responses.">
+<link rel="stylesheet" href="/styles.css"><style>
+.practice-hero{background:#101010;color:white;padding:65px 0 55px;border-top:7px solid #ffd400}
+.practice-hero h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;max-width:950px}
+.practice-hero p{max-width:780px;font-size:1.1rem}
+.practice{padding:45px 0 75px;background:#fffaf0}
+.practice-panel{background:#fff;border:2px solid #e7e0cf;border-top:7px solid #1f9d55;border-radius:16px;padding:clamp(18px,4vw,36px);max-width:880px}
+.practice .eyebrow{color:#146b38}
+.case-quote{background:#f3f4f6;border-left:5px solid #d92525;padding:16px;margin:18px 0;font-weight:700}
+.choice{display:block;width:100%;text-align:left;border:2px solid #d6d6d6;background:white;color:#111;padding:14px 18px;margin:10px 0;border-radius:10px;cursor:pointer;font-size:1rem}
+.choice:hover,.choice:focus-visible{border-color:#1f9d55;outline:3px solid #ffe678}
+.choice[aria-pressed="true"]{background:#edf9ee;border-color:#1f9d55}
+.feedback{background:#eef8f0;border:2px solid #1f9d55;border-radius:10px;padding:18px;margin-top:18px}
+.progress{font-weight:800;margin-bottom:12px}
+.next{background:#111;color:#ffd400;border:0;border-radius:7px;padding:13px 22px;font-weight:900;cursor:pointer;margin-top:16px}
+.next:focus-visible{outline:3px solid #d92525}
+.takeaway{background:#111;color:#fff;padding:28px;margin-top:26px;border-radius:14px}
+.practice small{color:#444}
+</style></head><body>
+<main><header class="practice-hero"><div class="container"><p class="eyebrow">AI Boss Mobility Consulting · Interactive learning</p>
+<h1>Let's Practice Critical Thinking</h1>
+<p>AI can be helpful, convincing—and wrong. These examples come from Brian Keith Hill's real work with AI. Your job isn't to disagree automatically. Your job is to ask the right questions and verify the result.</p>
+<a href="/" style="color:#ffd400;font-weight:800">← Back to AI Boss Mobility</a></div></header>
+<section class="practice"><div class="container"><div class="practice-panel">
+<p id="progress" class="progress" aria-live="polite"></p>
+<h2 id="scenario-title"></h2><p id="scenario-context"></p>
+<div class="case-quote" id="ai-claim"></div>
+<h3>What would you ask or do next?</h3><div id="choices" role="group" aria-label="Choose a response"></div>
+<div id="feedback" class="feedback" hidden tabindex="-1" aria-live="polite"></div>
+<button id="next" class="next" hidden type="button">Next example →</button>
+</div><div class="takeaway"><h2>Your four critical-thinking questions</h2>
+<ol><li><strong>Why?</strong> Why did AI make that choice?</li><li><strong>How?</strong> What facts or evidence support the answer?</li><li><strong>Does it match?</strong> Is this the result I actually asked for?</li><li><strong>Prove it.</strong> Can I see and test what is complete?</li></ol>
+<p>Keep critically thinking for yourself when using AI. You remain responsible for your decisions.</p></div></div></section></main>
+<script>
+const cases=[
+{title:"The wrong browser",context:"Brian asked AI to work inside his established Google Chrome 3 testing browser. The assistant kept checking regular Google Chrome instead.",claim:"AI: “I can't find your GoHighLevel tab.”",choices:["Open more random tabs until something works.","Ask which browser was checked, why it ignored the established preference, and verify the correct session.","Assume the GoHighLevel account has disappeared."],best:1,why:"The right challenge is specific: name the expected browser, inspect the actual tool results, and require the assistant to verify it is looking in Chrome 3. A confident explanation does not replace the check."},
+{title:"The book cover showed someone else",context:"Brian requested his own existing hands-clasped portrait on an eBook cover. The assistant produced an attractive image featuring a different person.",claim:"AI: “Here is your new book cover.”",choices:["Accept it because the design looks impressive.","Ask AI to create five more unrelated portraits.","Say the central requirement was missed, provide the known source image, and check the replacement."],best:2,why:"A polished design can still be wrong. Brian's actual identity was the key requirement. The assistant needed to use the approved source image, not a plausible lookalike."},
+{title:"Ready for sale—or merely prepared?",context:"A complete manuscript and proposed prices existed, but GoHighLevel products, active payment links, and customer delivery hadn't passed testing.",claim:"AI: “Your book is ready to sell.”",choices:["Ask for proof of the live standard price, approved checkout, successful delivery, and no legacy links.","Publish it immediately because the EPUB file exists.","Assume a draft product description proves payment works."],best:0,why:"Separating a finished file from a functioning customer journey prevents real problems. Ask for an end-to-end test and the specific evidence for each step."},
+{title:"A new AI answer sounds certain",context:"AI offers a strong recommendation for a decision involving money or business systems, but doesn't say what it checked.",claim:"AI: “This is definitely your best option.”",choices:["Agree because AI used confident language.","Reject everything AI says, even when supported.","Ask for the assumptions, alternatives, sources, tradeoffs, and what remains uncertain."],best:2,why:"Critical thinking is not permanent disagreement. It's making evidence visible, comparing options, and keeping control of the decision."}
+];
+let current=0,answered=false;
+const $=id=>document.getElementById(id);
+function render(){answered=false;const s=cases[current];$("progress").textContent="Example "+(current+1)+" of "+cases.length;$("scenario-title").textContent=s.title;$("scenario-context").textContent=s.context;$("ai-claim").textContent=s.claim;$("feedback").hidden=true;$("feedback").textContent="";$("next").hidden=true;$("choices").replaceChildren();s.choices.forEach((txt,i)=>{const b=document.createElement("button");b.className="choice";b.type="button";b.setAttribute("aria-pressed","false");b.textContent=txt;b.addEventListener("click",()=>{if(answered)return;answered=true;document.querySelectorAll(".choice").forEach(x=>x.disabled=true);b.setAttribute("aria-pressed","true");$("feedback").hidden=false;const heading=document.createElement("strong");heading.textContent=i===s.best?"Good critical-thinking choice.":"There's a stronger way to challenge this.";const detail=document.createElement("p");detail.textContent=s.why;$("feedback").append(heading,detail);$("next").hidden=false;$("next").textContent=current===cases.length-1?"Try the exercises again ↺":"Next example →";$("feedback").focus();});$("choices").append(b);});}
+$("next").addEventListener("click",()=>{current=(current+1)%cases.length;render();$("scenario-title").scrollIntoView({behavior:"smooth",block:"start"});});render();
+</script></body></html>
