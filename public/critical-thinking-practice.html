@@ -3,12 +3,12 @@
 <title>Practice Critical Thinking with AI | AI Boss Mobility Consulting</title>
 <meta name="description" content="Interactive real-world examples of how Brian Keith Hill questions, checks and verifies AI responses.">
 <link rel="stylesheet" href="/styles.css"><style>
-.practice-hero{background:#101010;color:white;padding:65px 0 55px;border-top:7px solid #ffd400}
+.practice-hero{background:radial-gradient(circle at 88% 20%,#195532 0%,transparent 38%),linear-gradient(115deg,#080808 0%,#202020 78%);color:white;padding:65px 0 55px;border-top:9px solid #ffd400;border-bottom:6px solid #d92525}
 .practice-hero h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;max-width:950px}
 .practice-hero p{max-width:780px;font-size:1.1rem}
 .practice{padding:45px 0 75px;background:#fffaf0}
-.practice-panel{background:#fff;border:2px solid #e7e0cf;border-top:7px solid #1f9d55;border-radius:16px;padding:clamp(18px,4vw,36px);max-width:880px}
-.practice .eyebrow{color:#146b38}
+.practice-panel{box-shadow:0 18px 48px rgba(0,0,0,.08);background:#fff;border:2px solid #e7e0cf;border-top:7px solid #1f9d55;border-radius:16px;padding:clamp(18px,4vw,36px);max-width:880px}
+.practice .eyebrow{color:#146b38}.brand-bar{height:12px;background:linear-gradient(90deg,#ffd400 0 25%,#d92525 25% 50%,#1f9d55 50% 75%,#101010 75%);border-radius:5px;margin:18px 0 26px}.next-actions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:24px 0}.next-card{border:2px solid #222;background:#fff;color:#111;padding:22px;border-radius:15px}.next-card:nth-child(2){border-top:8px solid #d92525}.next-card:nth-child(1){border-top:8px solid #1f9d55}.next-card:nth-child(3){border-top:8px solid #ffd400}.next-card h3{margin-top:0}.next-card a{display:inline-block;background:#111;color:#ffd400;padding:12px 16px;border-radius:7px;text-decoration:none;font-weight:800}.next-card a:focus-visible{outline:3px solid #1f9d55}.next-card p{min-height:70px}
 .case-quote{background:#f3f4f6;border-left:5px solid #d92525;padding:16px;margin:18px 0;font-weight:700}
 .choice{display:block;width:100%;text-align:left;border:2px solid #d6d6d6;background:white;color:#111;padding:14px 18px;margin:10px 0;border-radius:10px;cursor:pointer;font-size:1rem}
 .choice:hover,.choice:focus-visible{border-color:#1f9d55;outline:3px solid #ffe678}
@@ -21,7 +21,7 @@
 .practice small{color:#444}
 </style></head><body>
 <main><header class="practice-hero"><div class="container"><p class="eyebrow">AI Boss Mobility Consulting · Interactive learning</p>
-<h1>Let's Practice Critical Thinking</h1>
+<h1>Let's Practice Critical Thinking</h1><div class="brand-bar" aria-hidden="true"></div>
 <p>AI can be helpful, convincing—and wrong. These examples come from Brian Keith Hill's real work with AI. Your job isn't to disagree automatically. Your job is to ask the right questions and verify the result.</p>
 <a href="/" style="color:#ffd400;font-weight:800">← Back to AI Boss Mobility</a></div></header>
 <section class="practice"><div class="container"><div class="practice-panel">
@@ -33,7 +33,17 @@
 <button id="next" class="next" hidden type="button">Next example →</button>
 </div><div class="takeaway"><h2>Your four critical-thinking questions</h2>
 <ol><li><strong>Why?</strong> Why did AI make that choice?</li><li><strong>How?</strong> What facts or evidence support the answer?</li><li><strong>Does it match?</strong> Is this the result I actually asked for?</li><li><strong>Prove it.</strong> Can I see and test what is complete?</li></ol>
-<p>Keep critically thinking for yourself when using AI. You remain responsible for your decisions.</p></div></div></section></main>
+<p>Keep critically thinking for yourself when using AI. You remain responsible for your decisions.</p></div>
+<section aria-labelledby="next-step-heading" style="padding:38px 0 0">
+<p class="eyebrow">From a better question to a real opportunity</p><h2 id="next-step-heading">Could your hobby, passion, or business idea become a source of income?</h2>
+<p>Brian Keith Hill has used coaching, writing, music, and his interest in AI to explore ways to serve others and earn revenue. That did not happen simply by accepting an AI answer. It required decisions, revisions, and checking what really worked.</p>
+<p><strong>Try the same approach:</strong> What problem does your idea solve? Who would want it? What would it cost? What proof would show it works? What risks or assumptions should you challenge?</p>
+<div class="next-actions-grid">
+<article class="next-card"><h3>Explore a business idea</h3><p>Bring your hobby or passion project and think through the first steps, customers, and evidence you need.</p><a href="/ask-brian">Think it through with Brian's AI Twin →</a></article>
+<article class="next-card"><h3>Meet the person behind the lessons</h3><p>Learn how Brian connects human experience, leadership, and AI while maintaining your own judgment.</p><a href="/meet-brian">Meet Brian →</a></article>
+<article class="next-card"><h3>Explore an outside opportunity</h3><p>Review a clearly disclosed referral opportunity and decide for yourself whether it fits your goals.</p><a href="/#ai-opportunities">See opportunities and referral disclosure →</a></article>
+</div><p><small>These are learning paths, not earnings guarantees. Outside opportunities may use referral links; check the disclosure and provider terms before deciding. Custom consulting requires a reviewed written estimate and signed agreement before any invoice or deposit.</small></p>
+</section></div></section></main>
 <script>
 const cases=[
 {title:"The wrong browser",context:"Brian asked AI to work inside his established Google Chrome 3 testing browser. The assistant kept checking regular Google Chrome instead.",claim:"AI: “I can't find your GoHighLevel tab.”",choices:["Open more random tabs until something works.","Ask which browser was checked, why it ignored the established preference, and verify the correct session.","Assume the GoHighLevel account has disappeared."],best:1,why:"The right challenge is specific: name the expected browser, inspect the actual tool results, and require the assistant to verify it is looking in Chrome 3. A confident explanation does not replace the check."},
