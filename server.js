@@ -131,7 +131,7 @@ async function voiceToken(req,res){
   const ip=String(req.headers["x-forwarded-for"]||req.socket.remoteAddress||"").split(",")[0].trim();
   const used=voiceDaily.get(ip)||0;
   // One replica. Deliberately conservative; AI Studio's own free-tier quota is an additional ceiling.
-  if(used>=2 || voiceCount>=12)return json(res,429,{ok:false,error:"Today's free voice pilot sessions are used. Please try again another day or book a conversation."});
+  if(used>=2 || voiceCount>=12)return json(res,429,{ok:false,error:"Today's free voice pilot sessions are used. Please try again another day or explore our services online."});
   const tokenRequest={
     uses:1,
     expireTime:new Date(Date.now()+4*60*1000).toISOString(),
