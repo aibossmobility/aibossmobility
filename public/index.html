@@ -300,7 +300,7 @@ button.disabled=true; status.textContent='Submitting your request…';
 try {
 const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details})});
 const data=await response.json();
-if(!response.ok||!data.ok||!(data.routed>0)) throw new Error('Delivery not confirmed');
+if(!response.ok||data.ok!==true||data.crm_received!==true) throw new Error('CRM delivery not confirmed');
 status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
 form.reset();
 } catch(error) {
