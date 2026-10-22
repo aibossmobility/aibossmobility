@@ -243,3 +243,15 @@ body{font-size:17px}
 .decision-actions{display:flex;gap:14px;flex-wrap:wrap}
 
 @media(max-width:800px){.decision-pillars,.decision-steps{grid-template-columns:1fr}.decision-steps li{flex-wrap:wrap}.decision-steps li strong{min-width:0}}
+
+/* Service suitability, deliverables, and decision caveats */
+.consult-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0 20px}
+.consult-choice{background:#fff;border:1px solid #d4d4d4;border-top:5px solid var(--green);border-radius:12px;padding:22px}
+.consult-choice:nth-child(2){border-top-color:var(--yellow)}
+.consult-choice:nth-child(3){border-top-color:var(--red)}
+.consult-choice:nth-child(4){border-top-color:#232323}
+.consult-choice h3{margin-top:0}
+.consult-choice p{line-height:1.55;color:#374151}
+.consult-choice strong{color:#111}
+.consult-compare-note{padding:16px;background:#f4f7ee;border-left:5px solid var(--green)}
+@media(max-width:800px){.consult-compare{grid-template-columns:1fr}}
