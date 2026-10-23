@@ -26,16 +26,24 @@
 <main>
 <section class="hero hero-interactive" id="start">
   <div class="container hero-center">
+    <div class="watch-first" aria-label="Watch the welcome video and learn what to do next">
+      <div class="watch-first-media">
+        <video controls playsinline preload="metadata" poster="/images/brian-keith-hill-heygen-original.webp" aria-label="Watch Brian's 55-second introduction">
+          <source src="/videos/ai-boss-mobility-welcome.mp4" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+        <button type="button" class="watch-first-play" aria-label="Play Brian's 55-second welcome video">▶</button>
+      </div>
+      <div class="watch-first-directions">
+        <p class="watch-first-kicker">WATCH FIRST · 55-SECOND VIDEO</p>
+        <h2>Start here. It's simple.</h2>
+        <p><strong>Tap Play.</strong> Then choose the <strong>red, yellow, or green</strong> option below. Take the next step at your own pace.</p>
+        <a href="/ask-brian" class="watch-first-twin">Have a question? Ask Brian's AI Twin <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
     <div class="eyebrow">You don't have to figure this out alone.</div>
     <h1>Who do you trust to help you understand this?</h1>
     <p class="hero-copy">Brian is willing to help you choose the right tool, make sense of the technical language, explain what matters, and break it down into a next step you can actually use.</p>
-    <div class="welcome-video" aria-label="AI Boss Mobility welcome video from Brian Hill">
-      <video controls playsinline preload="metadata" poster="/images/brian-keith-hill-heygen-original.webp">
-        <source src="/videos/ai-boss-mobility-welcome.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-      </video>
-      <div class="welcome-video-caption"><strong>Start here with Brian.</strong><span>Technology gives us options. Faith helps us stay open, keep learning, discern wisely, and move forward.</span></div>
-    </div>
     <p class="journey-invitation"><strong>Are we ready?</strong> Okay. Let's step into our journey together.</p>
     <p class="path-prompt">Where are you right now?</p>
     <div class="traffic-picker" role="group" aria-label="Choose where you are right now">
@@ -114,7 +122,7 @@
    <h3 id="guide-answer-title"></h3>
    <p id="guide-answer-copy"></p>
    <p id="guide-answer-question"></p>
-   <div class="guide-actions"><a class="btn btn-primary" href="#homepage-voice-entry" id="guide-voice">Talk this through with Brian’s AI Twin</a><button class="btn guide-request" type="button" id="guide-request">Let’s prepare my estimate</button><a class="btn guide-book" href="/#estimate">Explore Paid Services</a></div>
+   <div class="guide-actions"><a class="btn btn-primary" href="/ask-brian" id="guide-voice">Talk this through with Brian’s AI Twin</a><button class="btn guide-request" type="button" id="guide-request">Let’s prepare my estimate</button><a class="btn guide-book" href="/#estimate">Explore Paid Services</a></div>
    <p class="guide-note"><strong>Before you pay anything:</strong> We help you understand your goal, what is included, and the choices available. When you feel ready, we prepare a written estimate request with your selected service and explanation. Brian reviews custom scope, deliverables, price, and payment schedule before an estimate is emailed. You can review the estimate and agreement before any invoice or deposit.</p>
   </div>
  </div>
@@ -160,7 +168,7 @@
       <h2>Ask the question in your own words.</h2>
       <p class="lead">Start with Brian’s newly created Digital Twin, an AI conversation guide for understanding AI and thinking through your next steps. It is not Brian speaking live. Brian personally reviews requests for paid work.</p>
       <div class="buttons">
-        <a class="btn btn-primary" href="#homepage-voice-entry">Talk with Brian’s AI Twin</a><a class="btn btn-secondary" href="#estimate">Request a Written Estimate</a>
+        <a class="btn btn-primary" href="/ask-brian">Talk with Brian’s AI Twin</a><a class="btn btn-secondary" href="#estimate">Request a Written Estimate</a>
         <a class="btn btn-secondary" href="/#estimate">Explore Paid Services</a>
       </div>
     </div>
@@ -305,15 +313,20 @@
 </section>
 </main>
 
-<!-- Original conversational voice entry, restored independently of the October 8 welcome video. -->
-<aside aria-label="Talk with Brian's AI Digital Twin" class="homepage-voice-entry" id="homepage-voice-entry" tabindex="-1">
-  <p class="homepage-voice-label">Talk with Brian's AI Twin</p>
-  <p class="homepage-voice-note">Hi, I’m Brian’s AI Digital Twin, and I’m here to help in any way I can. You don’t need to know anything about AI to get started. Brian helps people make technology easier, strengthen their businesses, and turn ideas into practical next steps.</p>
-  <p class="homepage-voice-hint">Tap the voice circle, then try one of these conversation starters. I’m AI, not Brian live, and your microphone starts only with your permission.</p>
-  <details class="homepage-voice-starters"><summary>Not sure what to say? Start here</summary><ul><li>“I’m curious about AI, but I don’t know where to begin.”</li><li>“Can AI help with something in my business?”</li><li>“I have an idea and need help making it happen.”</li><li>“What does Brian help people with?”</li></ul><p>Or just say hello. We can figure out the next step together.</p></details>
-  <elevenlabs-convai id="homepage-brian-voice" agent-id="agent_6501m4a9dfa1e7rscam6qqavabgd" action-text="Talk with Brian's AI Twin" start-call-text="Start conversation" avatar-orb-color-1="#ffd900" avatar-orb-color-2="#148547" markdown-link-allowed-hosts="ai.bossmobilelifecoach.com,papalifecoach.com" dismissible="true"></elevenlabs-convai>
-</aside>
-<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script>
+(function(){
+  const video=document.querySelector('.watch-first-media video');
+  const playButton=document.querySelector('.watch-first-play');
+  if(!video||!playButton)return;
+  playButton.addEventListener('click',function(){
+    playButton.hidden=true;
+    const started=video.play();
+    if(started&&typeof started.catch==='function')started.catch(function(){playButton.hidden=false;});
+  });
+  video.addEventListener('play',function(){playButton.hidden=true;});
+  video.addEventListener('ended',function(){playButton.hidden=false;});
+})();
+</script>
 <script>
 const guideInfo={
  clarity:{title:'Let’s make the next step clearer.',copy:'Brian can listen to what you’re trying to accomplish, explain your options in plain language, and help you decide what matters first.',question:'Here’s a way to start: “I have a situation I’d like clarity on. Can you help me sort out my choices?”'},
@@ -343,7 +356,7 @@ document.getElementById('guide-request').addEventListener('click',()=>{
  const modal=document.getElementById('interest-modal');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
 });
 </script>
-<script>document.querySelectorAll('a[href="#homepage-voice-entry"]').forEach(function(link){link.addEventListener('click',function(event){event.preventDefault();const panel=document.getElementById('homepage-voice-entry');panel.focus({preventScroll:true});panel.classList.add('voice-attention');setTimeout(()=>panel.classList.remove('voice-attention'),1800);});});</script>
+
 
 <div class="modal" id="interest-modal" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="interest-title">

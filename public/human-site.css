@@ -134,3 +134,34 @@ body:not(.human-home) .footer{background:var(--human-paper);color:var(--human-in
 /* Simplify the older page banners: preserve portrait file without an oversized repeated photograph. */
 body:not(.human-home) .site-hero::before,body:not(.human-home) .site-hero::after{content:none!important;display:none!important}
 @media(max-width:600px){body:not(.human-home) .site-hero{min-height:0!important;padding:48px 0!important}}
+
+/* Explore page: one simple, horizontal click-to-play orientation above the question. */
+#start.hero-interactive .watch-first{width:min(100%,980px);margin:0 auto clamp(26px,4vw,42px);display:grid;grid-template-columns:minmax(215px,.86fr) minmax(0,1.45fr);align-items:center;gap:clamp(14px,2.5vw,30px);text-align:left;padding:clamp(12px,2.1vw,22px);background:#f9f0e2;color:#312218;border:1px solid #bca17d;border-radius:18px;box-shadow:0 8px 20px rgba(66,42,22,.11);}
+#start .watch-first-media{min-width:0}
+#start .watch-first-media video{display:block;width:100%;aspect-ratio:16/9;background:#171717;border-radius:11px;object-fit:cover;cursor:pointer}
+#start .watch-first-directions{min-width:0}
+#start .watch-first-kicker{color:#9c1d24;font-size:clamp(.76rem,1.1vw,.90rem);font-weight:900;letter-spacing:.055em;margin:0 0 5px!important}
+#start .watch-first-directions h2{font-size:clamp(1.16rem,2vw,1.78rem)!important;line-height:1.16;letter-spacing:-.02em;margin:0 0 8px;color:#312218}
+#start .watch-first-directions p:not(.watch-first-kicker){font-size:clamp(.91rem,1.4vw,1.06rem);margin:0 0 9px;line-height:1.35;color:#38291e}
+#start .watch-first-twin{color:#116041;font-weight:800;font-size:clamp(.88rem,1.3vw,1.03rem);text-underline-offset:4px;line-height:1.35}
+#start .watch-first-twin:hover{text-decoration:underline}
+#start.hero-interactive{padding-top:clamp(30px,4vw,58px)}
+@media(max-width:620px){
+ #start.hero-interactive .watch-first{grid-template-columns:minmax(120px,.85fr) minmax(0,1.35fr);gap:12px;padding:11px;border-radius:13px}
+ #start .watch-first-media video{border-radius:8px}
+ #start .watch-first-kicker{font-size:.68rem;line-height:1.25}
+ #start .watch-first-directions h2{font-size:1.07rem!important;line-height:1.1;margin:2px 0 4px}
+ #start .watch-first-directions p:not(.watch-first-kicker){font-size:.81rem;line-height:1.25;margin:0 0 5px}
+ #start .watch-first-twin{font-size:.78rem}
+}
+@media(max-width:360px){
+ #start.hero-interactive .watch-first{grid-template-columns:1fr;gap:10px}
+ #start .watch-first-media video{max-height:160px}
+}
+
+#start .watch-first-media{position:relative}
+#start .watch-first-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#ae2229;color:#fff;font-size:29px;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.4);padding-left:4px}
+#start .watch-first-play:hover{background:#821c20}
+#start .watch-first-play[hidden]{display:none}
+#start .watch-first-play:focus-visible{outline:3px solid #ffcc3a;outline-offset:4px}
+@media(max-width:620px){#start .watch-first-play{width:48px;height:48px;font-size:23px}}

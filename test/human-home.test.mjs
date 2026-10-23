@@ -24,7 +24,10 @@ test('old content, estimates and AI Twin survive as accessible destinations',()=
  assert.match(explore,/id="start-learning"/);
  assert.match(explore,/id="solutions"/);
  assert.match(explore,/id="trellis"/);
- assert.match(explore,/id="homepage-voice-entry"/);
+ assert.doesNotMatch(explore,/class="homepage-voice-entry"/);
+ assert.match(explore,/class="watch-first"/);
+ assert.ok(explore.indexOf('class="watch-first"') < explore.indexOf("Who do you trust"));
+ assert.match(explore,/href="\/ask-brian"/);
  assert.match(home,/\/ask-brian/);
  assert.match(home,/location\.replace\("\/explore"\+location\.hash\)/);
 });
