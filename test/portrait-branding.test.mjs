@@ -31,8 +31,8 @@ test("Every shared page banner references the exact approved portrait", () => {
   }
 });
 
-test("Homepage welcome video poster uses original HeyGen image and video stays intact", () => {
-  const html = readFileSync(join(root, "index.html"), "utf8");
+test("Existing welcome video poster uses original HeyGen image and video stays intact in Explore", () => {
+  const html = readFileSync(join(root, "explore.html"), "utf8");
   assert.ok(html.includes(`poster="${asset}"`));
   assert.ok(html.includes('src="/videos/ai-boss-mobility-welcome.mp4"'));
 });

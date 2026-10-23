@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../public/explore.html', import.meta.url), 'utf8');
 const trellis = html.match(/<section class="compact-section" id="trellis"[\s\S]*?<\/section>/)?.[0];
 test('Trellis uses both specifically approved manual referral destinations', () => {
   assert.ok(trellis);

@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 
-const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../public/explore.html', import.meta.url), 'utf8');
 const script = html.match(/<script>\s*(document\.getElementById\('estimate-form'\)[\s\S]*?)<\/script>/)?.[1];
 assert.ok(script, 'The estimate submission script must exist');
 
