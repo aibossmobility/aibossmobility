@@ -6,11 +6,13 @@ const port=process.env.PORT||3000;
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
 
 function resolveFile(url){
-  const clean=decodeURIComponent((url||"/").split("?")[0]);
+  let clean;
+  try{clean=decodeURIComponent((url||"/").split("?")[0]);}
+  catch{return null;}
   const route=clean==="/"?"/index.html":clean;
   const target=path.extname(route)?route:route+".html";
   const file=path.normalize(path.join(root,target));
-  return file.startsWith(root)?file:null;
+  return file.startsWith(root+path.sep)?file:null;
 }
 function json(res,status,payload){res.writeHead(status,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"});res.end(JSON.stringify(payload));}
 function readBody(req){return new Promise((resolve,reject)=>{let raw="";req.on("data",chunk=>{raw+=chunk;if(raw.length>25000){reject(new Error("payload too large"));req.destroy();}});req.on("end",()=>resolve(raw));req.on("error",reject);});}
