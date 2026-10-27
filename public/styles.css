@@ -255,3 +255,43 @@ body{font-size:17px}
 .consult-choice strong{color:#111}
 .consult-compare-note{padding:16px;background:#f4f7ee;border-left:5px solid var(--green)}
 @media(max-width:800px){.consult-compare{grid-template-columns:1fr}}
+
+/* AI Boss Mobility Consulting Brand System v1.0 — approved 2026-10-27. Separate from Papa Life. */
+:root{
+  --abm-navy:#14263D;--abm-teal:#087E83;--abm-gold:#D5A547;--abm-ivory:#F8F5ED;--abm-coral:#D66F5C;
+  --abm-slate:#64748B;--abm-blue:#3B82F6;--abm-sage:#84A98C;--abm-lightgray:#E5E7EB;--abm-charcoal:#1F2937;
+  --black:#14263D;--black2:#1F2937;--yellow:#D5A547;--red:#D66F5C;--green:#087E83;
+  --cream:#F8F5ED;--gray:#64748B;--line:#E5E7EB;
+}
+body{font-family:"Open Sans",Inter,ui-sans-serif,system-ui,sans-serif;color:var(--abm-navy);background:var(--abm-ivory)}
+h1,h2,h3,h4,.brand,.btn{font-family:Montserrat,"Open Sans",ui-sans-serif,system-ui,sans-serif}
+.site-header{background:rgba(20,38,61,.98);border-bottom-color:var(--abm-gold)}
+.site-header:before{background:linear-gradient(90deg,var(--abm-teal),var(--abm-gold) 62%,var(--abm-coral))}
+.site-header .brand{border-color:rgba(248,245,237,.75)}
+.site-header .nav a:hover,.nav a:hover,.brand span,.eyebrow,.site-hero-kicker{color:#E6B95E}
+.hero{background:radial-gradient(circle at 84% 14%,rgba(8,126,131,.22),transparent 28%),linear-gradient(135deg,#14263D,#1F2937)}
+.hero:before{background-image:linear-gradient(rgba(213,165,71,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(213,165,71,.14) 1px,transparent 1px)}
+.site-hero{background-color:#14263D;background-image:linear-gradient(90deg,rgba(20,38,61,.94) 0%,rgba(20,38,61,.76) 43%,rgba(20,38,61,.12) 82%),url('/images/ai-boss-african-header.webp')}
+.site-hero:after{background:var(--abm-ivory)}
+.hero-card,.next-move,.twin-conversation-stage,.operator-box{background:#1F2937;border-color:rgba(132,169,140,.25)}
+.twin-conversation-stage{background:#14263D}
+.section-dark,.heritage-strip,.footer,.cta{background:#14263D}
+.section-cream,.experience-lab,.traffic-section{background:#F8F5ED}
+.card,.need-card,.lab-content,.accordion-grid details{background:#fff;border-color:#E5E7EB}
+.btn-primary,.cta .btn{background:#D5A547!important;color:#14263D!important}
+.btn-primary:hover,.cta .btn:hover{background:#E6B95E!important}
+.btn-secondary,.btn-secondary-dark{border-color:#F8F5ED;color:#F8F5ED}
+.btn:focus-visible,.nav a:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #D5A547;outline-offset:3px}
+.signal,.tech-kicker,.site-header:before{box-shadow:none}
+.signal{background:linear-gradient(90deg,#087E83 0 42%,#D5A547 42% 78%,#D66F5C 78%)}
+.card:before,.case,.section-cream .case{border-color:#087E83}
+.card:before{background:#087E83}.grid .card:nth-child(3n+2):before{background:#D5A547}.grid .card:nth-child(3n):before{background:#D66F5C}
+.cta{border-top-color:#D5A547}.cta:before{background:#087E83}.cta:after{background:#D66F5C}
+.footer{border-top-color:#087E83}
+.traffic-note{background:#F8F5ED;border-left-color:#D5A547}
+.lab-step{color:#087E83}.lab-choice:hover,.lab-choice.chosen{border-color:#087E83;background:#EAF5F3}
+.traffic-red{border-top-color:#D66F5C}.traffic-yellow{border-top-color:#D5A547}.traffic-green{border-top-color:#087E83}
+.traffic-red .traffic-signal{background:#D66F5C}.traffic-yellow .traffic-signal{background:#D5A547}.traffic-green .traffic-signal{background:#087E83}
+.traffic-red a{color:#F4A899}.traffic-green a{color:#8DE0D8}
+@media(max-width:800px){.site-hero{background-image:linear-gradient(90deg,rgba(20,38,61,.94),rgba(20,38,61,.58)),url('/images/ai-boss-african-header.webp')}}
+@media(max-width:600px){.site-hero{background-color:#14263D;background-image:linear-gradient(180deg,#14263D 0%,#14263D 47%,rgba(20,38,61,.32) 74%,rgba(20,38,61,.12) 100%),url('/images/ai-boss-african-header.webp')}}
