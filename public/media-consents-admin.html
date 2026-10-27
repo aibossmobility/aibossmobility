@@ -41,4 +41,5 @@ async function load(){
 document.getElementById("load").onclick=load;document.getElementById("refresh").onclick=load;
 const saved=localStorage.getItem("mediaConsentAdminToken");if(saved){document.getElementById("token").value=saved;load()}
 document.getElementById("csv").onclick=()=>{const keys=["submitted_at","full_name","email","project_or_purpose","allow_photo","allow_video","allow_voice","allow_name_likeness","allow_testimonial","allow_website_social","allow_education_training","allow_marketing","allow_ai_assisted_editing","consent_all","typed_signature","consent_version"];const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';const csv=[keys.join(","),...current.map(r=>keys.map(k=>q(r[k])).join(","))].join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="media-ai-consents.csv";a.click();URL.revokeObjectURL(a.href)}
-</script></body></html>
+</script><script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
+</body></html>

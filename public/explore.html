@@ -430,5 +430,6 @@ document.getElementById('interest-form').addEventListener('submit',async e=>{
  try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
 });
 </script>
+<script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
 </body>
 </html>
