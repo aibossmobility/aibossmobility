@@ -31,3 +31,28 @@
 @media(max-width:850px){.garden-room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.garden-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.garden-room-grid,.garden-steps{grid-template-columns:1fr}.garden-rooms{padding:37px 16px}.garden-journey{margin:24px 14px}.garden-room-art{min-height:95px}.garden-room-body{padding:20px}}
 @media(prefers-reduced-motion:reduce){.garden-room,.garden-path a{transition:none}.garden-room:hover,.garden-path a:hover{transform:none}}
+
+/* The four human values are expressed as welcoming words around the Garden, not a crowded sales banner. */
+.garden-values{max-width:1160px;margin:38px auto 54px;padding:clamp(22px,3.2vw,38px);border:1px solid #eadcc3;border-radius:25px;background:linear-gradient(140deg,#fff8e9,#f6efe0 62%,#eaf4e8);box-shadow:0 10px 32px #584a3011;color:#14263d}
+.garden-values .garden-kicker{text-align:center;margin-bottom:8px}
+.garden-values h2{font-size:clamp(25px,3vw,37px);line-height:1.18;letter-spacing:-.035em;text-align:center;color:#14263d;margin:0 0 10px}
+.garden-values-intro{font-size:16px;color:#56636b;text-align:center;max-width:675px;line-height:1.65;margin:0 auto 26px}
+.garden-compass{max-width:900px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr);grid-template-areas:". better ." "fun center great" ". impact .";gap:12px;align-items:stretch}
+.garden-value{min-width:0;border:1px solid #e7ddcb;border-radius:15px;background:#fffefb;padding:16px 17px;box-shadow:0 5px 14px #3f42210b}
+.garden-value strong{display:block;font-size:15px;font-weight:850;letter-spacing:.065em;line-height:1.3;margin-bottom:6px}
+.garden-value span{display:block;color:#485863;font-size:13px;line-height:1.5}
+.garden-value.better{grid-area:better;border-top:4px solid #e5b821}.garden-value.fun{grid-area:fun;border-top:4px solid #248548}.garden-value.great{grid-area:great;border-top:4px solid #151515}.garden-value.impact{grid-area:impact;border-top:4px solid #c83b36}
+.garden-value-center{grid-area:center;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#fff8e9;border-radius:19px;border:1px solid #e2ccaa;padding:18px;min-height:160px}
+.garden-value-center span{display:block;font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:#a25b40;margin-bottom:8px}
+.garden-value-center strong{display:block;color:#14263d;font-size:clamp(19px,2.2vw,25px);line-height:1.24}
+.garden-value-center p{font-size:13px;color:#687077;max-width:240px;line-height:1.5;margin:10px 0 0}
+.garden-value-sign{display:grid;grid-template-columns:auto 1fr;gap:13px;align-items:start;border:1px solid #e4d8c5;background:#fffaf0;border-radius:16px;padding:18px 20px;margin:24px auto;max-width:1000px;color:#14263d}
+.garden-value-sign .garden-value-tag{font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.1em;border-radius:8px;padding:8px 11px;color:#fff;background:#087e83}
+.garden-value-sign p{font-size:15px;line-height:1.6;margin:0;color:#465762}
+.garden-value-sign strong{color:#14263d}
+.garden-value-sign.better .garden-value-tag{background:#d5a547;color:#14263d}.garden-value-sign.fun .garden-value-tag{background:#197e43}.garden-value-sign.great .garden-value-tag{background:#14263d}.garden-value-sign.impact .garden-value-tag{background:#ba3e38}
+.garden-value-stripe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:20px auto 0}
+.garden-value-stripe span{border-radius:7px;padding:6px 11px;font-size:12px;font-weight:850;letter-spacing:.045em;color:#fff;background:#14263d}
+.garden-value-stripe span:nth-child(1){color:#132238;background:#e5bd38}.garden-value-stripe span:nth-child(2){background:#187c43}.garden-value-stripe span:nth-child(3){background:#14263d}.garden-value-stripe span:nth-child(4){background:#bc3935}
+@media(max-width:700px){.garden-compass{grid-template-columns:1fr 1fr;grid-template-areas:"center center" "better fun" "great impact"}.garden-value-center{min-height:130px}.garden-values{margin:24px 14px;padding:23px 18px}}
+@media(max-width:480px){.garden-compass{grid-template-columns:1fr;grid-template-areas:"center" "better" "fun" "great" "impact"}.garden-value-sign{grid-template-columns:1fr;gap:10px}.garden-value-center{min-height:0}}
