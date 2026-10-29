@@ -245,6 +245,8 @@
 <option value="">Please select</option>
 <option>AI Clarity Session — confirm price in GoHighLevel</option><option>AI Quick Start — confirm price in GoHighLevel</option>
 <option>Custom consulting — $750</option><option>Custom consulting — $1,250</option><option>Custom consulting — $2,000</option><option>Custom consulting — $2,500</option><option>Custom consulting — $3,500</option><option>AI Feasibility &amp; Readiness — proposed $350</option><option>AI Strategy &amp; Planning — proposed $750</option><option>AI Workflow Automation — proposed $1,250</option><option>AI Cost-Benefit &amp; ROI — proposed $450</option><option>AI Leadership Education — proposed $500</option><option>Not sure — help me choose</option></select></label>
+<div id="estimate-scope" style="border:1px solid #b9c9c8;border-radius:12px;padding:18px;background:#f8f5ed" aria-live="polite">
+<h3 style="margin-top:0">Your service checklist</h3><p id="scope-intro">Choose a service above to see the included steps, expected schedule, and what you can request.</p><div id="scope-checks"></div><p id="scope-pricing"></p><p class="boundary">Check the deliverables you want included. Unchecked steps are requests to remove or adjust scope, not an automatic discount. We will confirm the final written scope, timeline and price before signing. A 50% deposit is due after signature; the balance is due upon completion before final delivery.</p></div>
 <label>Tell me what you want to accomplish <textarea name="details" required maxlength="2400" rows="5" style="display:block;width:100%;padding:12px"></textarea></label>
 <p class="boundary" style="background:#fff6d6;padding:14px;border:2px solid #145b35;border-radius:10px"><strong>Before requesting paid work:</strong> Review our <a href="/refund-policy" style="font-weight:800;text-decoration:underline">Refund &amp; Cancellation Policy</a>, including the 50% deposit, service cancellation, and final-payment rules. No charge is made by submitting this form.</p>
 <button class="btn btn-primary" type="submit">Request My Written Estimate</button>
@@ -378,6 +380,237 @@ document.getElementById('guide-request').addEventListener('click',()=>{
 <footer class="footer"><div class="container footer-grid"><div><strong>AI Boss Mobility</strong><br>Interactive AI & Business Operations</div><div>Brian Keith Hill · San Leandro, California<br>© 2026 AI Boss Mobility<br><a href="/site-directory">Site Directory</a> · <a href="/responsible-ai">Responsible AI</a> · <a href="/privacy">Privacy</a> · <a href="/refund-policy">Refunds &amp; Cancellations</a> · <a href="/consent">Media & AI Permission</a></div></div></footer>
 
 <script>
+<script>
+(function(){
+const offers={
+'AI Feasibility & Readiness — proposed $350':{price:350,time:'5–7 business days after kickoff and receipt of needed information',steps:['Kickoff conversation to define your business goal','Inventory your current tools, data and workflow','Identify 2–3 realistic AI opportunities and risks','Provide a written readiness summary and prioritized next steps','Review findings with you in a handoff conversation']},
+'AI Strategy & Planning — proposed $750':{price:750,time:'7–10 business days after kickoff and receipt of needed information',steps:['Define the business problem and success criteria','Review current processes and available AI tools','Compare practical options, costs and risks','Deliver a phased implementation roadmap with priorities','Walk through the roadmap and recommended first action']},
+'AI Workflow Automation — proposed $1,250':{price:1250,time:'2–3 weeks after kickoff, access approval and scope sign-off',steps:['Map one agreed workflow and identify repetitive tasks','Confirm the automation design, tools and permissions','Configure one scoped workflow or prototype','Test with sample cases and document exceptions','Provide a handoff guide and walkthrough']},
+'AI Cost-Benefit & ROI — proposed $450':{price:450,time:'5–7 business days after receiving baseline cost and process information',steps:['Define the proposed AI use case and comparison baseline','Collect supplied time, labor and subscription assumptions','Estimate one-time and recurring costs','Prepare a scenario-based benefits and ROI worksheet','Review assumptions, limitations and recommendation']},
+'AI Leadership Education — proposed $500':{price:500,time:'One 2-hour online workshop, scheduled by agreement; materials provided afterward',steps:['Discuss team goals and experience before the workshop','Tailor the workshop agenda for up to 10 participants','Deliver a live two-hour responsible AI learning session','Provide exercises, five reusable prompts and a checklist','Offer a follow-up consultation and action summary']}
+};
+const form=document.getElementById('estimate-form'),select=form.elements.service,checks=document.getElementById('scope-checks'),intro=document.getElementById('scope-intro'),pricing=document.getElementById('scope-pricing');
+function render(){const offer=offers[select.value];checks.replaceChildren();if(!offer){intro.textContent='For existing offers and custom consulting tiers, we will list and agree on your exact deliverables and schedule in the written estimate. Describe what you want below.';pricing.textContent='Existing prices are preserved; exact inclusions and timing depend on your signed scope.';return;}
+intro.textContent='Select the work you want included. The items below are the proposed standard deliverables for this package.';
+offer.steps.forEach((step,i)=>{const label=document.createElement('label');label.style.cssText='display:block;padding:8px 0';const input=document.createElement('input');input.type='checkbox';input.name='requested_step';input.value=step;input.checked=true;label.append(input,document.createTextNode(' '+(i+1)+'. '+step));checks.append(label);});
+pricing.textContent='Proposed starting price: 
+event.preventDefault();
+const form=event.currentTarget, status=document.getElementById('estimate-status'), button=form.querySelector('button[type="submit"]');
+const f=Object.fromEntries(new FormData(form).entries());
+button.disabled=true; status.textContent='Submitting your request…';
+try {
+const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details+' | '+window.getEstimateScope()})});
+const data=await response.json();
+if(!response.ok||data.ok!==true||data.crm_received!==true) throw new Error('CRM delivery not confirmed');
+status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
+form.reset();
+} catch(error) {
+status.textContent='Online delivery could not be confirmed. Please email brian@bossmobility.net with your request instead.';
+} finally {button.disabled=false;}
+});
+</script>
+<script>
+const paths={
+ stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
+ decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
+ go:{title:'I am ready to move',copy:'Turn the goal into the next action, follow-up, booking or implementation step.',cta:'Start the next step'},
+ grow:{title:'Grow my business',copy:'Find the next helpful way to create conversations, traffic, appointments and revenue.',cta:'Build my growth path'},
+ followup:{title:'Follow up with leads',copy:'Organize warm leads, unanswered conversations and the next best follow-up without blasting people.',cta:'Plan my follow-up'},
+ tech:{title:'Fix my technology',copy:'Describe what is failing. Brian can help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
+ ai:{title:'Build an AI assistant',copy:'Start with the job you want AI to own, the decisions you want to keep and the tools it should connect to.',cta:'Design my AI operator'},
+ productivity:{title:'Improve productivity',copy:'Turn repeat work into a simpler routine and decide what should be automated, delegated or removed.',cta:'Simplify my workflow'},
+ talk:{title:"Talk with Brian",copy:'Describe your question so Brian can help you choose a thoughtful next step.',cta:'Start the conversation'}
+};
+let selected='stop';
+function selectPath(key){
+ selected=key; const p=paths[key]||paths.stop;
+ document.getElementById('path-title').textContent=p.title;
+ document.getElementById('path-copy').textContent=p.copy;
+ document.getElementById('path-cta').textContent=p.cta;
+ document.querySelectorAll('[data-path]').forEach(el=>el.classList.toggle('active',el.dataset.path===key));
+ document.getElementById('interest-path').value=key;
+ document.getElementById('interest-need').value=p.title+' — '+p.copy;
+}
+document.querySelectorAll('[data-path]').forEach(el=>el.addEventListener('click',()=>selectPath(el.dataset.path)));
+const modal=document.getElementById('interest-modal');
+document.getElementById('capture-interest').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');});
+document.getElementById('modal-close').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');});
+modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}});
+document.getElementById('interest-form').addEventListener('submit',async e=>{
+ e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
+ button.disabled=true; status.textContent='Saving…';
+ const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
+});
+</script>
+<script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
+</body>
+</html>
++offer.price.toLocaleString()+' | 50% deposit: 
+event.preventDefault();
+const form=event.currentTarget, status=document.getElementById('estimate-status'), button=form.querySelector('button[type="submit"]');
+const f=Object.fromEntries(new FormData(form).entries());
+button.disabled=true; status.textContent='Submitting your request…';
+try {
+const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details})});
+const data=await response.json();
+if(!response.ok||data.ok!==true||data.crm_received!==true) throw new Error('CRM delivery not confirmed');
+status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
+form.reset();
+} catch(error) {
+status.textContent='Online delivery could not be confirmed. Please email brian@bossmobility.net with your request instead.';
+} finally {button.disabled=false;}
+});
+</script>
+<script>
+const paths={
+ stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
+ decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
+ go:{title:'I am ready to move',copy:'Turn the goal into the next action, follow-up, booking or implementation step.',cta:'Start the next step'},
+ grow:{title:'Grow my business',copy:'Find the next helpful way to create conversations, traffic, appointments and revenue.',cta:'Build my growth path'},
+ followup:{title:'Follow up with leads',copy:'Organize warm leads, unanswered conversations and the next best follow-up without blasting people.',cta:'Plan my follow-up'},
+ tech:{title:'Fix my technology',copy:'Describe what is failing. Brian can help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
+ ai:{title:'Build an AI assistant',copy:'Start with the job you want AI to own, the decisions you want to keep and the tools it should connect to.',cta:'Design my AI operator'},
+ productivity:{title:'Improve productivity',copy:'Turn repeat work into a simpler routine and decide what should be automated, delegated or removed.',cta:'Simplify my workflow'},
+ talk:{title:"Talk with Brian",copy:'Describe your question so Brian can help you choose a thoughtful next step.',cta:'Start the conversation'}
+};
+let selected='stop';
+function selectPath(key){
+ selected=key; const p=paths[key]||paths.stop;
+ document.getElementById('path-title').textContent=p.title;
+ document.getElementById('path-copy').textContent=p.copy;
+ document.getElementById('path-cta').textContent=p.cta;
+ document.querySelectorAll('[data-path]').forEach(el=>el.classList.toggle('active',el.dataset.path===key));
+ document.getElementById('interest-path').value=key;
+ document.getElementById('interest-need').value=p.title+' — '+p.copy;
+}
+document.querySelectorAll('[data-path]').forEach(el=>el.addEventListener('click',()=>selectPath(el.dataset.path)));
+const modal=document.getElementById('interest-modal');
+document.getElementById('capture-interest').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');});
+document.getElementById('modal-close').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');});
+modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}});
+document.getElementById('interest-form').addEventListener('submit',async e=>{
+ e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
+ button.disabled=true; status.textContent='Saving…';
+ const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
+});
+</script>
+<script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
+</body>
+</html>
++(offer.price/2).toLocaleString()+' | 50% balance: 
+event.preventDefault();
+const form=event.currentTarget, status=document.getElementById('estimate-status'), button=form.querySelector('button[type="submit"]');
+const f=Object.fromEntries(new FormData(form).entries());
+button.disabled=true; status.textContent='Submitting your request…';
+try {
+const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details})});
+const data=await response.json();
+if(!response.ok||data.ok!==true||data.crm_received!==true) throw new Error('CRM delivery not confirmed');
+status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
+form.reset();
+} catch(error) {
+status.textContent='Online delivery could not be confirmed. Please email brian@bossmobility.net with your request instead.';
+} finally {button.disabled=false;}
+});
+</script>
+<script>
+const paths={
+ stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
+ decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
+ go:{title:'I am ready to move',copy:'Turn the goal into the next action, follow-up, booking or implementation step.',cta:'Start the next step'},
+ grow:{title:'Grow my business',copy:'Find the next helpful way to create conversations, traffic, appointments and revenue.',cta:'Build my growth path'},
+ followup:{title:'Follow up with leads',copy:'Organize warm leads, unanswered conversations and the next best follow-up without blasting people.',cta:'Plan my follow-up'},
+ tech:{title:'Fix my technology',copy:'Describe what is failing. Brian can help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
+ ai:{title:'Build an AI assistant',copy:'Start with the job you want AI to own, the decisions you want to keep and the tools it should connect to.',cta:'Design my AI operator'},
+ productivity:{title:'Improve productivity',copy:'Turn repeat work into a simpler routine and decide what should be automated, delegated or removed.',cta:'Simplify my workflow'},
+ talk:{title:"Talk with Brian",copy:'Describe your question so Brian can help you choose a thoughtful next step.',cta:'Start the conversation'}
+};
+let selected='stop';
+function selectPath(key){
+ selected=key; const p=paths[key]||paths.stop;
+ document.getElementById('path-title').textContent=p.title;
+ document.getElementById('path-copy').textContent=p.copy;
+ document.getElementById('path-cta').textContent=p.cta;
+ document.querySelectorAll('[data-path]').forEach(el=>el.classList.toggle('active',el.dataset.path===key));
+ document.getElementById('interest-path').value=key;
+ document.getElementById('interest-need').value=p.title+' — '+p.copy;
+}
+document.querySelectorAll('[data-path]').forEach(el=>el.addEventListener('click',()=>selectPath(el.dataset.path)));
+const modal=document.getElementById('interest-modal');
+document.getElementById('capture-interest').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');});
+document.getElementById('modal-close').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');});
+modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}});
+document.getElementById('interest-form').addEventListener('submit',async e=>{
+ e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
+ button.disabled=true; status.textContent='Saving…';
+ const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
+});
+</script>
+<script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
+</body>
+</html>
++(offer.price/2).toLocaleString()+'. Expected schedule: '+offer.time+'. Timing begins after agreement, deposit, and required inputs; changes require written approval.';
+}
+select.addEventListener('change',render);render();
+window.getEstimateScope=function(){const offer=offers[select.value];if(!offer)return 'Custom scope requested; deliverables and timing to be confirmed in written estimate.';const chosen=[...checks.querySelectorAll('input:checked')].map(el=>el.value),excluded=offer.steps.filter(step=>!chosen.includes(step));return 'Proposed price 
+event.preventDefault();
+const form=event.currentTarget, status=document.getElementById('estimate-status'), button=form.querySelector('button[type="submit"]');
+const f=Object.fromEntries(new FormData(form).entries());
+button.disabled=true; status.textContent='Submitting your request…';
+try {
+const response=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,email:f.email,organization:f.organization||'',path:'written_estimate_request',need:'Written estimate request: '+f.service+' — '+f.details})});
+const data=await response.json();
+if(!response.ok||data.ok!==true||data.crm_received!==true) throw new Error('CRM delivery not confirmed');
+status.textContent='Your estimate request has been received for review. Brian will confirm the service scope, deliverables, price and payment schedule before an estimate is sent. No payment is due.';
+form.reset();
+} catch(error) {
+status.textContent='Online delivery could not be confirmed. Please email brian@bossmobility.net with your request instead.';
+} finally {button.disabled=false;}
+});
+</script>
+<script>
+const paths={
+ stop:{title:'Something is stuck',copy:'Tell Brian what stopped working and what you expected to happen. Start with the blocker before buying another tool.',cta:'Ask Brian'},
+ decide:{title:'I need a decision',copy:'Get the choices simplified, the tradeoffs explained, and one next step you can actually take.',cta:'Work through the decision'},
+ go:{title:'I am ready to move',copy:'Turn the goal into the next action, follow-up, booking or implementation step.',cta:'Start the next step'},
+ grow:{title:'Grow my business',copy:'Find the next helpful way to create conversations, traffic, appointments and revenue.',cta:'Build my growth path'},
+ followup:{title:'Follow up with leads',copy:'Organize warm leads, unanswered conversations and the next best follow-up without blasting people.',cta:'Plan my follow-up'},
+ tech:{title:'Fix my technology',copy:'Describe what is failing. Brian can help narrow the issue and identify the safest next action.',cta:'Troubleshoot with me'},
+ ai:{title:'Build an AI assistant',copy:'Start with the job you want AI to own, the decisions you want to keep and the tools it should connect to.',cta:'Design my AI operator'},
+ productivity:{title:'Improve productivity',copy:'Turn repeat work into a simpler routine and decide what should be automated, delegated or removed.',cta:'Simplify my workflow'},
+ talk:{title:"Talk with Brian",copy:'Describe your question so Brian can help you choose a thoughtful next step.',cta:'Start the conversation'}
+};
+let selected='stop';
+function selectPath(key){
+ selected=key; const p=paths[key]||paths.stop;
+ document.getElementById('path-title').textContent=p.title;
+ document.getElementById('path-copy').textContent=p.copy;
+ document.getElementById('path-cta').textContent=p.cta;
+ document.querySelectorAll('[data-path]').forEach(el=>el.classList.toggle('active',el.dataset.path===key));
+ document.getElementById('interest-path').value=key;
+ document.getElementById('interest-need').value=p.title+' — '+p.copy;
+}
+document.querySelectorAll('[data-path]').forEach(el=>el.addEventListener('click',()=>selectPath(el.dataset.path)));
+const modal=document.getElementById('interest-modal');
+document.getElementById('capture-interest').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');});
+document.getElementById('modal-close').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');});
+modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}});
+document.getElementById('interest-form').addEventListener('submit',async e=>{
+ e.preventDefault(); const status=document.getElementById('form-status'); const button=e.currentTarget.querySelector('button[type=submit]');
+ button.disabled=true; status.textContent='Saving…';
+ const payload=Object.fromEntries(new FormData(e.currentTarget).entries());
+ try{const r=await fetch('/api/business-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();if(!r.ok||!result.ok)throw new Error('delivery failed');status.textContent='Thank you. Your request was received for review.';setTimeout(()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');},1200);}catch(err){status.textContent='Your request could not be delivered yet. Please email brian@bossmobility.net directly.';}finally{button.disabled=false;}
+});
+</script>
+<script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
+</body>
+</html>
++offer.price+'; estimated schedule '+offer.time+'; requested deliverables: '+(chosen.join('; ')||'None selected')+'; proposed exclusions or changes: '+(excluded.join('; ')||'None')+'; final price and schedule subject to signed scope.';};
+})();
+</script>
 document.getElementById('estimate-form').addEventListener('submit',async event=>{
 event.preventDefault();
 const form=event.currentTarget, status=document.getElementById('estimate-status'), button=form.querySelector('button[type="submit"]');
