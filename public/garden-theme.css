@@ -1,0 +1,33 @@
+/* Garden of Possibilities: AI Boss Mobility approved navy, teal, gold, ivory and coral. */
+:root{--garden-navy:#14263d;--garden-teal:#087e83;--garden-gold:#d5a547;--garden-ivory:#f8f5ed;--garden-coral:#d16e55;--garden-cream:#fffaf0}
+.garden-journey{background:linear-gradient(125deg,#fff3df,#f7f0e2 54%,#e8f5ed);color:#14263d;border:1px solid #e9d8be;border-radius:24px;padding:clamp(25px,4.8vw,56px);margin:34px auto;max-width:1160px;box-shadow:0 10px 32px #6150380f}
+.garden-kicker{font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#a65645;margin:0 0 12px}
+.garden-journey h2,.garden-rooms h2{color:#14263d;font-size:clamp(27px,3.4vw,40px);letter-spacing:-.035em;line-height:1.15;margin:0 0 16px}
+.garden-journey p{max-width:760px;font-size:17px;line-height:1.7;color:#465661;margin:0 0 17px}
+.garden-path{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.garden-path a{border:1px solid #dcccad;border-radius:100px;padding:9px 15px;background:#fffefa;color:#176d70;text-decoration:none;font-size:14px;font-weight:700;transition:background .2s ease,transform .2s ease}
+.garden-path a:hover,.garden-path a:focus-visible{background:#e2f3ed;transform:translateY(-2px)}
+.garden-rooms{max-width:1160px;margin:0 auto;padding:48px 22px 68px}
+.garden-rooms .garden-subtitle{font-size:17px;color:#576671;max-width:780px;margin:0 0 27px}
+.garden-room-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.garden-room{display:flex;flex-direction:column;text-decoration:none!important;color:#14263d!important;background:#fffefa;border:1px solid #e6d9c4;border-radius:20px;overflow:hidden;box-shadow:0 9px 24px #5d503313;transition:transform .2s ease,box-shadow .2s ease}
+.garden-room:hover{transform:translateY(-3px);box-shadow:0 15px 35px #5d503326}
+.garden-room-art{min-height:140px;display:flex;align-items:flex-end;padding:20px;background:radial-gradient(circle at 75% 20%,#f8d09e 0,transparent 43%),linear-gradient(125deg,#f9e8d1,#e5efe5);position:relative;overflow:hidden}
+.garden-room-art:after{content:"";position:absolute;border-radius:50%;width:150px;height:150px;border:2px solid #d5a54766;right:-36px;top:-51px;box-shadow:0 0 0 34px #d5a54718}
+.garden-room:nth-child(2) .garden-room-art{background:radial-gradient(circle at 70% 14%,#d3e6d9,transparent 47%),linear-gradient(125deg,#f9e4d7,#ecf6ee)}
+.garden-room:nth-child(3) .garden-room-art{background:radial-gradient(circle at 72% 20%,#f5cbab,transparent 44%),linear-gradient(125deg,#f3ebd3,#d4e9e6)}
+.garden-room:nth-child(4) .garden-room-art{background:linear-gradient(125deg,#e1f0e8,#f8ebd4)}
+.garden-room:nth-child(5) .garden-room-art{background:linear-gradient(125deg,#f8e5d8,#e0eee6)}
+.garden-room-art span{position:relative;z-index:1;background:#fff9edd9;border:1px solid #ffffffaa;color:#8d5b44;border-radius:100px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:8px 12px}
+.garden-room-body{padding:24px 25px 25px;display:flex;flex-direction:column;flex:1}
+.garden-room h3{font-size:22px;line-height:1.2;letter-spacing:-.025em;color:#14263d;margin:0 0 10px}
+.garden-room p{font-size:15px;line-height:1.6;color:#50606c;flex:1;margin:0 0 18px}
+.garden-room .garden-go{font-size:14px;font-weight:800;color:#087e83}
+.garden-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:27px}
+.garden-step{background:#fffefa;border:1px solid #ebdfcb;padding:20px;border-radius:15px}
+.garden-step strong{font-size:15px;display:block;color:#14263d;margin:8px 0}
+.garden-step span{font-size:14px;color:#53616c}
+.garden-step .garden-count{font-size:12px;font-weight:900;color:#bd6b54;letter-spacing:.1em}
+@media(max-width:850px){.garden-room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.garden-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:570px){.garden-room-grid,.garden-steps{grid-template-columns:1fr}.garden-rooms{padding:37px 16px}.garden-journey{margin:24px 14px}.garden-room-art{min-height:95px}.garden-room-body{padding:20px}}
+@media(prefers-reduced-motion:reduce){.garden-room,.garden-path a{transition:none}.garden-room:hover,.garden-path a:hover{transform:none}}
