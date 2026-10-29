@@ -214,6 +214,11 @@ async function paypalCapture(req,res){
 
 http.createServer(async(req,res)=>{
   const route=(req.url||"").split("?")[0];
+  if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
+    const url=String(process.env.GHL_CLARITY_PAYMENT_URL||"");
+    const valid=/^https:\/\/[a-z0-9.-]+\//i.test(url)&&(/(^|\.)leadconnectorhq\.com$/i.test(new URL(url||"https://invalid.local").hostname)||/(^|\.)gohighlevel\.com$/i.test(new URL(url||"https://invalid.local").hostname));
+    return json(res,200,{provider:"gohighlevel",available:valid,url:valid?url:null,price_usd:"149.00",verification_ready:false});
+  }
   if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"paypal_via_gohighlevel",checkout_ready:false,reason:"Existing GoHighLevel payment link and verified notification must be configured before enabling online checkout",direct_paypal_checkout_enabled:false});
   if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
   if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);
