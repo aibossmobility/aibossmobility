@@ -158,8 +158,65 @@ async function voiceToken(req,res){
   }catch(err){console.error("Gemini voice token request could not complete");return json(res,503,{ok:false,error:"The free voice service could not connect. Please try again later."});}
 }
 
+
+/* PayPal checkout: sandbox by default, and unavailable until credentials are configured.
+   The server alone decides the charge amount; clients cannot supply prices. */
+const paypalPending=new Map();
+function paypalBase(){return process.env.PAYPAL_MODE==="live"?"https://api-m.paypal.com":"https://api-m.sandbox.paypal.com";}
+function paypalReady(){return Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET);}
+async function paypalToken(){
+  const basic=Buffer.from(process.env.PAYPAL_CLIENT_ID+":"+process.env.PAYPAL_CLIENT_SECRET).toString("base64");
+  const response=await fetch(paypalBase()+"/v1/oauth2/token",{method:"POST",headers:{"Authorization":"Basic "+basic,"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=client_credentials",signal:AbortSignal.timeout(12000)});
+  if(!response.ok)throw Error("PayPal authentication failed");
+  return (await response.json()).access_token;
+}
+async function paypalRequest(url,method,body,token){
+  const response=await fetch(paypalBase()+url,{method,headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json","PayPal-Request-Id":body?.reference_id||require("crypto").randomUUID()},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(15000)});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw Error("PayPal request failed: "+response.status);
+  return result;
+}
+async function paypalCheckout(req,res){
+  if(!paypalReady())return json(res,503,{ok:false,error:"PayPal checkout is being configured. No payment was taken."});
+  try{
+    const input=JSON.parse(await readBody(req)||"{}");
+    const email=String(input.email||"").trim().toLowerCase().slice(0,254);
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return json(res,400,{ok:false,error:"A valid customer email is required."});
+    const plan=String(input.plan||"full");
+    if(!["full","first_half","second_half"].includes(plan))return json(res,400,{ok:false,error:"Unknown payment option."});
+    // Second-half payment cannot be issued without a verified first-half payment.
+    if(plan==="second_half")return json(res,403,{ok:false,error:"The remaining payment requires a verified first payment and an individual invoice."});
+    const amount=plan==="full"?"149.00":"74.50";
+    const token=await paypalToken();
+    const order=await paypalRequest("/v2/checkout/orders","POST",{intent:"CAPTURE",purchase_units:[{reference_id:require("crypto").randomUUID(),description:"AI Clarity & Quick Start consultation — "+(plan==="full"?"full payment":"first half, balance due before meeting"),amount:{currency_code:"USD",value:amount}}],application_context:{shipping_preference:"NO_SHIPPING",user_action:"PAY_NOW"}},token);
+    const approval=(order.links||[]).find(x=>x.rel==="approve"&&/^https:\/\/(www\.)?paypal\.com\//.test(x.href)||x.rel==="approve"&&/^https:\/\/www\.sandbox\.paypal\.com\//.test(x.href));
+    if(!order.id||!approval)return json(res,502,{ok:false,error:"PayPal did not return an approval link."});
+    paypalPending.set(order.id,{email,plan,amount,status:"created",created:Date.now()});
+    return json(res,200,{ok:true,order_id:order.id,approval_url:approval.href,mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox"});
+  }catch(err){console.error("PayPal checkout initialization failed",err.message);return json(res,502,{ok:false,error:"Checkout could not be started. No confirmed payment."});}
+}
+async function paypalCapture(req,res){
+  if(!paypalReady())return json(res,503,{ok:false,error:"PayPal is not configured."});
+  try{
+    const input=JSON.parse(await readBody(req)||"{}"),id=String(input.order_id||"");
+    const record=paypalPending.get(id);
+    if(!record||!/^[-A-Z0-9]{8,40}$/.test(id))return json(res,404,{ok:false,error:"Unknown checkout session."});
+    if(record.status==="paid")return json(res,200,{ok:true,paid:true,order_id:id});
+    const token=await paypalToken();
+    const capture=await paypalRequest("/v2/checkout/orders/"+encodeURIComponent(id)+"/capture","POST",{},token);
+    const payment=capture.purchase_units?.[0]?.payments?.captures?.[0];
+    if(capture.status!=="COMPLETED"||payment?.status!=="COMPLETED"||payment.amount?.currency_code!=="USD"||payment.amount?.value!==record.amount)return json(res,409,{ok:false,paid:false,error:"Payment is not verified as complete."});
+    record.status="paid";record.capture_id=payment.id;
+    try{const dir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");fs.mkdirSync(dir,{recursive:true});fs.appendFileSync(path.join(dir,"paypal-verified-payments.ndjson"),JSON.stringify({order_id:id,capture_id:payment.id,email:record.email,plan:record.plan,amount:record.amount,verified_at:new Date().toISOString()})+"\\n");}catch(err){console.error("PayPal receipt persistence failed");return json(res,503,{ok:false,error:"Payment captured but receipt could not be safely recorded. Contact support; do not pay again."});}
+    return json(res,200,{ok:true,paid:true,order_id:id,consultation_ready:record.plan==="full"});
+  }catch(err){console.error("PayPal capture verification failed",err.message);return json(res,502,{ok:false,error:"Payment status could not be verified. Do not retry payment until checked."});}
+}
+
 http.createServer(async(req,res)=>{
   const route=(req.url||"").split("?")[0];
+  if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
+  if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);
+  if(req.method==="POST"&&route==="/api/paypal/capture-order")return paypalCapture(req,res);
   if(req.method==="GET"&&route==="/api/gemini-voice/status")return voiceStatus(res);
   if(req.method==="POST"&&route==="/api/gemini-voice/session")return voiceToken(req,res);
   if(req.method==="POST"&&route==="/api/guide")return handleGuideLead(req,res);
