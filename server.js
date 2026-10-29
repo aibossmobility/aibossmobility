@@ -214,6 +214,7 @@ async function paypalCapture(req,res){
 
 http.createServer(async(req,res)=>{
   const route=(req.url||"").split("?")[0];
+  if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"paypal_via_gohighlevel",checkout_ready:false,reason:"Existing GoHighLevel payment link and verified notification must be configured before enabling online checkout",direct_paypal_checkout_enabled:false});
   if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
   if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);
   if(req.method==="POST"&&route==="/api/paypal/capture-order")return paypalCapture(req,res);
