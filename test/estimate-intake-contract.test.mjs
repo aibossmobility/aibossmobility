@@ -16,17 +16,18 @@ async function simulateSubmission(response) {
   const form = {
     querySelector: () => button,
     reset: () => { resetCount += 1; },
+    elements: {service: {dispatchEvent() {}}},
     addEventListener: (_event, handler) => { submitHandler = handler; },
   };
   const document = { getElementById: (id) => id === 'estimate-form' ? form : status };
   class FakeFormData {
-    entries() { return Object.entries({ name: 'Test Customer', email: 'test@example.invalid', organization: 'Test Org', service: 'Custom consulting — $750', details: 'Workflow consultation' }); }
+    entries() { return Object.entries({ name: 'Test Customer', email: 'test@example.invalid', organization: 'Test Org', service: 'Custom consulting — $750', details: 'Workflow consultation', clarity_completed: 'yes' }); }
   }
   const fetch = async (url, options) => {
     request = { url, ...options };
     return { ok: response.httpOk, json: async () => response.body };
   };
-  vm.runInNewContext(script, { document, FormData: FakeFormData, fetch, console }, { timeout: 1000 });
+  vm.runInNewContext(script, { document, FormData: FakeFormData, fetch, console, window: {getEstimateScope: () => "Approved test scope"}, Event: class Event {} }, { timeout: 1000 });
   await submitHandler({ preventDefault() {}, currentTarget: form });
   return { status: status.textContent, resetCount, button, request };
 }
