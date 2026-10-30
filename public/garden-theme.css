@@ -101,3 +101,23 @@
 @media(max-width:900px){.human-story{margin:35px 18px;grid-template-columns:1fr}.human-story-photo{min-height:300px}.human-story-photo img{position:absolute}.human-home .human-hero{grid-template-columns:1fr 1fr}}
 @media(max-width:730px){.human-home .human-hero{display:flex;min-height:0;flex-direction:column}.human-home .human-hero-copy{padding:70px 22px 44px}.human-home .human-hero-copy:before{top:32px;left:23px}.human-home .human-hero h1{font-size:clamp(40px,8.4vw,59px)}.human-home .human-scene{border-radius:26px 26px 0 0;height:330px;min-height:330px}.human-porch{padding:76px 20px}.human-porch-actions{align-items:flex-start}.human-choice-area{padding:70px 20px}.human-option{min-height:190px;padding:26px}.human-story-photo{min-height:280px}.human-story-copy{padding:34px 25px}.human-purpose{min-height:0!important}}
 @media(prefers-reduced-motion:reduce){.human-home .human-photo:first-child{opacity:1!important}}
+
+/* Readability safeguards: keep action labels high contrast on every background. */
+.human-home .human-button,
+.human-home .human-button:link,
+.human-home .human-button:visited{background:#187c43;color:#fff!important;text-decoration:none}
+.human-home .human-button:hover,.human-home .human-button:focus-visible{background:#14263d;color:#fff!important}
+.human-home .human-button.outline,
+.human-home .human-button.outline:link,
+.human-home .human-button.outline:visited{background:#fffaf0;color:#14263d!important;border:2px solid #187c43}
+.human-home .human-button.outline:hover,.human-home .human-button.outline:focus-visible{background:#14263d;color:#fff!important;border-color:#14263d}
+.human-home .human-proof .human-button.outline,
+.human-home .human-proof .human-button.outline:visited{background:#176f3b;color:#fff!important;border-color:#176f3b}
+.human-home .human-proof .human-button.outline:hover,.human-home .human-proof .human-button.outline:focus-visible{background:#14263d;color:#fff!important;border-color:#14263d}
+.human-home .human-purpose .human-button.outline,
+.human-home .human-purpose .human-button.outline:visited{background:#fffaf0;color:#14263d!important;border-color:#187c43}
+.human-home .human-purpose .human-button.outline:hover{background:#14263d;color:#fff!important}
+.human-home .human-twin,.human-home .human-twin:visited{background:#087e83;color:#fff!important}
+.human-home .human-porch-actions a,.human-home .human-porch-actions a:visited{color:#fff!important}
+.garden-path a,.garden-path a:visited{color:#15565b}
+.garden-room .garden-go{color:#09656a}
