@@ -214,7 +214,35 @@ async function paypalCapture(req,res){
 
 const supportHandler = require("./purchase-support").installPurchaseSupport({readBody,json,isAdmin:isConsentAdmin});
 
+// Enforced headers for ALL website and API responses, including errors.
+// Keep voice/chat microphone permissions available and allow existing embedded
+// support, checkout and digital-twin providers; avoid changing their behavior.
+const SECURITY_HEADERS=Object.freeze({
+  "Strict-Transport-Security":"max-age=86400",
+  "Content-Security-Policy":[
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'self'",
+    "script-src 'self' 'unsafe-inline' https://link.msgsndr.com https://unpkg.com https://www.googletagmanager.com https://*.elevenlabs.io https://*.11labs.io",
+    "style-src 'self' 'unsafe-inline' https:",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data: https:",
+    "connect-src 'self' https: wss:",
+    "media-src 'self' blob: https:",
+    "frame-src https:",
+    "form-action 'self' https:",
+    "upgrade-insecure-requests"
+  ].join('; '),
+  "X-Frame-Options":"SAMEORIGIN",
+  "X-Content-Type-Options":"nosniff",
+  "Referrer-Policy":"strict-origin-when-cross-origin",
+  "Permissions-Policy":"camera=(), geolocation=()"
+});
+function applySecurityHeaders(res){for(const [name,value] of Object.entries(SECURITY_HEADERS))res.setHeader(name,value);}
+
 http.createServer(async(req,res)=>{
+  applySecurityHeaders(res);
   const route=(req.url||"").split("?")[0];
   if(route==="/api/purchase-support" && ["POST","GET"].includes(req.method)){await supportHandler(req,res,route);return;}
   if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
