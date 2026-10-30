@@ -212,8 +212,11 @@ async function paypalCapture(req,res){
   }catch(err){console.error("PayPal capture verification failed",err.message);return json(res,502,{ok:false,error:"Payment status could not be verified. Do not retry payment until checked."});}
 }
 
+const supportHandler = require("./purchase-support").installPurchaseSupport({readBody,json,isAdmin:isConsentAdmin});
+
 http.createServer(async(req,res)=>{
   const route=(req.url||"").split("?")[0];
+  if(route==="/api/purchase-support" && ["POST","GET"].includes(req.method)){await supportHandler(req,res,route);return;}
   if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
     const url=String(process.env.GHL_CLARITY_PAYMENT_URL||"");
     const valid=/^https:\/\/[a-z0-9.-]+\//i.test(url)&&(/(^|\.)leadconnectorhq\.com$/i.test(new URL(url||"https://invalid.local").hostname)||/(^|\.)gohighlevel\.com$/i.test(new URL(url||"https://invalid.local").hostname)||new URL(url||"https://invalid.local").hostname==="link.fastpaydirect.com");
