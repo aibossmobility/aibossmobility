@@ -184,3 +184,7 @@ body:not(.human-home) .btn-primary{background:var(--brand-teal);color:#fff}
 body:not(.human-home) .btn-primary:hover{background:var(--brand-navy)}
 body:not(.human-home) .cta{background:var(--brand-gold);color:var(--brand-navy)}
 body:not(.human-home) .footer a{color:var(--brand-navy)}
+
+/* Approved journey logo: preserve the complete banner and readable proportions. */
+.human-logo{max-width:310px}.human-logo img{width:clamp(190px,22vw,310px);height:auto;border-radius:0}
+@media(max-width:730px){.human-header{flex-wrap:wrap;gap:12px}.human-logo{max-width:260px}.human-logo img{width:min(260px,75vw)}.human-menu{gap:14px}}
