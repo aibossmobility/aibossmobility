@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choose Your AI Service | AI Boss Mobility</title>
+<meta name="description" content="Choose a fixed-scope AI Boss Mobility package, see the deliverables and price, and save a private customer project brief.">
+<link rel="canonical" href="https://ai.bossmobilelifecoach.com/start-project">
+<link rel="stylesheet" href="/human-site.css"><link rel="stylesheet" href="/garden-theme.css">
+<style>
+*{box-sizing:border-box}body{margin:0;color:#233b40;background:#fbf7ed;font:16px/1.65 system-ui,-apple-system,Arial,sans-serif}a{color:#126d65}header{background:#fff;border-bottom:1px solid #e7d7b8}nav{max-width:1050px;margin:auto;padding:20px 24px;display:flex;gap:25px;align-items:center;flex-wrap:wrap}nav a{font-weight:700}.logo{max-width:115px;max-height:65px;object-fit:contain}main{max-width:900px;margin:0 auto;padding:26px 20px 80px}.hero{background:linear-gradient(120deg,#f8e5bc,#e7f3ea);padding:30px;border:1px solid #dfd1b5;border-radius:22px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:800;color:#935329}h1{font-size:clamp(31px,5vw,49px);line-height:1.13;color:#193c35;margin:12px 0}.lead{font-size:18px;max-width:720px}.panel{background:#fff;border:1px solid #e2d5bc;padding:26px;border-radius:18px;margin-top:26px}.panel h2{margin-top:0;color:#194039}.notice{border-left:4px solid #bd8d27;background:#fffbef;padding:14px 17px;margin:17px 0;font-size:15px}label{display:block;font-weight:750;margin:17px 0 6px}input,select,textarea{width:100%;border:1px solid #99ada4;border-radius:9px;padding:12px 13px;font:inherit;background:#fff;color:#173e38}textarea{min-height:110px}input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid #c9a03a;outline-offset:2px}.help{font-size:13px;color:#485c58;margin:2px 0 12px}.button,button{border:0;background:#146858;color:white;font:700 16px system-ui;padding:14px 20px;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}.button:hover,button:hover{background:#0e433b}button:disabled{opacity:.55;cursor:wait}#price{font-weight:850;font-size:28px;color:#16554a;margin:8px 0}#deliverables{padding-left:24px}#deliverables li{margin:6px 0}.check{display:flex;align-items:flex-start;gap:12px}.check input{width:20px;height:20px;flex:none;margin-top:5px}.check label{margin:0;font-weight:500}#result[hidden],#track[hidden]{display:none}.success{border-left:5px solid #267054;background:#eff8f1;padding:18px;border-radius:10px;overflow-wrap:anywhere}.error{border-left:5px solid #bb523e;background:#fff2ef;padding:18px;border-radius:10px}code{font-size:13px;word-break:break-all}footer{text-align:center;padding:20px 15px 45px;background:#f0e8d8;color:#384e49}footer a{margin:0 8px}
+</style></head><body>
+<header><nav><a href="/"><img class="logo" src="/images/ai-boss-approved-logo.webp" alt="AI Boss Mobility"></a><a href="/">Home</a><a href="/consulting-services">Services and pricing</a><a href="/ask-brian">Ask Brian's digital twin</a></nav></header>
+<main>
+<section class="hero"><p class="eyebrow">Your project, your choices</p><h1>Choose what you need. We'll guide the next steps.</h1><p class="lead">You can choose a predefined package, see what is included, and save the details of your project without waiting for Brian to approve your request.</p><p><a href="/ask-brian">Ask Brian's digital twin a question</a> about choosing a service.</p></section>
+<div class="notice"><strong>Checkout safety:</strong> Package selection and estimates are available now. Secure payment for these five packages is not active until verified GoHighLevel payment and delivery connections are completed. You will not be charged by submitting this form.</div>
+<section class="panel"><h2>1. Choose your package</h2><label for="service">AI Boss Mobility service</label><select id="service" required><option value="">Select a service</option></select><p id="price" aria-live="polite"></p><p><strong>What's included in your package</strong></p><ul id="deliverables"></ul><p class="help">Your price is for the selected fixed scope. Extra tasks, software subscriptions, website hosting and outside services are not included unless explicitly described. No recurring membership is required.</p></section>
+<form class="panel" id="intake"><h2>2. Tell us about your project</h2><label for="email">Email address used for your future checkout</label><input id="email" type="email" required autocomplete="email" maxlength="254"><label for="org">Organization or business name</label><input id="org" required minlength="8" maxlength="150"><label for="objective">What would you like to accomplish?</label><textarea id="objective" required minlength="8" maxlength="800" placeholder="Tell us the result you're looking for."></textarea><label for="workflow">How do you handle this work today?</label><textarea id="workflow" required minlength="8" maxlength="800" placeholder="Describe your existing process."></textarea><label for="tools">Which tools or systems do you already use?</label><textarea id="tools" required placeholder="One tool per line. Example: Google Workspace"></textarea><p class="help">One tool per line, at least eight characters each.</p><label for="limits">What constraints or requirements should we respect?</label><textarea id="limits" required placeholder="One requirement per line. Example: Keep all customer data confidential"></textarea><p class="help">Do not enter passwords, payment-card information, or confidential customer records.</p><div class="check"><input type="checkbox" id="terms" required><label for="terms">I agree to the <a href="/privacy" target="_blank" rel="noopener">privacy policy</a> and <a href="/refund-policy" target="_blank" rel="noopener">purchase and refund terms</a>, and confirm these are the details I want used to prepare my selected fixed-scope estimate. This submission does not authorize a charge.</label></div><p><button id="save" type="submit">Save my choices and estimate</button></p><div id="result" role="status" aria-live="polite" hidden></div></form>
+<section class="panel" id="track" hidden><h2>Check your project status</h2><p id="track-message">Loading your saved selection…</p><button id="refresh" type="button">Refresh status</button></section>
+<section class="panel"><h2>What happens after you save?</h2><p>Your selections are stored privately with a unique status reference. Once the secure checkout connection is verified, the system can match an actual paid GoHighLevel transaction to your saved brief and assign work to the appropriate Papa Life OS worker. Working drafts go through quality checks before any finished product is delivered.</p><p><strong>Submitting this page does not place an order or start a paid project.</strong> If you have already made a payment, please use <a href="/purchase-help">Purchase &amp; service help</a> rather than paying again.</p></section>
+</main><footer>AI Boss Mobility Consulting · <a href="/">Home</a><a href="/privacy">Privacy</a><a href="/purchase-help">Customer support</a></footer>
+<script>
+"use strict";
+const API="https://papalifecoach.com/api/public/ai-boss";
+const service=document.getElementById("service"), price=document.getElementById("price"),deliverables=document.getElementById("deliverables");
+let products={};
+function text(el,s){el.textContent=s;}
+function dollars(c){return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",minimumFractionDigits:0}).format(c/100);}
+async function load(){
+ try{const response=await fetch(API+"/fixed-services",{mode:"cors"});if(!response.ok)throw Error("Catalog unavailable");const data=await response.json();if(!data.ok)throw Error("Catalog unavailable");
+ for(const p of data.products){products[p.code]=p;const option=document.createElement("option");option.value=p.code;option.textContent=p.title+" — "+dollars(p.priceCents);service.appendChild(option);}
+ const params=new URLSearchParams(location.search);if(products[params.get("service")])service.value=params.get("service");
+ service.dispatchEvent(new Event("change"));
+ }catch{text(price,"The fixed-price catalog is temporarily unavailable. No charge can occur.");document.getElementById("save").disabled=true;}
+}
+service.addEventListener("change",()=>{const p=products[service.value];text(price,p?dollars(p.priceCents)+" one-time fixed-scope estimate":"");deliverables.replaceChildren();if(p)for(const label of p.includedSections){const li=document.createElement("li");text(li,label);deliverables.appendChild(li);}});
+const lineList=id=>document.getElementById(id).value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+const result=document.getElementById("result");
+document.getElementById("intake").addEventListener("submit",async e=>{
+ e.preventDefault();result.hidden=false;result.className="";text(result,"Saving your choices securely…");
+ const btn=document.getElementById("save");btn.disabled=true;
+ try{
+  if(!products[service.value])throw Error("Select a valid package.");
+  const body={productCode:service.value,email:document.getElementById("email").value,acceptedTerms:document.getElementById("terms").checked,
+  brief:{organization:document.getElementById("org").value,objective:document.getElementById("objective").value,currentWorkflow:document.getElementById("workflow").value,
+  toolsInUse:lineList("tools"),constraints:lineList("limits")}};
+  const r=await fetch(API+"/intakes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const json=await r.json();if(!r.ok||!json.ok)throw Error(json.error||"Couldn't save your selection.");
+  const fragment="track="+encodeURIComponent(json.intakeId)+"."+encodeURIComponent(json.privateStatusToken);
+  history.replaceState(null,"",location.pathname+"#"+fragment);
+  result.className="success";result.replaceChildren();
+  const headline=document.createElement("strong");text(headline,"Your choices are saved. No charge occurred.");result.appendChild(headline);
+  const p=document.createElement("p");text(p,"Your fixed estimate: "+dollars(json.priceCents)+". Keep this private status link. It can be used to check your project.");result.appendChild(p);
+  const a=document.createElement("a");a.href=location.href;a.textContent="My private project status link";result.appendChild(a);
+  document.getElementById("track").hidden=false;await checkStatus();
+ }catch(err){result.className="error";text(result,String(err.message||"Unable to save your brief."));}
+ finally{btn.disabled=false;}
+});
+async function checkStatus(){
+ const m=location.hash.match(/^#track=([a-f0-9-]{36})\.([A-Za-z0-9_-]+)$/);if(!m)return;
+ const node=document.getElementById("track");node.hidden=false;
+ try{const r=await fetch(API+"/intakes/"+m[1]+"/status?token="+encodeURIComponent(m[2]),{mode:"cors"});const j=await r.json();if(!r.ok||!j.ok)throw Error("Status unavailable");
+ const states={awaiting_payment:"Your selected package and brief are saved. Checkout is not yet activated.",verified:"Your payment has been independently verified.",working:"Your project is in the internal production and review process.",quality_review:"Quality checks are being completed.",delivered:"Delivery has been recorded.",needs_help:"The system needs to resolve a delivery issue; you won't need to pay again."};
+ text(document.getElementById("track-message"),states[j.state]||"Your project is recorded.");
+ }catch{text(document.getElementById("track-message"),"Status unavailable. Keep your private link and use Purchase & service help if needed.");}
+}
+document.getElementById("refresh").addEventListener("click",checkStatus);
+load();if(location.hash.startsWith("#track="))checkStatus();
+</script></body></html>
