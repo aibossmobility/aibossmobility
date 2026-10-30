@@ -134,3 +134,9 @@
 .footer-resources nav a{font-size:13px;color:#425963!important;text-decoration:underline;text-underline-offset:3px}
 .footer-simple{font-size:14px;line-height:1.5}.footer-simple .footer-resources{margin-top:15px}.footer-simple .footer-resources nav{margin-top:8px}
 @media(max-width:760px){.human-footer-right{align-items:flex-start;margin-left:0}.human-footer-right>nav{gap:12px}}
+
+/* Simple welcoming footers, retaining visible policy access. */
+footer.footer-simple,.footer.footer-simple{background:#fffaf0!important;color:#14263d!important;border-top:1px solid #e2d5c0;padding:27px 5%;line-height:1.6}
+footer.footer-simple a,.footer.footer-simple a:visited{color:#145e64!important}
+footer.footer-simple .footer-resources summary{color:#344f50}
+footer.footer-simple .footer-resources a{color:#145e64!important}
