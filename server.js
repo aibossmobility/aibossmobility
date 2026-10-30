@@ -244,6 +244,26 @@ function applySecurityHeaders(res){for(const [name,value] of Object.entries(SECU
 http.createServer(async(req,res)=>{
   applySecurityHeaders(res);
   const route=(req.url||"").split("?")[0];
+  // The Trellis trial is an AI Boss-only, reversible, default-off module.
+  const trellisOn=process.env.TRELLIS_TRIAL_ENABLED==="true" && Date.now()<Date.parse("2026-12-01T00:00:00-08:00");
+  if(route==="/trellis-trial" || route==="/trellis-trial.html" || route==="/api/trellis-trial"){
+    if(!trellisOn)return json(res,404,{error:"Trial not available"});
+    if(route==="/api/trellis-trial"){
+      if(req.method!=="POST")return json(res,405,{error:"Method not allowed"});
+      let body="";for await(const part of req){body+=part;if(body.length>4096)return json(res,413,{error:"Too large"});}
+      let question="";try{question=String(JSON.parse(body).question||"").toLowerCase().slice(0,1000);}catch{return json(res,400,{error:"Invalid request"});}
+      const link="https://trellis.hortus.ai/sign-up?ref=HdygwSij";
+      let answer="Trellis is a marketplace for exploring and comparing AI tools and services. Official guide: https://trellis.hortus.ai/guide";
+      if(/papa life|fatherhood|papa framework/.test(question))answer="Papa Life is a separate service and outside this Trellis trial.";
+      else if(/register me|send my|submit my|automatically refer/.test(question))answer="I cannot register you or transmit contact details. If you independently choose to join as a vendor, use Brian's link: "+link;
+      else if(/price|pricing|cost|subscription|commission|fee/.test(question))answer="I cannot verify current vendor pricing. Check the Trellis guide or signed-in vendor billing information: https://trellis.hortus.ai/guide";
+      else if(/partner|endorse/.test(question))answer="This is an authorized information-reference trial, not a claim of a formal partnership.";
+      else if(/join|vendor|sign.?up|refer|invitation|list my service/.test(question))answer="Interested in listing your AI service? You can choose Brian's Trellis vendor invitation: "+link+". Trellis handles enrollment and attribution.";
+      return json(res,200,{answer});
+    }
+    req.url="/trellis-trial.html";
+  }
+
   if(route==="/api/purchase-support" && ["POST","GET"].includes(req.method)){await supportHandler(req,res,route);return;}
   if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
     const url=String(process.env.GHL_CLARITY_PAYMENT_URL||"");
