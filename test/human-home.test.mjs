@@ -13,10 +13,10 @@ test('approved calm home has one main start action and exactly three choices',()
  assert.match(home,/Keep critically thinking for yourself when using AI/);
 });
 test('approved artwork and culturally appropriate locally served scene files exist',()=>{
- for(const f of ['images/ai-boss-approved-logo.webp','images/hero-conversation-a.jpg','images/hero-senior-black.jpg','images/hero-mature-latino.jpg']) assert.ok(existsSync(new URL(f,root)),f);
- assert.match(home,/ai-boss-approved-logo.webp/);
+ for(const f of ['images/ai-boss-journey-logo.webp','images/hero-conversation-a.jpg','images/hero-senior-black.jpg','images/hero-mature-latino.jpg']) assert.ok(existsSync(new URL(f,root)),f);
+ assert.match(home,/ai-boss-journey-logo.webp/);
  assert.doesNotMatch(home,/images\.pexels\.com/);
- assert.match(styles,/#d9c3a3/);
+ assert.match(styles,/#F8F5ED/);
  assert.match(styles,/prefers-reduced-motion/);
 });
 test('old content, estimates and AI Twin survive as accessible destinations',()=>{
