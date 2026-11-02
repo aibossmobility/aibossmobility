@@ -1,0 +1,10 @@
+{
+  "schema": "knowledge-version-v1",
+  "canonical_version": "3.2.2",
+  "canonical_source": "https://docs.google.com/document/d/1TXkHlLDd-DzrSwF9JbcnK3mdDZw6fFehwgi1xZwDin4/edit",
+  "public_agent_edition": "ElevenLabs V3.2.2",
+  "brand": "AI Boss Mobility Consulting",
+  "approved_public_scope": true,
+  "knowledge_runtime_connected": false,
+  "description": "Version discovery only. This is not evidence of live conversational knowledge retrieval."
+}
