@@ -44,7 +44,7 @@
 <h1>Come with your question. We'll find a place to start.</h1>
 <p class="lead">Talk with Brian's AI Digital Twin. You can ask about learning AI, your business, family relationships, or a next step when you're feeling stuck. You don't need to know the technical words.</p>
 <div class="twin-actions">
-<button type="button" class="btn btn-primary" id="start-twin">Explore free voice conversation</button>
+<button type="button" class="btn btn-primary" id="start-twin">Go to voice conversation controls</button>
 <a class="btn btn-secondary" href="/#digital-twin">Go straight to AI business help</a>
 </div>
 <p class="twin-note">This is an AI assistant representing Brian's approach—not Brian speaking live. The conversation is handled by an AI service; please avoid sharing passwords, banking details, or sensitive records. Read our <a href="/privacy">privacy policy</a>.</p>
@@ -79,7 +79,10 @@
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <script>
 document.getElementById('start-twin').addEventListener('click',function(){
-  document.getElementById('google-voice-pilot').scrollIntoView({behavior:'smooth',block:'center'});
+  const controls=document.getElementById('google-voice-pilot');
+  controls.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  const firstConsent=controls.querySelector('[data-voice-adult]');
+  if(firstConsent)firstConsent.focus({preventScroll:true});
 });
 </script>
 <script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
