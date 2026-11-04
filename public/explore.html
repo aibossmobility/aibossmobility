@@ -429,7 +429,7 @@ document.querySelectorAll('[data-path]').forEach(el=>el.addEventListener('click'
  selectPath(el.dataset.path);
  const destination=document.querySelector('.next-move');
  if(destination){
-  destination.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  destination.scrollIntoView({behavior:'instant',block:'center'});
  }
 }));
 const modal=document.getElementById('interest-modal');
