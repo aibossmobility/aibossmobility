@@ -2,7 +2,7 @@
   const root=document.getElementById('outreach-workspace');if(!root)return;
   const $=selector=>root.querySelector(selector), topics=window.AIBossConversationTopics;
   const kinds=['Entrepreneur','Business leader','Church leader','Nonprofit leader','Community leader','Partner','Explorer'];
-  let token='',records=[],selected=null,view='Upcoming',dirty=false,saving=false;
+  let records=[],selected=null,view='Upcoming',dirty=false,saving=false;
   const fields=['person','organization','date','kind','purpose','certainty','topic','missing','prompt','useful','steps'];
   function today(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());return ['year','month','day'].map(k=>p.find(v=>v.type===k).value).join('-');}
   function missing(c){return [...(!c.date?['Date']:[]),...(!c.purpose.trim()||c.certainty==='Unknown'?['Purpose or interest']:[]),...(c.missing.trim()?['Details to clarify']:[])];}
@@ -32,8 +32,8 @@
     for(const c of items){const b=document.createElement('button');b.type='button';b.className='ab-card';const kind=document.createElement('small');kind.textContent=c.kind;const title=document.createElement('h3');title.textContent=c.person;const p=document.createElement('p');p.textContent=c.purpose||'Interest still to clarify';const footer=document.createElement('small');footer.textContent=(c.date?new Date(c.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'Date to confirm')+' · '+(c.completed?'Reflection complete':missing(c).join(' · ')||'Ready to explore');b.append(kind,title,p,footer);b.addEventListener('click',()=>{if(!leave())return;selected=structuredClone(c);dirty=false;error();renderEditor();});container.append(b);}
     $('[data-empty]').hidden=items.length>0;$('[data-empty]').textContent=q?'No matching conversations.':view==='Completed reflections'?'Completed reflections will appear here.':view==='Missing information'?'Nothing to clarify right now.':'Create a conversation when you have someone in mind. A name is enough to begin.';
   }
-  async function api(method='GET',body){const r=await fetch('/api/outreach-conversations',{method,headers:{'x-admin-token':token,...(body?{'Content-Type':'application/json'}:{})},cache:'no-store',...(body?{body:JSON.stringify(body)}:{})});const data=await r.json();if(!r.ok||!data.ok)throw Error(data.error||'Could not connect. Your notes are still on screen.');return data;}
-  async function load(e){e?.preventDefault();if(!leave())return;token=$('[data-token]').value;error();$('[data-open]').disabled=true;try{const data=await api();records=data.conversations;selected=null;dirty=false;$('[data-login]').hidden=true;$('[data-work]').hidden=false;$('[data-token]').value='';renderList();}catch(e){error(e.message);}finally{$('[data-open]').disabled=false;}}
+  async function api(method='GET',body){const r=await fetch('/api/outreach-conversations',{method,headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',cache:'no-store',...(body?{body:JSON.stringify(body)}:{})});const data=await r.json();if(r.status===401){const e=new Error('Sign in through Papa Life OS to unlock these private conversations.');e.authRequired=true;throw e;}if(!r.ok||!data.ok)throw Error(data.error||'Could not connect. Your notes are still on screen.');return data;}
+  async function load(){if(!leave())return;error();try{const data=await api();records=data.conversations;selected=null;dirty=false;$('[data-login]').hidden=true;$('[data-work]').hidden=false;renderList();}catch(e){if(e.authRequired&&!new URLSearchParams(location.search).has('sso_error')){window.location.assign('/auth/papa/start');return;}error(e.message);}}
   async function save(complete){
     if(!selected||saving)return;
     if(!selected.person.trim()){error('Add the person’s name before saving.');switchTab('Prepare');$('[data-field="person"]').focus();return;}
@@ -45,12 +45,12 @@
   for(const select of root.querySelectorAll('[data-field="kind"]'))for(const k of kinds){const option=document.createElement('option');option.textContent=k;select.append(option);}
   for(const t of topics){const option=document.createElement('option');option.value=t.id;option.textContent=t.name;$('[data-field="topic"]').append(option);}
   for(const kind of ['Entrepreneur','Church leader','Nonprofit leader','Partner','Explorer']){const b=document.createElement('button');b.type='button';b.className='ab-outline';b.textContent='+ '+kind;b.addEventListener('click',()=>create(kind));$('[data-starts]').append(b);}
-  $('[data-login]').addEventListener('submit',load);
+  // Owner session is verified on the server. No local code or password is collected.
   $('[data-new]').addEventListener('click',()=>create());
   $('[data-save]').addEventListener('click',()=>save());
   $('[data-complete]').addEventListener('click',()=>save(!selected.completed));
   $('[data-back]').addEventListener('click',()=>{if(!leave())return;selected=null;dirty=false;error();renderList();});
-  $('[data-logout]').addEventListener('click',()=>{if(!leave())return;token='';records=[];selected=null;dirty=false;$('[data-work]').hidden=true;$('[data-login]').hidden=false;for(const field of root.querySelectorAll('[data-editor] input,[data-editor] textarea'))field.value='';$('[data-cards]').replaceChildren();error();});
+  $('[data-logout]').addEventListener('click',async()=>{if(!leave())return;try{await fetch('/auth/papa/logout',{method:'POST',credentials:'same-origin'});}catch{}records=[];selected=null;dirty=false;$('[data-work]').hidden=true;$('[data-login]').hidden=false;for(const field of root.querySelectorAll('[data-editor] input,[data-editor] textarea'))field.value='';$('[data-cards]').replaceChildren();error('Signed out of AI Boss. Your Papa Life session remains available.');});
   $('[data-copy-invitation]').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('[data-invitation]').textContent);$('[data-copy-status]').textContent='Copied for your review. Nothing has been sent.';}catch{$('[data-copy-status]').textContent='Select and copy the invitation above. Nothing has been sent.';}});
   $('[data-search]').addEventListener('input',renderList);
   for(const b of root.querySelectorAll('[data-view]'))b.addEventListener('click',()=>{view=b.dataset.view;renderList();});
@@ -63,4 +63,5 @@
     else return;dirty=true;notice('Unsaved changes');completeEnabled();
   });
   window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+  load();
 })();
