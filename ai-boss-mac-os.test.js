@@ -49,11 +49,11 @@ const {acceptMacEvent,dailyReport,installMacOS,pacificDay}=require("./ai-boss-ma
    assert.equal((await get({"x-admin-token":"owner-test-code",Origin:"https://unrelated.example"})).status,403);
    const owner=await get({"x-admin-token":"owner-test-code"});
    assert.equal(owner.status,200);
-   assert.equal((await owner.json()).summary.mac_voice_recaps,0,"HTTP store differs from isolated fixture");
+   assert.equal((await owner.json()).summary.mac_voice_recaps,1,"Owner can read verified Mac recaps");
    assert.equal((await post({})).status,401);
    assert.equal((await post({Authorization:"Bearer invalid"})).status,401);
-   const receipt=await post({Authorization:"Bearer "+process.env.AI_BOSS_MAC_RELAY_TOKEN});
-   assert.equal(receipt.status,400,"old test timestamp rejected by live clock window");
+   const receipt=await post({Authorization:"Bearer "+process.env.AI_BOSS_MAC_RELAY_TOKEN},{...base,observed_at:"2000-01-01T00:00:00.000Z"});
+   assert.equal(receipt.status,400,"stale Mac event rejected");
   }finally{
    await new Promise(resolve=>server.close(resolve));
    if(prevToken===undefined)delete process.env.AI_BOSS_MAC_RELAY_TOKEN;else process.env.AI_BOSS_MAC_RELAY_TOKEN=prevToken;
