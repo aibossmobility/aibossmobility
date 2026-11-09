@@ -45,8 +45,9 @@ small,.muted{font-size:13px;color:#546457}
 footer{text-align:center;margin:35px 0;color:#58635c}
 @media(max-width:740px){.metrics,.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:440px){.metrics,.two{grid-template-columns:1fr}}
+.sso-link{display:inline-block;border-radius:8px;background:#145b35;color:#fff!important;font-weight:750;padding:12px 18px;text-decoration:none}.sso-link:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
 </style>
-<script src="/ai-boss-os.js?v=20261109-ghl-api-readonly" defer></script>
+<script src="/ai-boss-os.js?v=20261109-papa-owner-sso" defer></script>
 </head>
 <body>
 <header class="header"><div class="container">
@@ -57,9 +58,10 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 </div></header>
 <main class="container">
 <section class="panel" id="login" aria-label="Private owner sign in">
-<h2>Open your private daily picture</h2>
-<p>Enter your existing AI Boss back-office access code. It stays in this browser tab's memory and is not saved to local storage.</p>
-<form id="unlock"><label>Back-office access code <input id="access" type="password" autocomplete="off" required></label><button type="submit">Unlock my daily report</button></form>
+<h2>Sign in once with Papa Life OS</h2>
+<p>Your existing Papa Life owner account unlocks this AI Boss Mobility dashboard. You will not need a separate back-office code. Sign-in happens securely on papalifecoach.com; no password is copied here.</p>
+<p><a class="sso-link" href="/auth/papa/start">Continue with Papa Life OS</a></p>
+<p class="muted">Already signed in to Papa Life on this browser? You'll return directly to AI Boss Mobility. Otherwise, use your same Papa Life username and password there.</p>
 <p id="message" role="status"></p>
 </section>
 <div id="workspace" hidden>
@@ -67,7 +69,7 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between">
 <div><h2 style="margin-bottom:6px">Today's verified activity</h2><span class="status" id="mac-status">Checking Mac report</span></div>
 <form id="controls"><label>Report date <input id="report-date" type="date" required></label>
-<button type="submit">Refresh report</button><button type="button" class="secondary" id="lock">Lock</button></form>
+<button type="submit">Refresh report</button><button type="button" class="secondary" id="lock">Sign out of AI Boss</button></form>
 </div>
 <div class="metrics">
 <div class="metric"><strong id="proof">—</strong><span>Mac worker-proof records (local evidence)</span></div>
