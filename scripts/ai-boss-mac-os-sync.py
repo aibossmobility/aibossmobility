@@ -37,6 +37,47 @@ WORKSPACE_TOKEN=ROOT / "secrets/google-workspace-connector.token"
 GHL_BROWSER_READONLY=ROOT / "bin/ai-boss-ghl-chrome-readonly.py"
 GHL_LAST_ACK=ROOT / "reports/ai-boss-ghl-readonly-last-ack.json"
 
+GHL_API_READER=ROOT / "bin/ai-boss-ghl-api-readonly.py"
+GHL_API_TOKEN=HOME / ".config/papa-life-os/ai-boss-ghl-readonly.token"
+GHL_API_LAST_ACK=ROOT / "reports/ai-boss-ghl-api-last-ack.json"
+
+def ghl_api_daily(site_token):
+    """When a proper user-installed private credential exists, send only API counts."""
+    now=dt.datetime.now(PACIFIC)
+    today=now.date().isoformat()
+    if not GHL_API_TOKEN.is_file():
+        return {"status":"awaiting_private_credential"}
+    if not GHL_API_READER.is_file():
+        return {"status":"api_reader_unavailable"}
+    try:
+        cmd=["/usr/bin/python3",str(GHL_API_READER),"--read-only"]
+        result=subprocess.run(cmd,capture_output=True,text=True,timeout=135)
+        if result.returncode: return {"status":"api_read_unavailable"}
+        body=json.loads(result.stdout or "{}")
+        totals=body.get("summary")
+        if not body.get("ok") or not isinstance(totals,dict):
+            return {"status":"api_read_unavailable"}
+        fields={"location_id","scope","contacts_count","opportunities_count","conversations_count"}
+        if set(totals)!=fields or totals.get("scope")!="subaccount_readonly" or totals.get("location_id")!="qJ83IIaK5y2ZPHzLfGG1":
+            return {"status":"api_response_unverified"}
+        event={
+            "brand":"ai_boss_mobility","kind":"ghl_api_snapshot",
+            "source_ref":"ghl-api:"+today,
+            "observed_at":now.isoformat(),"date":today,
+            **totals
+        }
+        receipt=send(event,site_token)
+        if not (receipt.get("accepted") or receipt.get("duplicate")):
+            return {"status":"api_delivery_unconfirmed"}
+        GHL_API_LAST_ACK.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
+        GHL_API_LAST_ACK.write_text(json.dumps({"date":today,"acknowledged":True})+"\n")
+        GHL_API_LAST_ACK.chmod(0o600)
+        return {"status":"verified","metrics_available":sum(isinstance(totals[k],int)
+            for k in ("contacts_count","opportunities_count","conversations_count"))}
+    except Exception:
+        # No API endpoint data, token or contact details in logs.
+        return {"status":"api_read_unavailable"}
+
 def ghl_browser_daily(token,force=False):
     today=dt.datetime.now(PACIFIC).date().isoformat()
     if not force and GHL_LAST_ACK.is_file():
@@ -292,13 +333,14 @@ def main():
         google_ok=bool(receipt.get("accepted") or receipt.get("duplicate"))
     except Exception:
         print("Mac Google daily report could not be delivered",file=sys.stderr)
-    crm_result=ghl_browser_daily(token,force="--ghl-now" in sys.argv)
+    crm_api_result=ghl_api_daily(token)
+    crm_result={"status":"superseded_by_verified_api"} if crm_api_result["status"]=="verified" else ghl_browser_daily(token,force="--ghl-now" in sys.argv)
     voice_ok,voice_bad=voice_recaps(token)
     print(json.dumps({
         "connector":"mac-mini-desktop-commander","brand":"ai_boss_mobility",
         "worker_days_acknowledged":sent,"worker_days_needing_attention":blocked,
         "approved_voice_recaps_acknowledged":voice_ok,
-        "voice_recaps_needing_attention":voice_bad,"google_daily_report_acknowledged":google_ok,"crm_ui_status":crm_result["status"],"customer_messages_sent":0
+        "voice_recaps_needing_attention":voice_bad,"google_daily_report_acknowledged":google_ok,"crm_ui_status":crm_result["status"],"crm_api_status":crm_api_result["status"],"customer_messages_sent":0
     }))
     if blocked or voice_bad or not google_ok:
         sys.exit(1)
