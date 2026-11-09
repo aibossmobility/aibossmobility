@@ -24,6 +24,22 @@ const {acceptMacEvent,dailyReport,installMacOS,pacificDay}=require("./ai-boss-ma
   assert.equal(acceptMacEvent(voice,data,now).accepted,true);
   assert.equal(acceptMacEvent(voice,data,now).duplicate,true);
   assert.equal(dailyReport(day,data,dir).summary.mac_voice_recaps,1);
+  const google={brand:"ai_boss_mobility",kind:"integration_rollup",
+    date:day,source_ref:"mac-google:2026-11-09",observed_at:now.toISOString(),
+    services:{
+      gmail:{status:"connected",count:7,scan_limit:50,truncated:false},
+      google_calendar:{status:"connected",count:1,scan_limit:100,truncated:false}
+    }
+  };
+  assert.equal(acceptMacEvent(google,data,now).accepted,true);
+  assert.equal(acceptMacEvent(google,data,now).duplicate,true);
+  assert.equal(dailyReport(day,data,dir).summary.gmail_message_matches,7);
+  assert.equal(dailyReport(day,data,dir).summary.calendar_ai_boss_events,1);
+  assert.equal(dailyReport(day,data,dir).google_source_snapshot.gmail.scope.includes("not unique customer conversations"),true);
+  assert.throws(()=>acceptMacEvent({...google,services:{...google.services,gmail:{...google.services.gmail,count:100}}},data,now));
+  assert.throws(()=>acceptMacEvent({...google,services:{...google.services,gmail:{status:"unavailable",count:0,scan_limit:50,truncated:false}}},data,now));
+  assert.throws(()=>acceptMacEvent({...google,services:{...google.services,google_calendar:{...google.services.google_calendar,private_title:"Do not upload"}}},data,now));
+
   assert.equal(dailyReport("2026-11-08",data,dir).summary.mac_voice_recaps,0);
   assert.equal(pacificDay(new Date("2026-11-10T03:00:00Z")),day);
 
