@@ -70,12 +70,16 @@ function validSessionTicket(token,now=Date.now(),dir=dataDir()){
 function isBossSsoSession(req){
   return validSessionTicket(cookies(req)[SESSION_COOKIE]);
 }
+function appendSetCookie(res,value){
+  const current=res.getHeader("Set-Cookie");
+  const list=current?(Array.isArray(current)?current:[current]):[];
+  res.setHeader("Set-Cookie",[...list,value]);
+}
 function writeCookie(res,name,value,maxAge){
-  res.setHeader("Set-Cookie",
-    name+"="+value+"; Path=/; Max-Age="+maxAge+"; HttpOnly; Secure; SameSite=Lax");
+  appendSetCookie(res,name+"="+value+"; Path=/; Max-Age="+maxAge+"; HttpOnly; Secure; SameSite=Lax");
 }
 function clearCookie(res,name){
-  res.setHeader("Set-Cookie",name+"=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
+  appendSetCookie(res,name+"=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
 }
 function responseHeaders(res){
   res.setHeader("Cache-Control","no-store, private");
