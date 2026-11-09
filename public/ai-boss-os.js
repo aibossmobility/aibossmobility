@@ -29,6 +29,10 @@ async function load(){
  text("voice",String(data.summary.mac_voice_recaps));
  text("outreach",String(data.summary.private_conversations_dated));
  text("intake",data.summary.website_business_intakes ?? "—");
+ text("gmail-matches",data.summary.gmail_message_matches ?? "—");
+ text("calendar-matches",data.summary.calendar_ai_boss_events ?? "—");
+ const gs=data.google_source_snapshot;
+ text("google-coverage",gs?"Last verified Google scan: "+new Date(gs.received_at).toLocaleString()+". Gmail scans at most "+gs.gmail.scan_limit+" matching IDs and Calendar scans at most "+gs.google_calendar.scan_limit+" events. "+(gs.gmail.truncated||gs.google_calendar.truncated?"At least one source may be truncated.":"Unknown events and unsourced conversations are not inferred."):"No authenticated Google snapshot received for this date.");
  text("mac-status",data.mac.connected?"Mac summary recently received":data.mac.latest_report_at?"Mac summary saved (not recent)":"No Mac summary received yet");
  text("mac-updated",data.mac.latest_report_at?"Latest Mac evidence received: "+new Date(data.mac.latest_report_at).toLocaleString():"No confirmed Mac evidence received for this date.");
  const m=data.mac.worker_proof;
