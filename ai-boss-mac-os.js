@@ -133,7 +133,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
   const gmail=google?.services?.gmail || null;
   const calendar=google?.services?.google_calendar || null;
   const voices=state.voice.filter(x=>x.date===day);
-  let notes=[],intakeCount=null;
+  let notes=[],intakeCount=null,ghlReceipts=0;
   try{
     const raw=JSON.parse(fs.readFileSync(path.join(dir,"outreach-conversations.json"),"utf8"));
     if(Array.isArray(raw))notes=raw.filter(c=>c.date===day).map(c=>({
@@ -148,6 +148,15 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       catch{return n;}
     },0);
   }catch(e){if(e.code==="ENOENT")intakeCount=0;}
+  try{
+    const raw=fs.readFileSync(path.join(dir,"ghl-intake-ack.ndjson"),"utf8");
+    ghlReceipts=raw.split(/\r?\n/).filter(Boolean).reduce((count_,line)=>{
+      try{
+        const item=JSON.parse(line);
+        return count_+(item.type==="intake_acknowledged" && pacificDay(new Date(item.accepted_at))===day?1:0);
+      }catch{return count_;}
+    },0);
+  }catch(e){if(e.code!=="ENOENT")ghlReceipts=null;}
   return {
     ok:true,date:day,
     primary_connector:"Brian's Mac mini / Desktop Commander",
@@ -159,6 +168,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
     summary:{mac_voice_recaps:voices.length,private_conversations_dated:notes.length,
       completed_private_reflections:notes.filter(c=>c.completed).length,
       website_business_intakes:intakeCount,
+      gohighlevel_webhook_acks:ghlReceipts,
       gmail_message_matches:gmail?.status==="connected"?gmail.count:null,
       calendar_ai_boss_events:calendar?.status==="connected"?calendar.count:null},
     google_source_snapshot:google?{
@@ -175,7 +185,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       mac_voice:voices.length?"at least one authorized recap received":"ready for authorized Mac recaps",
       gmail:gmail?.status==="connected"?"Connected: AI Boss-address message matches via authenticated Mac Gmail connector":"Not verified for this report date",
       google_calendar:calendar?.status==="connected"?"Connected: matching dated events via authenticated Mac Calendar connector":"Not verified for this report date",
-      gohighlevel:"delivery not independently verified by this report",
+      gohighlevel:ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
       social_media:"not connected"
     }
   };
