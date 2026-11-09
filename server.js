@@ -213,6 +213,7 @@ async function paypalCapture(req,res){
 }
 
 const supportHandler = require("./purchase-support").installPurchaseSupport({readBody,json,isAdmin:isConsentAdmin});
+const outreachHandler = require("./outreach-conversations").installOutreachConversations({readBody,json,isAdmin:isConsentAdmin});
 
 // Enforced headers for ALL website and API responses, including errors.
 // Keep voice/chat microphone permissions available and allow existing embedded
@@ -264,6 +265,7 @@ http.createServer(async(req,res)=>{
     req.url="/trellis-trial.html";
   }
 
+  if(route==="/api/outreach-conversations")return outreachHandler(req,res);
   if(route==="/api/purchase-support" && ["POST","GET"].includes(req.method)){await supportHandler(req,res,route);return;}
   if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
     const url=String(process.env.GHL_CLARITY_PAYMENT_URL||"");
