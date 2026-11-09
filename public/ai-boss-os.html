@@ -46,7 +46,7 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 @media(max-width:740px){.metrics,.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:440px){.metrics,.two{grid-template-columns:1fr}}
 </style>
-<script src="/ai-boss-os.js?v=20261109-ghl-ui-voice-probe" defer></script>
+<script src="/ai-boss-os.js?v=20261109-ghl-api-readonly" defer></script>
 </head>
 <body>
 <header class="header"><div class="container">
@@ -79,6 +79,8 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 <div class="metric"><strong id="ghl-acks">—</strong><span>Confirmed GoHighLevel intake handoffs (not conversions)</span></div>
 <div class="metric"><strong id="ghl-contacts">—</strong><span>Contacts visible in the AI Boss GHL location (not verified customers)</span></div>
 <div class="metric"><strong id="ghl-filtered">—</strong><span>Opportunities in the selected GHL view (possibly filtered)</span></div>
+<div class="metric"><strong id="ghl-api-opportunities">—</strong><span>AI Boss CRM API opportunities (only after verified scoped read)</span></div>
+<div class="metric"><strong id="ghl-api-conversations">—</strong><span>AI Boss CRM API conversations (not proven calls or sales)</span></div>
 </div>
 <p class="muted" id="mac-updated">No Mac report received yet.</p>
 <p class="muted" id="qa"></p><p class="muted" id="ghl-coverage">CRM API pipeline is not connected; live UI snapshot is source-labeled and cannot establish full CRM totals.</p><p class="muted" id="google-coverage">Gmail and Calendar counts appear only after a verified read-only Mac scan.</p>
