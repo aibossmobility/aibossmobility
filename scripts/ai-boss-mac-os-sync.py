@@ -45,7 +45,7 @@ def credential():
 def send(payload, token):
     request = urllib.request.Request(
         ENDPOINT, method="POST",
-        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "AI-Boss-Mac-Relay/1.0"},
         data=json.dumps(payload, separators=(",", ":")).encode(),
     )
     opener = urllib.request.build_opener(NoRedirect)
