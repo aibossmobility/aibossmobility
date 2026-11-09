@@ -144,7 +144,7 @@ async function verifyPapaTicket(ticket,state,options={}){
   return payload;
 }
 
-function installBossSso({json}){
+function installBossSso({json,fetchPublic}){
   return async(req,res)=>{
     responseHeaders(res);
     const route=(req.url||"").split("?")[0];
@@ -162,7 +162,7 @@ function installBossSso({json}){
       try{
         if(!STATE_RE.test(state)||!constantEqual(state,saved))
           throw Error("Sign-in state expired");
-        const claims=await verifyPapaTicket(ticket,state);
+        const claims=await verifyPapaTicket(ticket,state,{fetchPublic});
         if(!claims||!consumeTicketJti(claims.jti))
           throw Error("Sign-in ticket not valid");
         writeCookie(res,SESSION_COOKIE,makeSessionTicket(),SESSION_MAX_AGE);
