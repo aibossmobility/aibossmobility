@@ -46,7 +46,7 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 @media(max-width:740px){.metrics,.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:440px){.metrics,.two{grid-template-columns:1fr}}
 </style>
-<script src="/ai-boss-os.js?v=20261109-google-crm" defer></script>
+<script src="/ai-boss-os.js?v=20261109-ghl-ui-voice-probe" defer></script>
 </head>
 <body>
 <header class="header"><div class="container">
@@ -77,15 +77,17 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 <div class="metric"><strong id="gmail-matches">—</strong><span>Gmail messages matching AI Boss recipient addresses (not conversations)</span></div>
 <div class="metric"><strong id="calendar-matches">—</strong><span>AI Boss-labeled Calendar events dated today (not attendance)</span></div>
 <div class="metric"><strong id="ghl-acks">—</strong><span>Confirmed GoHighLevel intake handoffs (not conversions)</span></div>
+<div class="metric"><strong id="ghl-contacts">—</strong><span>Contacts visible in the AI Boss GHL location (not verified customers)</span></div>
+<div class="metric"><strong id="ghl-filtered">—</strong><span>Opportunities in the selected GHL view (possibly filtered)</span></div>
 </div>
 <p class="muted" id="mac-updated">No Mac report received yet.</p>
-<p class="muted" id="qa"></p><p class="muted" id="google-coverage">Gmail and Calendar counts appear only after a verified read-only Mac scan.</p>
+<p class="muted" id="qa"></p><p class="muted" id="ghl-coverage">CRM API pipeline is not connected; live UI snapshot is source-labeled and cannot establish full CRM totals.</p><p class="muted" id="google-coverage">Gmail and Calendar counts appear only after a verified read-only Mac scan.</p>
 </section>
 <div class="two">
 <section class="panel"><h2>Voice and conversation recaps</h2><p class="muted">Only recaps deliberately saved through your Mac voice reader are collected. Private notes stay private.</p><ul id="recaps" class="entries"></ul><p id="no-recaps" class="muted">No authorized Mac voice recaps received for this date.</p></section>
 <section class="panel"><h2>Conversations & follow-ups</h2><p class="muted">These are your saved AI Boss conversation records; next steps are for review, not automatically sent.</p><ul id="conversations" class="entries"></ul><p id="no-conversations" class="muted">No saved conversation records dated this day.</p></section>
 </div>
-<section class="panel"><h2>Connection coverage</h2><ul id="coverage"></ul><p class="muted">Mac worker proof and voice recaps are two distinct sources. Gmail and Calendar metrics count only source-matched messages and events, not conversations or attendance. GoHighLevel, SMS and social-media activity count only after independently verified integration. ElevenLabs is not the primary response voice. Your selected Brian Keith Hill voice identity remains on the Mac; dynamic voice cloning playback requires separate validation.</p></section>
+<section class="panel"><h2>Connection coverage</h2><ul id="coverage"></ul><p class="muted">Mac worker proof and voice recaps are two distinct sources. Gmail and Calendar metrics count only source-matched messages and events, not conversations or attendance. The GoHighLevel UI snapshot does not establish full CRM access. SMS and social-media activity count only after independently verified brand-specific integrations. ElevenLabs is not the primary response voice. Your selected Brian Keith Hill voice identity remains on the Mac; dynamic voice cloning playback requires separate validation.</p></section>
 </div>
 </main>
 <footer>AI Boss Mobility · Keep people, permissions and decisions at the center.</footer>
