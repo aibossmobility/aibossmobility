@@ -28,14 +28,16 @@ function constantToken(req) {
 }
 function stateFile(dir=dataDirectory()) {return path.join(dir,"ai-boss-mac-os-report.json");}
 function load(file=stateFile()){
-  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[],integrations:{},ghl_ui:{}};
+  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[],integrations:{},ghl_ui:{},ghl_api:{}};
   const obj=JSON.parse(fs.readFileSync(file,"utf8"));
   if(obj.version!==1 || typeof obj.rollups!=="object" || !Array.isArray(obj.voice))
     throw Error("Mac OS report needs review");
   if(obj.integrations===undefined)obj.integrations={};
   if(obj.ghl_ui===undefined)obj.ghl_ui={};
+  if(obj.ghl_api===undefined)obj.ghl_api={};
   if(!obj.integrations || typeof obj.integrations!=="object" || Array.isArray(obj.integrations)) throw Error("Mac OS integration report needs review");
   if(!obj.ghl_ui || typeof obj.ghl_ui!=="object" || Array.isArray(obj.ghl_ui)) throw Error("Mac OS GHL report needs review");
+  if(!obj.ghl_api || typeof obj.ghl_api!=="object" || Array.isArray(obj.ghl_api)) throw Error("Mac OS GHL API report needs review");
   return obj;
 }
 function persist(obj,file=stateFile()){
@@ -110,6 +112,27 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
       source_ref:payload.source_ref,received_at:now.toISOString(),
       observed_at:eventTime.toISOString(),services:sanitized
     };
+  }else if(payload.kind==="ghl_api_snapshot"){
+    const allowed=["brand","kind","source_ref","observed_at","date","location_id","scope","contacts_count","opportunities_count","conversations_count"];
+    if(Object.keys(payload).some(key=>!allowed.includes(key)) ||
+      payload.location_id!=="qJ83IIaK5y2ZPHzLfGG1" ||
+      payload.scope!=="subaccount_readonly" ||
+      [payload.contacts_count,payload.opportunities_count,payload.conversations_count]
+        .some(value=>value!==null && count(value)===null) ||
+      [payload.contacts_count,payload.opportunities_count,payload.conversations_count]
+        .every(value=>value===null))
+      throw Error("Invalid verified read-only GHL API snapshot");
+    const snapshot={
+      location_id:payload.location_id,scope:payload.scope,
+      contacts_count:payload.contacts_count,
+      opportunities_count:payload.opportunities_count,
+      conversations_count:payload.conversations_count
+    };
+    const prior=state.ghl_api[payload.date];
+    if(prior?.source_ref===payload.source_ref && JSON.stringify(prior.snapshot)===JSON.stringify(snapshot))
+      return {accepted:false,duplicate:true};
+    state.ghl_api[payload.date]={source_ref:payload.source_ref,
+      received_at:now.toISOString(),observed_at:eventTime.toISOString(),snapshot};
   }else if(payload.kind==="ghl_ui_snapshot"){
     if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","location_id","crm_scope","contacts_visible_count","opportunities_filtered_count","opportunities_filter_applied","pipeline_label"].includes(k)))
       throw Error("Unexpected CRM snapshot field");
@@ -149,6 +172,9 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
     state.voice=state.voice.slice(0,1000);
   }else throw Error("Unsupported Mac event");
   const cutoff=new Date(now.getTime()-90*86400000);
+  for(const day of Object.keys(state.ghl_api)){
+    if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.ghl_api[day];
+  }
   for(const day of Object.keys(state.ghl_ui)){
     if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.ghl_ui[day];
   }
@@ -167,6 +193,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
   const rollup=state.rollups[day]||null;
   const google=state.integrations[day]||null;
   const crm=state.ghl_ui[day]||null;
+  const api=state.ghl_api[day]||null;
   const gmail=google?.services?.gmail || null;
   const calendar=google?.services?.google_calendar || null;
   const voices=state.voice.filter(x=>x.date===day);
@@ -206,10 +233,14 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       completed_private_reflections:notes.filter(c=>c.completed).length,
       website_business_intakes:intakeCount,
       gohighlevel_webhook_acks:ghlReceipts,
-      gohighlevel_visible_contacts:crm?.snapshot.contacts_visible_count??null,
+      gohighlevel_visible_contacts:api?.snapshot.contacts_count??crm?.snapshot.contacts_visible_count??null,
       gohighlevel_filtered_opportunities:crm?.snapshot.opportunities_filtered_count??null,
+      gohighlevel_api_opportunities:api?.snapshot.opportunities_count??null,
+      gohighlevel_api_conversations:api?.snapshot.conversations_count??null,
       gmail_message_matches:gmail?.status==="connected"?gmail.count:null,
       calendar_ai_boss_events:calendar?.status==="connected"?calendar.count:null},
+    crm_api_snapshot:api?{received_at:api.received_at,observed_at:api.observed_at,...api.snapshot,
+      caution:"Read-only API totals from the AI Boss sub-account; CRM conversations are not proof of completed sales or phone calls."}:null,
     crm_readonly_snapshot:crm?{
       received_at:crm.received_at,observed_at:crm.observed_at,
       ...crm.snapshot,
@@ -228,7 +259,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       mac_voice:voices.length?"at least one authorized recap received":"ready for authorized Mac recaps",
       gmail:gmail?.status==="connected"?"Connected: AI Boss-address message matches via authenticated Mac Gmail connector":"Not verified for this report date",
       google_calendar:calendar?.status==="connected"?"Connected: matching dated events via authenticated Mac Calendar connector":"Not verified for this report date",
-      gohighlevel:crm?"Connected read-only Chrome 3 UI snapshot for this date; full GHL CRM API is not connected":ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
+      gohighlevel:api?"Connected read-only AI Boss sub-account API snapshot for this date":crm?"Connected read-only Chrome 3 UI snapshot for this date; full GHL CRM API is not connected":ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
       social_media:"Excluded: Metricool AI Boss-labeled brand currently connects several Papa Life social accounts. No AI Boss-only metrics verified.",
       phone_calls:"Not connected: Mac Google Messages is SMS, not a phone call log. No customer call data is inferred.",
       phone_messages:"Mac has a Google Messages snapshot, but personal/brand boundaries are not verified; content and thread totals excluded from AI Boss reporting."
