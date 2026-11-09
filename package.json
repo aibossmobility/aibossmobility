@@ -5,7 +5,7 @@
   "description": "AI Boss Mobility \u2014 practical AI strategy, automation, training, and human-centered implementation.",
   "scripts": {
     "start": "node server.js",
-    "test:outreach": "node outreach-conversations.test.js && node purchase-support.test.js"
+    "test:outreach": "node outreach-conversations.test.js && node purchase-support.test.js && node ai-boss-mac-os.test.js"
   },
   "engines": {
     "node": ">=20"
