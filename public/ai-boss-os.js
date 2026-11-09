@@ -1,7 +1,6 @@
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
-let token="";
 function today(){
  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
  return ["year","month","day"].map(k=>parts.find(p=>p.type===k).value).join("-");
@@ -20,11 +19,12 @@ function line(li,main,secondary){
 async function load(){
  const date=$("report-date").value;
  const response=await fetch("/api/ai-boss-os/daily?date="+encodeURIComponent(date),{
-  headers:{"x-admin-token":token},cache:"no-store",credentials:"same-origin"
+  cache:"no-store",credentials:"same-origin"
  });
  let data={};try{data=await response.json();}catch{}
+ if(response.status===401){const e=new Error("Your Papa Life owner sign-in is required.");e.authRequired=true;throw e;}
  if(!response.ok||!data.ok)throw Error(data.error||"Daily report is unavailable.");
- $("login").hidden=true;$("workspace").hidden=false;$("access").value="";
+ $("login").hidden=true;$("workspace").hidden=false;
  text("proof",data.mac.worker_proof?.proof_records ?? "—");
  text("voice",String(data.summary.mac_voice_recaps));
  text("outreach",String(data.summary.private_conversations_dated));
@@ -58,14 +58,27 @@ async function load(){
  }
  setMessage("");
 }
-$("unlock").addEventListener("submit",async e=>{
- e.preventDefault();token=$("access").value;
- try{await load();}catch(e){token="";setMessage(e.message,true);}
+function signIn(){
+ window.location.replace("/auth/papa/start");
+}
+$("controls").addEventListener("submit",async e=>{
+ e.preventDefault();
+ try{await load();}
+ catch(e){if(e.authRequired)signIn();else setMessage(e.message,true);}
 });
-$("controls").addEventListener("submit",async e=>{e.preventDefault();try{await load();}catch(e){setMessage(e.message,true);}});
-$("lock").addEventListener("click",()=>{
- token="";$("workspace").hidden=true;$("login").hidden=false;
- $("access").value="";$("coverage").replaceChildren();$("recaps").replaceChildren();$("conversations").replaceChildren();
- setMessage("Report locked.");
+$("lock").addEventListener("click",async()=>{
+ try{await fetch("/auth/papa/logout",{method:"POST",cache:"no-store",credentials:"same-origin"});}catch{}
+ $("workspace").hidden=true;$("login").hidden=false;
+ $("coverage").replaceChildren();$("recaps").replaceChildren();$("conversations").replaceChildren();
+ setMessage("Signed out of AI Boss. Your Papa Life account is unchanged.");
 });
+const params=new URLSearchParams(location.search);
+if(params.has("sso_error")){
+ setMessage("The shared sign-in could not be completed. Open Papa Life with your owner account and choose Continue with Papa Life OS again.",true);
+}else{
+ load().catch(e=>{
+   if(e.authRequired)signIn();
+   else setMessage("Your daily report is temporarily unavailable. "+e.message,true);
+ });
+}
 })();
