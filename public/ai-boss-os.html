@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Boss Mobility OS | Brian's Private Mac-Led Daily Picture</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="canonical" href="https://ai.bossmobilelifecoach.com/ai-boss-os">
+<link rel="stylesheet" href="/styles.css">
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{background:#f8f7f2;color:#121c18;margin:0;font:16px/1.5 system-ui,-apple-system,sans-serif}
+.container{max-width:1050px;margin:0 auto;padding:0 20px}
+.header{background:#111;color:#fff;border-bottom:5px solid #facd2d;padding:24px 0}
+.header a{color:#ffdf51}
+.brandline{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#f9cd3e}
+.header h1{font-size:clamp(26px,4vw,38px);line-height:1.15;margin:10px 0}
+.header p{max-width:800px;color:#eee}
+main{padding:25px 0 65px}
+.panel{background:#fff;border:1px solid #d6dbcf;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 2px 15px #13251c12}
+h2{font-size:22px;line-height:1.3;margin:0 0 12px;color:#135334}
+h3{font-size:16px;margin:0 0 5px}
+p{margin:8px 0 14px}
+form{display:flex;align-items:end;flex-wrap:wrap;gap:12px}
+label{display:block;font-size:14px;font-weight:750}
+input{display:block;padding:12px;border:1px solid #8ca38b;border-radius:8px;margin-top:5px;max-width:100%;background:#fff;color:#111}
+button{border:0;border-radius:8px;background:#145b35;color:#fff;font:750 15px system-ui;padding:12px 18px;cursor:pointer}
+button.secondary{border:1px solid #145b35;background:white;color:#145b35}
+button:disabled{opacity:.5}
+button:focus-visible,input:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:15px}
+.metric{border-radius:12px;padding:20px;background:#f4f1e4;border:1px solid #e6dfcb}
+.metric strong{display:block;font-size:30px;color:#145b35}
+.metric span{font-size:13px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+ul{padding-left:19px}
+li{margin-bottom:10px}
+small,.muted{font-size:13px;color:#546457}
+#message{font-weight:750}
+#message.error{color:#a22726}
+#workspace[hidden],#login[hidden],#empty[hidden]{display:none!important}
+.status{display:inline-block;border:1px solid #e1d7a8;border-radius:7px;background:#fff9df;padding:3px 8px;font-size:12px}
+.entries{max-height:380px;overflow:auto}
+.entries li{overflow-wrap:anywhere}
+footer{text-align:center;margin:35px 0;color:#58635c}
+@media(max-width:740px){.metrics,.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:440px){.metrics,.two{grid-template-columns:1fr}}
+</style>
+<script src="/ai-boss-os.js" defer></script>
+</head>
+<body>
+<header class="header"><div class="container">
+<p class="brandline">AI Boss Mobility · Private Operations</p>
+<h1>Brian's Mac-Led AI Boss Mobility OS</h1>
+<p>Your Mac mini and Desktop Commander lead the collection. This page displays verified website records, submitted Mac worker evidence and owner-approved voice recaps. It does not replace Papa Life or launch paid voice services.</p>
+<a href="/">AI Boss website</a> · <a href="/explore">Explore with visitors</a>
+</div></header>
+<main class="container">
+<section class="panel" id="login" aria-label="Private owner sign in">
+<h2>Open your private daily picture</h2>
+<p>Enter your existing AI Boss back-office access code. It stays in this browser tab's memory and is not saved to local storage.</p>
+<form id="unlock"><label>Back-office access code <input id="access" type="password" autocomplete="off" required></label><button type="submit">Unlock my daily report</button></form>
+<p id="message" role="status"></p>
+</section>
+<div id="workspace" hidden>
+<section class="panel">
+<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between">
+<div><h2 style="margin-bottom:6px">Today's verified activity</h2><span class="status" id="mac-status">Checking Mac report</span></div>
+<form id="controls"><label>Report date <input id="report-date" type="date" required></label>
+<button type="submit">Refresh report</button><button type="button" class="secondary" id="lock">Lock</button></form>
+</div>
+<div class="metrics">
+<div class="metric"><strong id="proof">—</strong><span>Mac worker-proof records (local evidence)</span></div>
+<div class="metric"><strong id="voice">—</strong><span>Approved Mac voice recaps</span></div>
+<div class="metric"><strong id="outreach">—</strong><span>Private conversations dated today</span></div>
+<div class="metric"><strong id="intake">—</strong><span>Website business intake records</span></div>
+</div>
+<p class="muted" id="mac-updated">No Mac report received yet.</p>
+<p class="muted" id="qa"></p>
+</section>
+<div class="two">
+<section class="panel"><h2>Voice and conversation recaps</h2><p class="muted">Only recaps deliberately saved through your Mac voice reader are collected. Private notes stay private.</p><ul id="recaps" class="entries"></ul><p id="no-recaps" class="muted">No authorized Mac voice recaps received for this date.</p></section>
+<section class="panel"><h2>Conversations & follow-ups</h2><p class="muted">These are your saved AI Boss conversation records; next steps are for review, not automatically sent.</p><ul id="conversations" class="entries"></ul><p id="no-conversations" class="muted">No saved conversation records dated this day.</p></section>
+</div>
+<section class="panel"><h2>Connection coverage</h2><ul id="coverage"></ul><p class="muted">Mac worker proof and voice recaps are two distinct sources. Gmail, Calendar, GoHighLevel, SMS and social-media activity only count after independently verified integration. ElevenLabs is not the primary response voice. Your selected Brian Keith Hill voice identity remains on the Mac; dynamic voice cloning playback requires separate validation.</p></section>
+</div>
+</main>
+<footer>AI Boss Mobility · Keep people, permissions and decisions at the center.</footer>
+</body></html>
