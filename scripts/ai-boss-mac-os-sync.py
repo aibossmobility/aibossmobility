@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import shutil
 import sqlite3
+import subprocess
 import stat
 import sys
 import urllib.error
@@ -32,6 +33,49 @@ MAX_AGE_DAYS = 89
 # Read-only: the Mac calls its established private Gmail and Workspace connector endpoints.
 GMAIL_ENV=ROOT / "secrets/gmail.env"
 WORKSPACE_TOKEN=ROOT / "secrets/google-workspace-connector.token"
+
+GHL_BROWSER_READONLY=ROOT / "bin/ai-boss-ghl-chrome-readonly.py"
+GHL_LAST_ACK=ROOT / "reports/ai-boss-ghl-readonly-last-ack.json"
+
+def ghl_browser_daily(token,force=False):
+    today=dt.datetime.now(PACIFIC).date().isoformat()
+    if not force and GHL_LAST_ACK.is_file():
+        try:
+            last=json.loads(GHL_LAST_ACK.read_text())
+            if last.get("date")==today:
+                return {"status":"already_verified_today"}
+        except (ValueError,OSError):
+            pass
+    if not GHL_BROWSER_READONLY.is_file():
+        return {"status":"reader_unavailable"}
+    try:
+        result=subprocess.run(
+            ["/usr/bin/python3",str(GHL_BROWSER_READONLY),"--run" if force else "--idle"],
+            capture_output=True,text=True,timeout=65
+        )
+        obj=json.loads(result.stdout or "{}")
+        if obj.get("status")=="skipped_mac_active":
+            return {"status":"waiting_until_mac_idle"}
+        if result.returncode or obj.get("crm_scope")!="read_only_chrome_ui":
+            return {"status":"crm_ui_not_verified"}
+        timestamp=dt.datetime.now(PACIFIC)
+        event={
+            "brand":"ai_boss_mobility","kind":"ghl_ui_snapshot",
+            "source_ref":"ghl-ui:"+today,
+            "observed_at":timestamp.isoformat(),"date":today,
+            **obj
+        }
+        receipt=send(event,token)
+        if not (receipt.get("accepted") or receipt.get("duplicate")):
+            raise RuntimeError("Read-only CRM report not acknowledged")
+        GHL_LAST_ACK.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
+        GHL_LAST_ACK.write_text(json.dumps({"date":today,"received_ack":True})+"\n")
+        GHL_LAST_ACK.chmod(0o600)
+        return {"status":"verified","contacts_visible":obj["contacts_visible_count"],
+                "opportunities_filtered":obj["opportunities_filtered_count"]}
+    except Exception:
+        # Never log contact names, CRM page contents or browser credentials.
+        return {"status":"crm_ui_not_verified"}
 
 def local_json(url, token, data):
     request=urllib.request.Request(
@@ -221,7 +265,7 @@ def voice_recaps(token):
     return delivered, blocked
 
 def main():
-    if sys.argv[1:] not in (["--activate"],["--activate","--backfill"]):
+    if sys.argv[1:] not in (["--activate"],["--activate","--backfill"],["--activate","--ghl-now"]):
         raise RuntimeError("Mac relay disabled without explicit --activate")
     if sys.platform != "darwin":
         raise RuntimeError("Run only on Brian's authorized Mac mini")
@@ -248,12 +292,13 @@ def main():
         google_ok=bool(receipt.get("accepted") or receipt.get("duplicate"))
     except Exception:
         print("Mac Google daily report could not be delivered",file=sys.stderr)
+    crm_result=ghl_browser_daily(token,force="--ghl-now" in sys.argv)
     voice_ok,voice_bad=voice_recaps(token)
     print(json.dumps({
         "connector":"mac-mini-desktop-commander","brand":"ai_boss_mobility",
         "worker_days_acknowledged":sent,"worker_days_needing_attention":blocked,
         "approved_voice_recaps_acknowledged":voice_ok,
-        "voice_recaps_needing_attention":voice_bad,"google_daily_report_acknowledged":google_ok,"customer_messages_sent":0
+        "voice_recaps_needing_attention":voice_bad,"google_daily_report_acknowledged":google_ok,"crm_ui_status":crm_result["status"],"customer_messages_sent":0
     }))
     if blocked or voice_bad or not google_ok:
         sys.exit(1)
