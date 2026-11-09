@@ -55,6 +55,17 @@ async function handleBusinessIntake(req,res){
     const routed=results.filter(Boolean).length;
     const ghlConfigured=Boolean(process.env.GHL_INTAKE_WEBHOOK);
     const ghlDelivered=ghlConfigured && results.length>0 && results[results.length-1]===true;
+    // Log only actual 2xx GoHighLevel intake acknowledgements, never infer a CRM
+    // conversation or a paying customer from a received form submission.
+    if(ghlDelivered){
+      try{
+        const receiptsDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");
+        fs.mkdirSync(receiptsDir,{recursive:true});
+        fs.appendFileSync(path.join(receiptsDir,"ghl-intake-ack.ndjson"),
+          JSON.stringify({source:"go_high_level_webhook",accepted_at:new Date().toISOString(),type:"intake_acknowledged"})+"\n",
+          {encoding:"utf8",mode:0o600});
+      }catch{console.error("GoHighLevel acknowledgement could not be recorded for reporting");}
+    }
     if(!ghlDelivered){
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});

@@ -29,6 +29,86 @@ ENDPOINT = "https://ai.bossmobilelifecoach.com/api/ai-boss-os/mac-event"
 PACIFIC = ZoneInfo("America/Los_Angeles")
 MAX_AGE_DAYS = 89
 
+# Read-only: the Mac calls its established private Gmail and Workspace connector endpoints.
+GMAIL_ENV=ROOT / "secrets/gmail.env"
+WORKSPACE_TOKEN=ROOT / "secrets/google-workspace-connector.token"
+
+def local_json(url, token, data):
+    request=urllib.request.Request(
+        url, method="POST",
+        headers={"Content-Type":"application/json","Authorization":"Bearer "+token},
+        data=json.dumps(data).encode("utf8")
+    )
+    with urllib.request.urlopen(request, timeout=19) as res:
+        if res.status!=200: raise RuntimeError("Local connector rejected read")
+        obj=json.load(res)
+    if not isinstance(obj,dict) or obj.get("error"): raise RuntimeError("Local connector returned an error")
+    return obj
+
+def local_secret_env(path,key):
+    # Never log or transfer the secret to the website.
+    for line in path.read_text().splitlines():
+        if line.startswith(key+"="):
+            value=line.split("=",1)[1].strip().strip('"').strip("'")
+            if len(value)<16: raise RuntimeError("Local Gmail authorization is unavailable")
+            return value
+    raise RuntimeError("Local Gmail authorization not configured")
+
+def google_daily_counts(day):
+    day_obj=dt.date.fromisoformat(day)
+    next_day=(day_obj+dt.timedelta(days=1)).isoformat()
+    services={
+        "gmail":{"status":"unavailable","count":None,"scan_limit":50,"truncated":False},
+        "google_calendar":{"status":"unavailable","count":None,"scan_limit":100,"truncated":False}
+    }
+    try:
+        token=local_secret_env(GMAIL_ENV,"AI_BOSS_GMAIL_CONNECTOR_TOKEN")
+        q=f"after:{day.replace('-','/')} before:{next_day.replace('-','/')} {{to:brian@bossmobility.net to:info@bossmobility.net}} -in:spam -in:trash"
+        result=local_json("http://127.0.0.1:8788/gmail",token,{
+            "operation":"search","target_ref":"query:"+q
+        })
+        ids=result.get("messages",[])
+        if not isinstance(ids,list): raise ValueError("Malformed Gmail metadata response")
+        count_=len(ids)
+        services["gmail"]={
+            "status":"connected","count":count_,"scan_limit":50,
+            "truncated":bool(result.get("nextPageToken") or count_>=50 or result.get("resultSizeEstimate",0)>50)
+        }
+    except Exception:
+        # Unavailable is never misreported as zero messages.
+        print("Gmail matching count unavailable; no private content logged",file=sys.stderr)
+
+    try:
+        token=WORKSPACE_TOKEN.read_text().strip()
+        start=dt.datetime.combine(day_obj,dt.time.min,PACIFIC)
+        end=dt.datetime.combine(day_obj+dt.timedelta(days=1),dt.time.min,PACIFIC)
+        result=local_json("http://127.0.0.1:8790/workspace",token,{
+            "system":"calendar","operation":"search","target_ref":"query:",
+            "start_at":start.isoformat(),"end_at":end.isoformat(),"max_results":100
+        })
+        events=result.get("items",[])
+        if not isinstance(events,list): raise ValueError("Malformed Calendar metadata response")
+        matched=sum(1 for item in events
+            if isinstance(item,dict) and any(word in str(item.get("summary","")).lower()
+            for word in ("ai boss","boss mobility","bossmobile")))
+        services["google_calendar"]={
+            "status":"connected","count":matched,"scan_limit":100,
+            "truncated":bool(result.get("nextPageToken") or len(events)>=100)
+        }
+    except Exception:
+        print("Dated AI Boss Calendar count unavailable; no attendee data logged",file=sys.stderr)
+    return services
+
+def send_google_counts(day,token):
+    now=dt.datetime.now(PACIFIC)
+    payload={
+        "brand":"ai_boss_mobility","kind":"integration_rollup",
+        "source_ref":"mac-google:"+day,
+        "observed_at":now.isoformat(),"date":day,
+        "services":google_daily_counts(day)
+    }
+    return send(payload,token)
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, request, fp, code, msg, headers, newurl):
         return None
@@ -160,14 +240,22 @@ def main():
         except Exception:
             blocked+=1
             print("Mac worker-proof daily aggregate needs attention (redacted)", file=sys.stderr)
+    # Only current-day Google data is called verified. Past calendar/mail activity is
+    # not synthesized from future-only event searches or unbounded message queries.
+    google_ok=False
+    try:
+        receipt=send_google_counts(now.isoformat(),token)
+        google_ok=bool(receipt.get("accepted") or receipt.get("duplicate"))
+    except Exception:
+        print("Mac Google daily report could not be delivered",file=sys.stderr)
     voice_ok,voice_bad=voice_recaps(token)
     print(json.dumps({
         "connector":"mac-mini-desktop-commander","brand":"ai_boss_mobility",
         "worker_days_acknowledged":sent,"worker_days_needing_attention":blocked,
         "approved_voice_recaps_acknowledged":voice_ok,
-        "voice_recaps_needing_attention":voice_bad,"customer_messages_sent":0
+        "voice_recaps_needing_attention":voice_bad,"google_daily_report_acknowledged":google_ok,"customer_messages_sent":0
     }))
-    if blocked or voice_bad:
+    if blocked or voice_bad or not google_ok:
         sys.exit(1)
 
 if __name__=="__main__":

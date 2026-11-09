@@ -28,10 +28,12 @@ function constantToken(req) {
 }
 function stateFile(dir=dataDirectory()) {return path.join(dir,"ai-boss-mac-os-report.json");}
 function load(file=stateFile()){
-  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[]};
+  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[],integrations:{}};
   const obj=JSON.parse(fs.readFileSync(file,"utf8"));
   if(obj.version!==1 || typeof obj.rollups!=="object" || !Array.isArray(obj.voice))
     throw Error("Mac OS report needs review");
+  if(obj.integrations===undefined)obj.integrations={};
+  if(!obj.integrations || typeof obj.integrations!=="object" || Array.isArray(obj.integrations)) throw Error("Mac OS integration report needs review");
   return obj;
 }
 function persist(obj,file=stateFile()){
@@ -73,6 +75,33 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
       source_ref:payload.source_ref,observed_at:eventTime.toISOString(),
       received_at:now.toISOString(),metrics
     };
+  }else if(payload.kind==="integration_rollup"){
+    if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","services"].includes(k)))
+      throw Error("Unexpected integration data");
+    const serviceKeys=["gmail","google_calendar"];
+    const allowedKeys=["status","count","scan_limit","truncated"];
+    const services=payload.services;
+    if(!services || typeof services!=="object" || Object.keys(services).sort().join(",")!==serviceKeys.sort().join(","))
+      throw Error("Both scoped Google connectors must be reported");
+    const sanitized={};
+    for(const service of serviceKeys){
+      const entry=services[service];
+      if(!entry || typeof entry!=="object" || Object.keys(entry).some(k=>!allowedKeys.includes(k)) ||
+         !["connected","unavailable"].includes(entry.status) ||
+         count(entry.scan_limit)===null || entry.scan_limit>250 ||
+         typeof entry.truncated!=="boolean" ||
+         (entry.status==="connected" && (count(entry.count)===null || entry.count>entry.scan_limit)) ||
+         (entry.status==="unavailable" && entry.count!==null))
+        throw Error("Invalid authenticated connector count");
+      sanitized[service]={status:entry.status,count:entry.count,scan_limit:entry.scan_limit,truncated:entry.truncated};
+    }
+    const old=state.integrations[payload.date];
+    if(old?.source_ref===payload.source_ref && JSON.stringify(old.services)===JSON.stringify(sanitized))
+      return {accepted:false,duplicate:true};
+    state.integrations[payload.date]={
+      source_ref:payload.source_ref,received_at:now.toISOString(),
+      observed_at:eventTime.toISOString(),services:sanitized
+    };
   }else if(payload.kind==="voice_recap"){
     if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","note","authorized_to_store"].includes(k)))
       throw Error("Unexpected Mac voice field");
@@ -87,6 +116,9 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
     state.voice=state.voice.slice(0,1000);
   }else throw Error("Unsupported Mac event");
   const cutoff=new Date(now.getTime()-90*86400000);
+  for(const day of Object.keys(state.integrations)){
+    if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.integrations[day];
+  }
   for(const day of Object.keys(state.rollups)){
     if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.rollups[day];
   }
@@ -97,8 +129,11 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
   if(!isDate(day))throw Error("Invalid report date");
   const state=load(file);
   const rollup=state.rollups[day]||null;
+  const google=state.integrations[day]||null;
+  const gmail=google?.services?.gmail || null;
+  const calendar=google?.services?.google_calendar || null;
   const voices=state.voice.filter(x=>x.date===day);
-  let notes=[],intakeCount=null;
+  let notes=[],intakeCount=null,ghlReceipts=0;
   try{
     const raw=JSON.parse(fs.readFileSync(path.join(dir,"outreach-conversations.json"),"utf8"));
     if(Array.isArray(raw))notes=raw.filter(c=>c.date===day).map(c=>({
@@ -113,6 +148,15 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       catch{return n;}
     },0);
   }catch(e){if(e.code==="ENOENT")intakeCount=0;}
+  try{
+    const raw=fs.readFileSync(path.join(dir,"ghl-intake-ack.ndjson"),"utf8");
+    ghlReceipts=raw.split(/\r?\n/).filter(Boolean).reduce((count_,line)=>{
+      try{
+        const item=JSON.parse(line);
+        return count_+(item.type==="intake_acknowledged" && pacificDay(new Date(item.accepted_at))===day?1:0);
+      }catch{return count_;}
+    },0);
+  }catch(e){if(e.code!=="ENOENT")ghlReceipts=null;}
   return {
     ok:true,date:day,
     primary_connector:"Brian's Mac mini / Desktop Commander",
@@ -123,7 +167,15 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       worker_proof:rollup?.metrics||null},
     summary:{mac_voice_recaps:voices.length,private_conversations_dated:notes.length,
       completed_private_reflections:notes.filter(c=>c.completed).length,
-      website_business_intakes:intakeCount},
+      website_business_intakes:intakeCount,
+      gohighlevel_webhook_acks:ghlReceipts,
+      gmail_message_matches:gmail?.status==="connected"?gmail.count:null,
+      calendar_ai_boss_events:calendar?.status==="connected"?calendar.count:null},
+    google_source_snapshot:google?{
+      received_at:google.received_at,
+      gmail:{...gmail,scope:"AI Boss recipient-address matches, not unique customer conversations"},
+      google_calendar:{...calendar,scope:"Calendar events on report date with AI Boss title; not attendance"}
+    }:null,
     voice_recaps:voices.slice(0,30).map(x=>({note:x.note,recorded_at:x.observed_at,source:x.source})),
     private_conversations:notes.slice(0,40),
     integrations:{
@@ -131,9 +183,9 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       website_business_intakes:intakeCount===null?"unavailable":"connected locally",
       mac_worker_evidence:rollup?"verified aggregate received":"awaiting Mac report",
       mac_voice:voices.length?"at least one authorized recap received":"ready for authorized Mac recaps",
-      gmail:"not included in site report",
-      google_calendar:"not included in site report",
-      gohighlevel:"delivery not independently verified by this report",
+      gmail:gmail?.status==="connected"?"Connected: AI Boss-address message matches via authenticated Mac Gmail connector":"Not verified for this report date",
+      google_calendar:calendar?.status==="connected"?"Connected: matching dated events via authenticated Mac Calendar connector":"Not verified for this report date",
+      gohighlevel:ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
       social_media:"not connected"
     }
   };
