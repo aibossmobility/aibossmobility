@@ -214,6 +214,7 @@ async function paypalCapture(req,res){
 
 const supportHandler = require("./purchase-support").installPurchaseSupport({readBody,json,isAdmin:isConsentAdmin});
 const outreachHandler = require("./outreach-conversations").installOutreachConversations({readBody,json,isAdmin:isConsentAdmin});
+const macOSHandler = require("./ai-boss-mac-os").installMacOS({readBody,json,isAdmin:isConsentAdmin});
 
 // Enforced headers for ALL website and API responses, including errors.
 // Keep voice/chat microphone permissions available and allow existing embedded
@@ -274,6 +275,7 @@ http.createServer(async(req,res)=>{
   }
   if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"paypal_via_gohighlevel",checkout_ready:false,reason:"Existing GoHighLevel payment link and verified notification must be configured before enabling online checkout",direct_paypal_checkout_enabled:false});
   if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
+  if(route==="/api/ai-boss-os/mac-event" || route==="/api/ai-boss-os/daily") return macOSHandler(req,res);
   if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);
   if(req.method==="POST"&&route==="/api/paypal/capture-order")return paypalCapture(req,res);
   if(req.method==="GET"&&route==="/api/gemini-voice/status")return voiceStatus(res);
