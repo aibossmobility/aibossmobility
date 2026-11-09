@@ -33,7 +33,7 @@
     $('[data-empty]').hidden=items.length>0;$('[data-empty]').textContent=q?'No matching conversations.':view==='Completed reflections'?'Completed reflections will appear here.':view==='Missing information'?'Nothing to clarify right now.':'Create a conversation when you have someone in mind. A name is enough to begin.';
   }
   async function api(method='GET',body){const r=await fetch('/api/outreach-conversations',{method,headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',cache:'no-store',...(body?{body:JSON.stringify(body)}:{})});const data=await r.json();if(r.status===401){const e=new Error('Sign in through Papa Life OS to unlock these private conversations.');e.authRequired=true;throw e;}if(!r.ok||!data.ok)throw Error(data.error||'Could not connect. Your notes are still on screen.');return data;}
-  async function load(){if(!leave())return;error();try{const data=await api();records=data.conversations;selected=null;dirty=false;$('[data-login]').hidden=true;$('[data-work]').hidden=false;renderList();}catch(e){if(e.authRequired&&!new URLSearchParams(location.search).has('sso_error')){window.location.assign('/auth/papa/start');return;}error(e.message);}}
+  async function load(){if(!leave())return;error();try{const data=await api();records=data.conversations;selected=null;dirty=false;$('[data-login]').hidden=true;$('[data-work]').hidden=false;renderList();}catch(e){error(new URLSearchParams(location.search).has('sso_error')?'Sign-in did not complete. Select Continue with Papa Life OS to try again.':e.message);}}
   async function save(complete){
     if(!selected||saving)return;
     if(!selected.person.trim()){error('Add the person’s name before saving.');switchTab('Prepare');$('[data-field="person"]').focus();return;}

@@ -8,6 +8,9 @@ const AI_BOSS_ORIGIN="https://ai.bossmobilelifecoach.com";
 const KEY_URL=PAPA_ORIGIN+"/api/auth/ai-boss-sso/public-key";
 const STATE_COOKIE="__Host-ai-boss-sso-state";
 const SESSION_COOKIE="__Host-ai-boss-sso-session";
+const RETURN_COOKIE="__Host-ai-boss-sso-return";
+const RETURN_PATHS=new Set(["/ai-boss-os","/purchase-support-admin","/media-consents-admin"]);
+function safeReturnPath(value){return RETURN_PATHS.has(value)?value:"/ai-boss-os";}
 const ISSUER=PAPA_ORIGIN;
 const AUDIENCE="ai-boss-mobility-owner-os";
 const OWNER_EMAIL="brian@bossmobility.net";
@@ -151,6 +154,8 @@ function installBossSso({json,fetchPublic}){
     if(route==="/auth/papa/start"&&req.method==="GET"){
       const state=crypto.randomBytes(32).toString("base64url");
       writeCookie(res,STATE_COOKIE,state,300);
+      const returnTo=safeReturnPath(new URL(req.url,AI_BOSS_ORIGIN).searchParams.get("returnTo"));
+      writeCookie(res,RETURN_COOKIE,encodeURIComponent(returnTo),300);
       res.writeHead(302,{Location:PAPA_ORIGIN+"/api/auth/ai-boss-sso/authorize?state="+encodeURIComponent(state)});
       return res.end();
     }
@@ -158,7 +163,10 @@ function installBossSso({json,fetchPublic}){
       const query=new URL(req.url,AI_BOSS_ORIGIN).searchParams;
       const state=query.get("state")||"",ticket=query.get("ticket")||"";
       const saved=cookies(req)[STATE_COOKIE]||"";
+      let returnTo="/ai-boss-os";
+      try{returnTo=safeReturnPath(decodeURIComponent(cookies(req)[RETURN_COOKIE]||""));}catch{}
       clearCookie(res,STATE_COOKIE);
+      clearCookie(res,RETURN_COOKIE);
       try{
         if(!STATE_RE.test(state)||!constantEqual(state,saved))
           throw Error("Sign-in state expired");
@@ -166,9 +174,9 @@ function installBossSso({json,fetchPublic}){
         if(!claims||!consumeTicketJti(claims.jti))
           throw Error("Sign-in ticket not valid");
         writeCookie(res,SESSION_COOKIE,makeSessionTicket(),SESSION_MAX_AGE);
-        res.writeHead(303,{Location:"/ai-boss-os"});
+        res.writeHead(303,{Location:returnTo});
       }catch{
-        res.writeHead(303,{Location:"/ai-boss-os?sso_error=signin_failed"});
+        res.writeHead(303,{Location:returnTo+"?sso_error=signin_failed"});
       }
       return res.end();
     }
