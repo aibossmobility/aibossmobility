@@ -1,6 +1,7 @@
 const http=require("http");
 const fs=require("fs");
 const path=require("path");
+const {installBossSso,isBossSsoSession}=require("./ai-boss-owner-sso");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
@@ -87,7 +88,7 @@ function safeConsentRecord(record){
 function isConsentAdmin(req){
   const token=String(process.env.MEDIA_CONSENT_ADMIN_TOKEN||"");
   const supplied=String(req.headers["x-admin-token"]||"");
-  return Boolean(token)&&supplied===token;
+  return (Boolean(token)&&supplied===token)||isBossSsoSession(req);
 }
 async function handleMediaAiConsent(req,res){
   try{
@@ -226,6 +227,7 @@ async function paypalCapture(req,res){
 const supportHandler = require("./purchase-support").installPurchaseSupport({readBody,json,isAdmin:isConsentAdmin});
 const outreachHandler = require("./outreach-conversations").installOutreachConversations({readBody,json,isAdmin:isConsentAdmin});
 const macOSHandler = require("./ai-boss-mac-os").installMacOS({readBody,json,isAdmin:isConsentAdmin});
+const ssoHandler=installBossSso({json});
 
 // Enforced headers for ALL website and API responses, including errors.
 // Keep voice/chat microphone permissions available and allow existing embedded
@@ -277,6 +279,7 @@ http.createServer(async(req,res)=>{
     req.url="/trellis-trial.html";
   }
 
+  if(route==="/auth/papa/start" || route==="/auth/papa/callback" || route==="/auth/papa/logout")return ssoHandler(req,res);
   if(route==="/api/outreach-conversations")return outreachHandler(req,res);
   if(route==="/api/purchase-support" && ["POST","GET"].includes(req.method)){await supportHandler(req,res,route);return;}
   if(req.method==="GET"&&route==="/api/payments/clarity-checkout"){
