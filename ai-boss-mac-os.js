@@ -28,12 +28,14 @@ function constantToken(req) {
 }
 function stateFile(dir=dataDirectory()) {return path.join(dir,"ai-boss-mac-os-report.json");}
 function load(file=stateFile()){
-  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[],integrations:{}};
+  if(!fs.existsSync(file))return {version:1,rollups:{},voice:[],integrations:{},ghl_ui:{}};
   const obj=JSON.parse(fs.readFileSync(file,"utf8"));
   if(obj.version!==1 || typeof obj.rollups!=="object" || !Array.isArray(obj.voice))
     throw Error("Mac OS report needs review");
   if(obj.integrations===undefined)obj.integrations={};
+  if(obj.ghl_ui===undefined)obj.ghl_ui={};
   if(!obj.integrations || typeof obj.integrations!=="object" || Array.isArray(obj.integrations)) throw Error("Mac OS integration report needs review");
+  if(!obj.ghl_ui || typeof obj.ghl_ui!=="object" || Array.isArray(obj.ghl_ui)) throw Error("Mac OS GHL report needs review");
   return obj;
 }
 function persist(obj,file=stateFile()){
@@ -55,6 +57,12 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
      eventTime.getTime()>now.getTime()+5*60*1000 ||
      eventTime.getTime()<now.getTime()-100*86400000) throw Error("Invalid observed date");
   if(!isDate(payload.date) || payload.date!==pacificDay(eventTime))throw Error("Pacific report date does not match event");
+  // Transport probe intentionally never saves a conversation or a record.
+  if(payload.kind==="voice_transport_probe"){
+    if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date"].includes(k)))
+      throw Error("Voice transport probe must not include personal or audio data");
+    return {accepted:true,transport_only:true,stored:false};
+  }
   const state=load(file);
   if(payload.kind==="worker_rollup"){
     if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","metrics"].includes(k)))
@@ -102,6 +110,31 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
       source_ref:payload.source_ref,received_at:now.toISOString(),
       observed_at:eventTime.toISOString(),services:sanitized
     };
+  }else if(payload.kind==="ghl_ui_snapshot"){
+    if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","location_id","crm_scope","contacts_visible_count","opportunities_filtered_count","opportunities_filter_applied","pipeline_label"].includes(k)))
+      throw Error("Unexpected CRM snapshot field");
+    if(payload.location_id!=="qJ83IIaK5y2ZPHzLfGG1" ||
+       payload.crm_scope!=="read_only_chrome_ui" ||
+       count(payload.contacts_visible_count)===null ||
+       (payload.opportunities_filtered_count!==null && count(payload.opportunities_filtered_count)===null) ||
+       typeof payload.opportunities_filter_applied!=="boolean" ||
+       typeof payload.pipeline_label!=="string" ||
+       payload.pipeline_label.length>90 || !/^[\w\s&/-]*$/.test(payload.pipeline_label))
+      throw Error("Unverified AI Boss read-only CRM snapshot");
+    const snapshot={
+      location_id:payload.location_id,scope:payload.crm_scope,
+      contacts_visible_count:payload.contacts_visible_count,
+      opportunities_filtered_count:payload.opportunities_filtered_count,
+      opportunities_filter_applied:payload.opportunities_filter_applied,
+      pipeline_label:payload.pipeline_label,
+    };
+    const old=state.ghl_ui[payload.date];
+    if(old?.source_ref===payload.source_ref && JSON.stringify(old.snapshot)===JSON.stringify(snapshot))
+      return {accepted:false,duplicate:true};
+    state.ghl_ui[payload.date]={
+      source_ref:payload.source_ref,observed_at:eventTime.toISOString(),
+      received_at:now.toISOString(),snapshot
+    };
   }else if(payload.kind==="voice_recap"){
     if(Object.keys(payload).some(k=>!["brand","kind","source_ref","observed_at","date","note","authorized_to_store"].includes(k)))
       throw Error("Unexpected Mac voice field");
@@ -116,6 +149,9 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
     state.voice=state.voice.slice(0,1000);
   }else throw Error("Unsupported Mac event");
   const cutoff=new Date(now.getTime()-90*86400000);
+  for(const day of Object.keys(state.ghl_ui)){
+    if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.ghl_ui[day];
+  }
   for(const day of Object.keys(state.integrations)){
     if(Date.parse(day+"T12:00:00Z")<cutoff.getTime())delete state.integrations[day];
   }
@@ -130,6 +166,7 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
   const state=load(file);
   const rollup=state.rollups[day]||null;
   const google=state.integrations[day]||null;
+  const crm=state.ghl_ui[day]||null;
   const gmail=google?.services?.gmail || null;
   const calendar=google?.services?.google_calendar || null;
   const voices=state.voice.filter(x=>x.date===day);
@@ -169,8 +206,14 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       completed_private_reflections:notes.filter(c=>c.completed).length,
       website_business_intakes:intakeCount,
       gohighlevel_webhook_acks:ghlReceipts,
+      gohighlevel_visible_contacts:crm?.snapshot.contacts_visible_count??null,
+      gohighlevel_filtered_opportunities:crm?.snapshot.opportunities_filtered_count??null,
       gmail_message_matches:gmail?.status==="connected"?gmail.count:null,
       calendar_ai_boss_events:calendar?.status==="connected"?calendar.count:null},
+    crm_readonly_snapshot:crm?{
+      received_at:crm.received_at,observed_at:crm.observed_at,
+      ...crm.snapshot,
+      caution:"Live Chrome UI view in AI Boss location; visible contacts are not validated business customers. Opportunities are in the selected pipeline and current filters, not the whole CRM."}:null,
     google_source_snapshot:google?{
       received_at:google.received_at,
       gmail:{...gmail,scope:"AI Boss recipient-address matches, not unique customer conversations"},
@@ -185,8 +228,10 @@ function dailyReport(day,file=stateFile(),dir=dataDirectory()){
       mac_voice:voices.length?"at least one authorized recap received":"ready for authorized Mac recaps",
       gmail:gmail?.status==="connected"?"Connected: AI Boss-address message matches via authenticated Mac Gmail connector":"Not verified for this report date",
       google_calendar:calendar?.status==="connected"?"Connected: matching dated events via authenticated Mac Calendar connector":"Not verified for this report date",
-      gohighlevel:ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
-      social_media:"not connected"
+      gohighlevel:crm?"Connected read-only Chrome 3 UI snapshot for this date; full GHL CRM API is not connected":ghlReceipts===null?"GoHighLevel acknowledgement storage unavailable":ghlReceipts>0?"Confirmed site-to-GoHighLevel webhook acknowledgements (not pipeline or revenue)":"No recorded GoHighLevel webhook acknowledgements for this date; full CRM not connected",
+      social_media:"Excluded: Metricool AI Boss-labeled brand currently connects several Papa Life social accounts. No AI Boss-only metrics verified.",
+      phone_calls:"Not connected: Mac Google Messages is SMS, not a phone call log. No customer call data is inferred.",
+      phone_messages:"Mac has a Google Messages snapshot, but personal/brand boundaries are not verified; content and thread totals excluded from AI Boss reporting."
     }
   };
 }

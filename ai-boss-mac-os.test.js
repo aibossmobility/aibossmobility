@@ -17,6 +17,26 @@ const {acceptMacEvent,dailyReport,installMacOS,pacificDay}=require("./ai-boss-ma
   assert.throws(()=>acceptMacEvent({...base,metrics:{proof_records:0,qa_passed:8,qa_pending:0,failed:0}},data,now));
   assert.throws(()=>acceptMacEvent({...base,date:"2026-02-30"},data,now));
   assert.throws(()=>acceptMacEvent({...base,date:"2026-11-10"},data,now));
+
+  const probe={brand:"ai_boss_mobility",kind:"voice_transport_probe",
+    source_ref:"voice-probe:2026-11-09",date:day,observed_at:now.toISOString()};
+  assert.deepEqual(acceptMacEvent(probe,data,now),{accepted:true,transport_only:true,stored:false});
+  assert.equal(dailyReport(day,data,dir).summary.mac_voice_recaps,0,"Transport probes must never count as spoken conversations");
+  assert.throws(()=>acceptMacEvent({...probe,note:"This must not be stored"},data,now));
+  const crm={brand:"ai_boss_mobility",kind:"ghl_ui_snapshot",
+    source_ref:"ghl-ui:2026-11-09",date:day,observed_at:now.toISOString(),
+    location_id:"qJ83IIaK5y2ZPHzLfGG1",crm_scope:"read_only_chrome_ui",
+    contacts_visible_count:22,opportunities_filtered_count:0,
+    opportunities_filter_applied:true,pipeline_label:"Marketing Pipeline"};
+  assert.equal(acceptMacEvent(crm,data,now).accepted,true);
+  assert.equal(acceptMacEvent(crm,data,now).duplicate,true);
+  assert.equal(dailyReport(day,data,dir).summary.gohighlevel_visible_contacts,22);
+  assert.equal(dailyReport(day,data,dir).summary.gohighlevel_filtered_opportunities,0);
+  assert.equal(dailyReport(day,data,dir).crm_readonly_snapshot.caution.includes("not the whole CRM"),true);
+  assert.throws(()=>acceptMacEvent({...crm,location_id:"BYx4g32AidgEkTBg7nLQ"},data,now));
+  assert.throws(()=>acceptMacEvent({...crm,contacts_visible_count:-1},data,now));
+  assert.throws(()=>acceptMacEvent({...crm,other_secret:"bad"},data,now));
+
   const voice={brand:"ai_boss_mobility",kind:"voice_recap",date:day,
     source_ref:"mac-voice:sample-0001",observed_at:now.toISOString(),
     authorized_to_store:true,note:"A locally authorized recap without client details."};
