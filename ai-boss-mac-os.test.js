@@ -37,6 +37,22 @@ const {acceptMacEvent,dailyReport,installMacOS,pacificDay}=require("./ai-boss-ma
   assert.throws(()=>acceptMacEvent({...crm,contacts_visible_count:-1},data,now));
   assert.throws(()=>acceptMacEvent({...crm,other_secret:"bad"},data,now));
 
+
+  const api={brand:"ai_boss_mobility",kind:"ghl_api_snapshot",
+    source_ref:"ghl-api:2026-11-09",date:day,observed_at:now.toISOString(),
+    location_id:"qJ83IIaK5y2ZPHzLfGG1",scope:"subaccount_readonly",
+    contacts_count:22,opportunities_count:3,conversations_count:null};
+  assert.equal(acceptMacEvent(api,data,now).accepted,true);
+  assert.equal(acceptMacEvent(api,data,now).duplicate,true);
+  assert.equal(dailyReport(day,data,dir).summary.gohighlevel_visible_contacts,22);
+  assert.equal(dailyReport(day,data,dir).summary.gohighlevel_api_opportunities,3);
+  assert.equal(dailyReport(day,data,dir).summary.gohighlevel_api_conversations,null);
+  assert.equal(dailyReport(day,data,dir).crm_api_snapshot.scope,"subaccount_readonly");
+  assert.throws(()=>acceptMacEvent({...api,location_id:"BYx4g32AidgEkTBg7nLQ"},data,now));
+  assert.throws(()=>acceptMacEvent({...api,contacts_count:-1},data,now));
+  assert.throws(()=>acceptMacEvent({...api,contacts_count:null,opportunities_count:null,conversations_count:null},data,now));
+  assert.throws(()=>acceptMacEvent({...api,private_contact_name:"Should never be uploaded"},data,now));
+
   const voice={brand:"ai_boss_mobility",kind:"voice_recap",date:day,
     source_ref:"mac-voice:sample-0001",observed_at:now.toISOString(),
     authorized_to_store:true,note:"A locally authorized recap without client details."};

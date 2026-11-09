@@ -34,8 +34,14 @@ async function load(){
  text("ghl-acks",data.summary.gohighlevel_webhook_acks ?? "—");
  text("ghl-contacts",data.summary.gohighlevel_visible_contacts ?? "—");
  text("ghl-filtered",data.summary.gohighlevel_filtered_opportunities ?? "—");
+ text("ghl-api-opportunities",data.summary.gohighlevel_api_opportunities ?? "—");
+ text("ghl-api-conversations",data.summary.gohighlevel_api_conversations ?? "—");
  const g=data.crm_readonly_snapshot;
- text("ghl-coverage",g?"Read-only Mac Chrome 3 view checked "+new Date(g.observed_at).toLocaleString()+". Contacts visible in this location: "+g.contacts_visible_count+". Opportunity view: "+(g.pipeline_label||"unspecified pipeline")+(g.opportunities_filter_applied?" with active filters":"; current view only")+". No full CRM API synchronization or contact-level customer classification.":"No live GHL UI snapshot for this date. An existing site webhook receipt is separate from CRM pipeline access.");
+ const a=data.crm_api_snapshot;
+ text("ghl-coverage",a?
+   "Verified read-only AI Boss location API counts from "+new Date(a.observed_at).toLocaleString()+". This does not classify contacts as customers, calls or sales.":
+   g?"Read-only Mac Chrome 3 view checked "+new Date(g.observed_at).toLocaleString()+". Contacts visible in this location: "+g.contacts_visible_count+". Opportunity view: "+(g.pipeline_label||"unspecified pipeline")+(g.opportunities_filter_applied?" with active filters":"; current view only")+". No full CRM API synchronization or contact-level customer classification.":
+   "No live GHL snapshot for this date. A site webhook receipt is separate from CRM access.");
  const gs=data.google_source_snapshot;
  text("google-coverage",gs?"Last verified Google scan: "+new Date(gs.received_at).toLocaleString()+". Gmail scans at most "+gs.gmail.scan_limit+" matching IDs and Calendar scans at most "+gs.google_calendar.scan_limit+" events. "+(gs.gmail.truncated||gs.google_calendar.truncated?"At least one source may be truncated.":"Unknown events and unsourced conversations are not inferred."):"No authenticated Google snapshot received for this date.");
  text("mac-status",data.mac.connected?"Mac summary recently received":data.mac.latest_report_at?"Mac summary saved (not recent)":"No Mac summary received yet");
