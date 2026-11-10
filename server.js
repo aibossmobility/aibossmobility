@@ -2,6 +2,7 @@ const http=require("http");
 const fs=require("fs");
 const path=require("path");
 const {installBossSso,isBossSsoSession}=require("./ai-boss-owner-sso");
+const {addStructuredData}=require("./site-structured-data");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
@@ -301,5 +302,5 @@ http.createServer(async(req,res)=>{
   if(req.method!=="GET"&&req.method!=="HEAD")return json(res,405,{ok:false,error:"Method not allowed"});
   if(route==="/favicon.ico"){res.writeHead(302,{Location:"/favicon.svg","Cache-Control":"public, max-age=86400"});return res.end();}
   const file=resolveFile(req.url);if(!file){res.writeHead(400);return res.end("Bad request");}
-  fs.readFile(file,(err,data)=>{if(!err){res.writeHead(200,{"Content-Type":mime[path.extname(file).toLowerCase()]||"application/octet-stream","X-Content-Type-Options":"nosniff","Referrer-Policy":"strict-origin-when-cross-origin"});return res.end(req.method==="HEAD"?"":data);}fs.readFile(path.join(root,"404.html"),(_,fallback)=>{res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});res.end(fallback||"Not found");});});
+  fs.readFile(file,(err,data)=>{if(!err){res.writeHead(200,{"Content-Type":mime[path.extname(file).toLowerCase()]||"application/octet-stream","X-Content-Type-Options":"nosniff","Referrer-Policy":"strict-origin-when-cross-origin"});const payload=path.extname(file).toLowerCase()===".html"?addStructuredData(data.toString("utf8"),req.url):data;return res.end(req.method==="HEAD"?"":payload);}fs.readFile(path.join(root,"404.html"),(_,fallback)=>{res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});res.end(fallback||"Not found");});});
 }).listen(port,"0.0.0.0",()=>console.log(`AI Boss Mobility listening on ${port}`));
