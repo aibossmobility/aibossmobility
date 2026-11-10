@@ -28,7 +28,7 @@ function classifySource(utmSource,referrer){
   return "direct_or_unknown";
 }
 function metricFile(){
-  const directory=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");
+  const directory=process.env.RAILWAY_VOLUME_MOUNT_PATH||(fs.existsSync("/data")?"/data":path.join(__dirname,"data"));
   return path.join(directory,"site-traffic-aggregates.json");
 }
 function load(){
