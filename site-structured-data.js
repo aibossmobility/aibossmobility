@@ -19,6 +19,7 @@ function decode(value){
 }
 function addStructuredData(html,requestPath){
   if(typeof html!=="string"||!/<\/head\s*>/i.test(html))return html;
+  if(html.includes('data-source="ai-boss-sitewide"'))return html;
   let route;
   try{route=new URL(requestPath||"/",SITE).pathname;}catch{return html;}
   if(route.endsWith(".html"))route=route.slice(0,-5);
