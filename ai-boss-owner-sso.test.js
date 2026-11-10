@@ -82,6 +82,8 @@ try{
  assert.equal(supportValid.status,303);
  assert.equal(supportValid.headers.get("location"),"/purchase-support-admin");
  assert.match(supportValid.headers.get("set-cookie"),/__Host-ai-boss-sso-return=; Path=\/; Max-Age=0/);
+ const trafficLogin=await fetch(origin+"/auth/papa/start?returnTo=%2Ftraffic-report",{redirect:"manual"});
+ assert.match(trafficLogin.headers.get("set-cookie"),/__Host-ai-boss-sso-return=%2Ftraffic-report/);
  const bogus=await fetch(origin+"/auth/papa/start?returnTo="+encodeURIComponent("https://malicious.example/steal"),{redirect:"manual"});
  const bogusCookie=bogus.headers.get("set-cookie");
  assert.match(bogusCookie,/__Host-ai-boss-sso-return=%2Fai-boss-os/);
