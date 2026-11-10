@@ -108,6 +108,7 @@
             if(pcm.length)socket.send(JSON.stringify({realtimeInput:{audio:{data:bytesToB64(pcm),mimeType:'audio/pcm;rate=16000'}}}));
           };
           msg('Connected. Speak naturally to Brian’s AI Digital Twin. Use headphones if possible.');
+          try{navigator.sendBeacon('/api/site-traffic/event',new Blob([JSON.stringify({kind:'voice_connected',page:'/ask-brian'})],{type:'application/json'}));}catch(_){}
         }
         const parts=packet.serverContent?.modelTurn?.parts||[];
         for(const part of parts){
