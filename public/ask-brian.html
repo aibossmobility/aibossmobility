@@ -35,7 +35,7 @@
    <p class="site-hero-kicker">Meet Brian’s Digital Twin</p>
    <h1>Your question matters. Let’s talk.</h1>
    <p>A conversational AI guide for learning, clarity, and your next useful step.</p>
-   <div class="site-hero-links"><a class="btn btn-primary" href="/ask-brian">Talk with Brian’s AI Twin</a><a class="btn btn-secondary" href="/#estimate">Explore Paid Services</a></div>
+   <div class="site-hero-links"><button type="button" class="btn btn-primary" id="hero-start-twin" aria-controls="google-voice-pilot" aria-expanded="false">Talk with Brian’s AI Twin</button><a class="btn btn-secondary" href="/#estimate">Explore Paid Services</a></div>
   </div>
  </div></section>
 <section class="section-dark twin-intro"><div class="container twin-page-grid">
@@ -78,14 +78,17 @@
 <script src="/gemini-voice.js" defer></script>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <script>
-document.getElementById('start-twin').addEventListener('click',function(){
+function openTwinConversation(){
   const controls=document.getElementById('google-voice-pilot');
   controls.hidden=false;
-  this.setAttribute('aria-expanded','true');
+  document.getElementById('start-twin').setAttribute('aria-expanded','true');
+  document.getElementById('hero-start-twin').setAttribute('aria-expanded','true');
   controls.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
   const firstConsent=controls.querySelector('[data-voice-adult]');
   if(firstConsent)firstConsent.focus({preventScroll:true});
-});
+}
+document.getElementById('start-twin').addEventListener('click',openTwinConversation);
+document.getElementById('hero-start-twin').addEventListener('click',openTwinConversation);
 </script>
 <script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_f2ac62c1e33445ea933fdc4f7578497a"></script>
 </body></html>
