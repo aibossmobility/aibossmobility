@@ -2,10 +2,11 @@
   "name": "ai-boss-mobility-site",
   "version": "1.0.0",
   "private": true,
-  "description": "AI Boss Mobility \u2014 practical AI strategy, automation, training, and human-centered implementation.",
+  "description": "AI Boss Mobility — practical AI strategy, automation, training, and human-centered implementation.",
   "scripts": {
     "start": "node server.js",
-    "test:outreach": "node outreach-conversations.test.js && node purchase-support.test.js && node ai-boss-mac-os.test.js"
+    "test:outreach": "node outreach-conversations.test.js && node purchase-support.test.js && node ai-boss-mac-os.test.js",
+    "test:seo": "node site-structured-data.test.js"
   },
   "engines": {
     "node": ">=20"
