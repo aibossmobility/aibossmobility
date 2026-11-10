@@ -3,6 +3,7 @@ const fs=require("fs");
 const path=require("path");
 const {installBossSso,isBossSsoSession}=require("./ai-boss-owner-sso");
 const {addStructuredData}=require("./site-structured-data");
+const siteMetrics=require("./site-metrics");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
 const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
@@ -26,7 +27,8 @@ async function handleGuideLead(req,res){
     const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),need=String(body.need||"").trim().slice(0,3000);
     if(!name||!email||!email.includes("@"))return json(res,400,{ok:false,error:"Name and valid email are required."});
     const lead={name,email,organization,need,source:"AI Boss Mobility Website",resource:"Free AI & Tech Language Guide",marketing_consent:false,submitted_at:new Date().toISOString()};
-    await postWebhook(process.env.AIRTABLE_GUIDE_WEBHOOK,lead,"Guide lead");
+    const guideDelivered=await postWebhook(process.env.AIRTABLE_GUIDE_WEBHOOK,lead,"Guide lead");
+    if(guideDelivered)siteMetrics.record("outcome",{target:"guide_webhook_ack"});
     return json(res,200,{ok:true});
   }catch(err){console.error("Guide lead error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
@@ -60,6 +62,7 @@ async function handleBusinessIntake(req,res){
     // Log only actual 2xx GoHighLevel intake acknowledgements, never infer a CRM
     // conversation or a paying customer from a received form submission.
     if(ghlDelivered){
+      siteMetrics.record("outcome",{target:"crm_intake_ack"});
       try{
         const receiptsDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");
         fs.mkdirSync(receiptsDir,{recursive:true});
@@ -69,6 +72,7 @@ async function handleBusinessIntake(req,res){
       }catch{console.error("GoHighLevel acknowledgement could not be recorded for reporting");}
     }
     if(!ghlDelivered){
+      siteMetrics.record("outcome",{target:"crm_intake_unconfirmed"});
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
     }
@@ -260,6 +264,8 @@ function applySecurityHeaders(res){for(const [name,value] of Object.entries(SECU
 http.createServer(async(req,res)=>{
   applySecurityHeaders(res);
   const route=(req.url||"").split("?")[0];
+  if(req.method==="POST"&&route==="/api/site-traffic/event")return siteMetrics.acceptEvent(req,res);
+  if(req.method==="GET"&&route==="/api/site-traffic/report")return siteMetrics.serveReport(req,res,isBossSsoSession(req));
   // The Trellis trial is an AI Boss-only, reversible, default-off module.
   const trellisOn=process.env.TRELLIS_TRIAL_ENABLED==="true" && Date.now()<Date.parse("2026-12-01T00:00:00-08:00");
   if(route==="/trellis-trial" || route==="/trellis-trial.html" || route==="/api/trellis-trial"){
@@ -302,5 +308,5 @@ http.createServer(async(req,res)=>{
   if(req.method!=="GET"&&req.method!=="HEAD")return json(res,405,{ok:false,error:"Method not allowed"});
   if(route==="/favicon.ico"){res.writeHead(302,{Location:"/favicon.svg","Cache-Control":"public, max-age=86400"});return res.end();}
   const file=resolveFile(req.url);if(!file){res.writeHead(400);return res.end("Bad request");}
-  fs.readFile(file,(err,data)=>{if(!err){res.writeHead(200,{"Content-Type":mime[path.extname(file).toLowerCase()]||"application/octet-stream","X-Content-Type-Options":"nosniff","Referrer-Policy":"strict-origin-when-cross-origin"});const payload=path.extname(file).toLowerCase()===".html"?addStructuredData(data.toString("utf8"),req.url):data;return res.end(req.method==="HEAD"?"":payload);}fs.readFile(path.join(root,"404.html"),(_,fallback)=>{res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});res.end(fallback||"Not found");});});
+  fs.readFile(file,(err,data)=>{if(!err){res.writeHead(200,{"Content-Type":mime[path.extname(file).toLowerCase()]||"application/octet-stream","X-Content-Type-Options":"nosniff","Referrer-Policy":"strict-origin-when-cross-origin"});const payload=path.extname(file).toLowerCase()===".html"?siteMetrics.inject(addStructuredData(data.toString("utf8"),req.url),req.url,req.headers.host):data;return res.end(req.method==="HEAD"?"":payload);}fs.readFile(path.join(root,"404.html"),(_,fallback)=>{res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});res.end(fallback||"Not found");});});
 }).listen(port,"0.0.0.0",()=>console.log(`AI Boss Mobility listening on ${port}`));

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Traffic & Inquiry Report | AI Boss Mobility OS</title>
+<link rel="canonical" href="https://ai.bossmobilelifecoach.com/traffic-report">
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f8f7f2;color:#17221c;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#111;color:#fff;padding:23px 18px;border-bottom:5px solid #f3d032}header h1{font-size:clamp(26px,5vw,36px);line-height:1.1;margin:8px 0}header p{margin:5px 0;color:#e5e5e5}
+main{max-width:1020px;margin:auto;padding:20px 18px 70px}.panel{background:#fff;border:1px solid #dce2d9;border-radius:12px;padding:20px;margin:16px 0}
+h2{font-size:20px;color:#126439;margin:0 0 12px}a{color:#125b43}header a{color:#ffdf51}.topnav{display:flex;gap:18px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.metric{padding:17px;border:1px solid #e1e5dd;border-radius:10px;background:#f9fcf9}.metric strong{display:block;font-size:31px;line-height:1.3;color:#075b35}.metric span{font-weight:700}
+button{background:#165f3d;color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #ffd400;outline-offset:3px}button[aria-pressed=true]{background:#161616}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid #ddd;padding:9px;text-align:left}td:last-child,th:last-child{text-align:right} .muted{font-size:14px;color:#586559}.error{font-weight:700;color:#a12121}#login{display:none}.report-section{display:none}
+</style></head><body>
+<header><div style="max-width:1020px;margin:auto">
+<div class="topnav"><a href="/ai-boss-os">AI Boss OS</a><a href="/">Public Website</a></div>
+<h1>Traffic &amp; Inquiry Report</h1><p>Private, first-party measurements from AI Boss Mobility</p>
+</div></header>
+<main>
+<div class="panel"><h2>Reporting period</h2><button type="button" id="week" aria-pressed="false">Last 7 days</button> <button type="button" id="month" aria-pressed="true">Last 28 days</button><p class="muted">Reporting starts when this feature is deployed. Dates use UTC. Figures are not unique visitor counts.</p></div>
+<div class="panel" id="loading" role="status">Reading your private traffic report...</div>
+<div class="panel" id="login"><p>Sign in using your existing Papa Life OS owner credentials to see these counts. No new account or password is needed.</p><a href="/auth/papa/start?returnTo=%2Ftraffic-report">Continue with Papa Life OS</a></div>
+<div id="report" class="report-section">
+<section class="panel"><h2>Website activity</h2><div class="grid"><div class="metric"><strong id="views">0</strong><span>Browser page views</span></div><div class="metric"><strong id="landings">0</strong><span>Landing page views</span></div><div class="metric"><strong id="clicks">0</strong><span>Calls to action clicked</span></div></div></section>
+<section class="panel"><h2>Verified inquiry outcomes</h2><div class="grid"><div class="metric"><strong id="crm">0</strong><span>GoHighLevel intake acknowledgements</span></div><div class="metric"><strong id="unconfirmed">0</strong><span>Unconfirmed CRM intake attempts</span></div><div class="metric"><strong id="guide">0</strong><span>Guide-lead webhook acknowledgements</span></div><div class="metric"><strong id="voice">0</strong><span>Google voice connections reported</span></div></div><p class="muted">A CRM acknowledgement means the GoHighLevel intake webhook returned success. It does not prove a reply, scheduled conversation, sale, or payment.</p></section>
+<section class="panel"><h2>Where page views occurred</h2><table><thead><tr><th>Page</th><th>Views</th></tr></thead><tbody id="pages"></tbody></table></section>
+<section class="panel"><h2>How people reached pages</h2><table><thead><tr><th>Source category</th><th>Landing views</th></tr></thead><tbody id="sources"></tbody></table><p class="muted">Categories are general. No full referrer URLs or personal identifiers are collected.</p></section>
+<section class="panel"><h2>What people chose to explore</h2><table><thead><tr><th>Action</th><th>Clicks</th></tr></thead><tbody id="targets"></tbody></table></section>
+</div>
+<div class="panel"><h2>What this report does and does not measure</h2><p>It counts JavaScript-enabled page loads, interest clicks and confirmed intake acknowledgements. A Google voice connection is counted only after browser-reported setup completion; it does not prove a completed two-way conversation. It does not count unique people, ElevenLabs conversations, booked consultations, or paid customers. Automated scans are filtered where identifiable, but some nonhuman traffic can remain.</p><p class="muted">Daily aggregates are stored only on the existing Railway volume, without cookies, names, email addresses, IP addresses or persistent tracking IDs. Counts are retained for up to 90 days.</p></div>
+</main>
+<script>
+(function(){
+"use strict";
+function el(id){return document.getElementById(id)}
+function number(n){return Number(n||0).toLocaleString("en-US")}
+function table(id,obj){var body=el(id);body.replaceChildren();var entries=Object.entries(obj||{}).sort(function(a,b){return b[1]-a[1]});if(!entries.length){var tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=2;td.textContent="No recorded activity yet";tr.appendChild(td);body.appendChild(tr);return;}entries.forEach(function(e){var tr=document.createElement("tr"),name=document.createElement("td"),count=document.createElement("td");name.textContent=e[0];count.textContent=number(e[1]);tr.append(name,count);body.appendChild(tr);});}
+async function load(days){el("week").setAttribute("aria-pressed",String(days===7));el("month").setAttribute("aria-pressed",String(days===28));el("loading").style.display="block";el("loading").textContent="Reading your private traffic report...";el("login").style.display="none";el("report").style.display="none";
+try{var r=await fetch("/api/site-traffic/report?days="+days,{credentials:"same-origin",cache:"no-store"});if(r.status===401){el("login").style.display="block";el("loading").style.display="none";return;}if(!r.ok)throw Error("Report unavailable ("+r.status+")");var data=await r.json();if(!data.ok)throw Error("Report not ready");var c=data.counts||{};el("views").textContent=number(c.pageViews);el("landings").textContent=number(c.landingPageViews);el("clicks").textContent=number(c.ctaClicks);el("crm").textContent=number(c.crmIntakeAcknowledged);el("unconfirmed").textContent=number(c.crmIntakeUnconfirmed);el("guide").textContent=number(c.guideDeliveryAcknowledged);el("voice").textContent=number(c.googleVoiceConnectionsReported);table("pages",data.byPage);table("sources",data.landingSources);table("targets",data.ctaTargets);el("loading").style.display="none";el("report").style.display="block";}
+catch(err){el("loading").textContent="The private report could not be loaded. "+err.message;}
+}
+el("week").addEventListener("click",function(){load(7)});el("month").addEventListener("click",function(){load(28)});load(28);
+})();
+</script></body></html>
