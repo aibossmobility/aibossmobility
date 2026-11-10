@@ -29,7 +29,7 @@
   else send("page_view");
   document.addEventListener("click",function(event){
     var a=event.target&&event.target.closest?event.target.closest("a[href]"):null;
-    if(!a)return;
+    if(!a){if(event.target&&event.target.closest&&event.target.closest("#hero-start-twin, #start-twin"))send("cta_click","ai_twin");return;}
     var target=targetFor(a);if(target)send("cta_click",target);
   },true);
 })();
