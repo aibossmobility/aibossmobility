@@ -46,7 +46,7 @@ function record(type,info={}){
   try{
     const date=new Date().toISOString().slice(0,10);
     const obj=load();
-    const day=obj.days[date]||(obj.days[date]={views:{},landingSources:{},cta:{},outcomes:{}});
+    const day=obj.days[date]||(obj.days[date]={views:{},landingSources:{},cta:{},outcomes:{},engagement:{}});
     if(type==="page_view"){
       const page=cleanPage(info.page);if(!page)return false;
       bump(day.views,page);
@@ -55,6 +55,10 @@ function record(type,info={}){
       const target=String(info.target||"");
       if(!TARGETS.has(target)||!cleanPage(info.page))return false;
       bump(day.cta,target);
+    }else if(type==="voice_connected"){
+      if(cleanPage(info.page)!=="/ask-brian")return false;
+      day.engagement=day.engagement||{};
+      bump(day.engagement,"google_voice_setup_complete");
     }else if(type==="outcome"){
       if(!["crm_intake_ack","crm_intake_unconfirmed","guide_webhook_ack"].includes(info.target))return false;
       bump(day.outcomes,info.target);
@@ -69,19 +73,20 @@ function makeReport(days=28){
   const now=new Date();
   const start=new Date(now.getTime()-(n-1)*86400000).toISOString().slice(0,10);
   const end=now.toISOString().slice(0,10);
-  const a={pageViews:0,landingPageViews:0,ctaClicks:0,crmIntakeAcknowledged:0,crmIntakeUnconfirmed:0,guideDeliveryAcknowledged:0};
+  const a={pageViews:0,landingPageViews:0,ctaClicks:0,crmIntakeAcknowledged:0,crmIntakeUnconfirmed:0,guideDeliveryAcknowledged:0,googleVoiceConnectionsReported:0};
   const perPage={},sources={},ctas={};
   for(const [date,d] of Object.entries(load().days)){if(date<start||date>end)continue;
     for(const [k,v] of Object.entries(d.views||{})){if(!Number.isFinite(v))continue;perPage[k]=(perPage[k]||0)+v;a.pageViews+=v;}
     for(const [k,v] of Object.entries(d.landingSources||{})){if(!Number.isFinite(v))continue;sources[k]=(sources[k]||0)+v;a.landingPageViews+=v;}
     for(const [k,v] of Object.entries(d.cta||{})){if(!Number.isFinite(v))continue;ctas[k]=(ctas[k]||0)+v;a.ctaClicks+=v;}
+    a.googleVoiceConnectionsReported+=(d.engagement||{}).google_voice_setup_complete||0;
     const o=d.outcomes||{};
     a.crmIntakeAcknowledged+=o.crm_intake_ack||0;
     a.crmIntakeUnconfirmed+=o.crm_intake_unconfirmed||0;
     a.guideDeliveryAcknowledged+=o.guide_webhook_ack||0;
   }
   return {ok:true,period:{start,end,days:n,timeZone:"UTC"},counts:a,byPage:perPage,landingSources:sources,ctaTargets:ctas,
-    definitions:{pageViews:"Browser page loads with JavaScript; not unique people",landingPageViews:"Page loads without an internal-site referrer; not unique sessions",ctaClicks:"Clicks indicating interest; not completed conversations or sales",crmIntakeAcknowledged:"Successful 2xx acknowledgement from configured GoHighLevel intake webhook; not a booked conversation",guideDeliveryAcknowledged:"Successful acknowledgement from configured guide-lead webhook"},
+    definitions:{pageViews:"Browser page loads with JavaScript; not unique people",landingPageViews:"Page loads without an internal-site referrer; not unique sessions",ctaClicks:"Clicks indicating interest; not completed conversations or sales",crmIntakeAcknowledged:"Successful 2xx acknowledgement from configured GoHighLevel intake webhook; not a booked conversation",guideDeliveryAcknowledged:"Successful acknowledgement from configured guide-lead webhook",googleVoiceConnectionsReported:"Browser-reported Google Voice setup completion, not a confirmed two-way conversation"},
     privacy:"Only daily aggregate counts and predefined categories are stored. No names, emails, IP addresses, cookies, session IDs, full referrers or user-agent strings are retained."};
 }
 function inject(html,route,host){
