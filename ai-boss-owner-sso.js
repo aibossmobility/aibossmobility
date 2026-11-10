@@ -9,7 +9,7 @@ const KEY_URL=PAPA_ORIGIN+"/api/auth/ai-boss-sso/public-key";
 const STATE_COOKIE="__Host-ai-boss-sso-state";
 const SESSION_COOKIE="__Host-ai-boss-sso-session";
 const RETURN_COOKIE="__Host-ai-boss-sso-return";
-const RETURN_PATHS=new Set(["/ai-boss-os","/purchase-support-admin","/media-consents-admin"]);
+const RETURN_PATHS=new Set(["/ai-boss-os","/purchase-support-admin","/media-consents-admin","/traffic-report"]);
 function safeReturnPath(value){return RETURN_PATHS.has(value)?value:"/ai-boss-os";}
 const ISSUER=PAPA_ORIGIN;
 const AUDIENCE="ai-boss-mobility-owner-os";
