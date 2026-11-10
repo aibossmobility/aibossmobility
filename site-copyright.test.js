@@ -1,0 +1,14 @@
+"use strict";
+const assert=require("node:assert/strict");
+const {addCopyright,COPYRIGHT}=require("./site-copyright");
+const page='<html><head></head><body><main>Example</main><script type="application/ld+json" data-source="ai-boss-sitewide">{}</script></body></html>';
+const out=addCopyright(page,"/meet-brian");
+assert(out.includes(COPYRIGHT));
+assert.equal(out.split(COPYRIGHT).length,2);
+assert.equal(addCopyright(out,"/meet-brian"),out,"Idempotent");
+assert.equal(addCopyright('<body>Noindex</body>',"/purchase-support-admin"),'<body>Noindex</body>',"No private page injection");
+const course=addCopyright(page,"/digital-courses");
+assert(course.includes("Curriculum Use and Licensing"));
+assert(course.includes("except as permitted by law"));
+assert(!out.includes("Curriculum Use and Licensing"));
+console.log("Owner copyright notices tests passed");
