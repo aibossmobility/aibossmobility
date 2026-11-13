@@ -1,0 +1,140 @@
+[
+  {
+    "slug": "for-business-owners",
+    "audience": "Business Owners & Entrepreneurs",
+    "title": "AI for Business Owners & Entrepreneurs | AI Boss Mobility",
+    "description": "Practical AI consulting for business owners and entrepreneurs: customer follow-up, workflow automation, AI readiness and cost-benefit decisions.",
+    "headline": "Make your business easier to run, without buying technology you don't need.",
+    "intro": "Choose an outcome first: dependable customer follow-up, less repetitive work, a better online presence, or confidence in an AI investment.",
+    "faqs": [
+      [
+        "How could AI help with customer follow-up?",
+        "Document how inquiries arrive and who replies today. Then consider a small, approved follow-up or task-reminder process. Keep people responsible for consent, sensitive messages and relationship-building."
+      ],
+      [
+        "Do I need to buy another tool?",
+        "Often not. Begin with the systems you already use, identify the bottleneck and test whether a practical change improves the work before spending more."
+      ],
+      [
+        "How do I know whether automation will save money?",
+        "Include software fees, setup, human review, maintenance, and potential mistakes when comparing costs and benefits. Savings depend on your situation and are not guaranteed."
+      ],
+      [
+        "Can I request a service without paying first?",
+        "Yes. You can select one of the existing fixed-scope services 08–12 and save a project brief. This is not checkout, and submitting the form does not charge you."
+      ]
+    ],
+    "services": [
+      [
+        "08",
+        "AI Feasibility & Readiness",
+        "$350",
+        "ai.feasibility.readiness"
+      ],
+      [
+        "10",
+        "AI Workflow Automation",
+        "$1,250",
+        "ai.workflow.automation"
+      ],
+      [
+        "11",
+        "AI Cost-Benefit & ROI",
+        "$450",
+        "ai.cost.benefit.roi"
+      ]
+    ]
+  },
+  {
+    "slug": "for-churches-and-nonprofits",
+    "audience": "Churches, Nonprofits & Community Leaders",
+    "title": "AI for Churches, Nonprofits & Community Leaders | AI Boss Mobility",
+    "description": "Responsible AI consulting for churches, nonprofits and community leaders: outreach, administrative systems, coordination and staff training.",
+    "headline": "Spend less time on administration and more time serving people.",
+    "intro": "Start with a real need, like outreach follow-up, volunteer coordination, communication, or reporting, and keep human relationships at the center.",
+    "faqs": [
+      [
+        "Can AI help with outreach without making it impersonal?",
+        "Use AI to organize tasks, prepare drafts for review, and remind staff to respond. Keep personal care, confidential conversations, and sensitive decisions in human hands."
+      ],
+      [
+        "Where should our organization start on a limited budget?",
+        "Choose a single bottleneck and look at the forms, documents, calendars, and communication systems you already have before purchasing additional software."
+      ],
+      [
+        "How can staff or volunteers learn responsibly?",
+        "Training can include practical examples, privacy boundaries, verifying AI-generated content, and reusable prompts. The existing leadership education service includes a two-hour workshop."
+      ],
+      [
+        "How can we get a project estimate?",
+        "Review the defined services, select the one that fits, and save a project brief. If your scope is different, it may need a separate written estimate. The form does not charge you."
+      ]
+    ],
+    "services": [
+      [
+        "08",
+        "AI Feasibility & Readiness",
+        "$350",
+        "ai.feasibility.readiness"
+      ],
+      [
+        "09",
+        "AI Strategy & Planning",
+        "$750",
+        "ai.strategy.planning"
+      ],
+      [
+        "12",
+        "AI Leadership Education",
+        "$500",
+        "ai.leadership.education"
+      ]
+    ]
+  },
+  {
+    "slug": "for-educators-and-workforce",
+    "audience": "Educators & Workforce Organizations",
+    "title": "AI Training for Educators & Workforce Organizations | AI Boss Mobility",
+    "description": "Practical AI literacy, workforce development training, digital skills and AI strategy for educators and workforce organizations.",
+    "headline": "Help learners use AI confidently and think critically about the results.",
+    "intro": "Whether you teach, lead training, or support career development, begin with job-relevant skills and responsible use of existing technology.",
+    "faqs": [
+      [
+        "What should introductory AI training cover?",
+        "Begin with realistic tasks, AI limitations, privacy, fact-checking, and hands-on practice. Learning to evaluate output matters more than memorizing prompts."
+      ],
+      [
+        "How do we avoid overwhelming instructors?",
+        "Pick one or two common workflows, set clear safeguards and give people a manageable practice environment with time for questions."
+      ],
+      [
+        "How do we know whether our program is ready?",
+        "Consider learner goals, accessibility, available devices, staff skills, existing software, and the kinds of work participants plan to do."
+      ],
+      [
+        "Can we request training or a workforce proposal?",
+        "Yes. Select an existing education or strategy service and save an organizational project brief. Customized work may require a separate estimate before payment."
+      ]
+    ],
+    "services": [
+      [
+        "12",
+        "AI Leadership Education",
+        "$500",
+        "ai.leadership.education"
+      ],
+      [
+        "09",
+        "AI Strategy & Planning",
+        "$750",
+        "ai.strategy.planning"
+      ],
+      [
+        "11",
+        "AI Cost-Benefit & ROI",
+        "$450",
+        "ai.cost.benefit.roi"
+      ]
+    ]
+  }
+]

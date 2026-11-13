@@ -1,0 +1,62 @@
+:root{--aud-ink:#1e332b;--aud-cream:#fff9ed;--aud-green:#145b35;--aud-gold:#f2c230;--aud-rust:#a7352b}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body.audience-path{margin:0;background:var(--aud-cream);color:var(--aud-ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.aud-skip{position:absolute;top:-100px;left:8px;background:#fff;padding:10px;z-index:100}
+.aud-skip:focus{top:8px}
+.aud-header{border-bottom:4px solid var(--aud-rust);background:#fff0d0}
+.aud-nav{max-width:1140px;margin:auto;padding:13px 22px;display:flex;gap:20px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.aud-brand{display:inline-flex;align-items:center;gap:12px;color:var(--aud-ink);font-size:18px;font-weight:800;text-decoration:none}
+.aud-brand img{width:80px;height:63px;object-fit:contain}
+.aud-links{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
+.aud-links a{color:var(--aud-green);font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.aud-links a:hover,.aud-links a:focus{color:var(--aud-rust)}
+.aud-hero{background:linear-gradient(115deg,#1e382b,#23422e);color:white;padding:clamp(45px,6vw,82px) 22px}
+.aud-wrap{max-width:1040px;margin:auto}
+.aud-kicker{color:var(--aud-gold);font-weight:850;letter-spacing:.12em;text-transform:uppercase;font-size:13px;margin:0}
+.aud-hero h1{font-size:clamp(33px,5vw,58px);line-height:1.12;letter-spacing:-.035em;margin:17px 0}
+.aud-hero p{max-width:780px;font-size:clamp(18px,2vw,22px)}
+.aud-main{padding:45px 22px 76px}
+.aud-main h2{font-size:clamp(25px,3vw,35px);line-height:1.17;margin:0 0 17px}
+.aud-main h3{font-size:21px;line-height:1.25;margin:0 0 10px}
+.aud-main p{margin:8px 0 18px}
+.aud-note{border-left:5px solid var(--aud-gold);background:#fff3d0;padding:17px 19px;margin:0 0 32px;border-radius:0 9px 9px 0}
+.aud-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px;margin:25px 0 50px}
+.aud-card{border:2px solid #c2cfc3;border-radius:15px;background:white;padding:24px;display:flex;flex-direction:column}
+.aud-card p{flex:1;color:#3c5144}
+.aud-card .aud-price{font-weight:850;font-size:19px;color:var(--aud-green)}
+.aud-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:47px;padding:10px 18px;background:var(--aud-green);border-radius:9px;text-decoration:none;color:white;font-weight:850;text-align:center}
+.aud-btn:hover,.aud-btn:focus{background:#0b3f25;color:white}
+.aud-btn.alt{background:var(--aud-gold);color:#18291e}
+.aud-btn.alt:hover{background:#ffe377}
+.aud-qa{border-top:1px solid #b9c8bd;padding:21px 0}
+.aud-qa h3{margin:0 0 8px}
+.aud-qa p{max-width:880px;color:#365042;margin:0}
+.aud-cta{background:#172c22;color:white;padding:32px;border-radius:16px;margin-top:50px}
+.aud-cta h2{margin:0 0 12px}
+.aud-cta p{max-width:760px;color:#e5eee6}
+.aud-other{background:#efe8d8;padding:33px 22px}
+.aud-other .aud-wrap{display:flex;gap:15px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.aud-other-links{display:flex;flex-wrap:wrap;gap:13px}
+.aud-other-links a{color:var(--aud-green);font-weight:800}
+.aud-footer{padding:24px;background:#172c22;color:#e6ece7;text-align:center;font-size:14px}
+.aud-footer a{color:#ffe174}
+@media(max-width:750px){.aud-grid{grid-template-columns:1fr}.aud-nav{flex-direction:column;align-items:flex-start}.aud-cta{padding:24px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Audience-first homepage chooser: scoped to AI Boss Mobility only. */
+.aud-home{background:#fff7e5;padding:clamp(30px,5vw,70px) 20px;color:#1e332b;border-bottom:3px solid #ddcda4}
+.aud-home-inner{max-width:1160px;margin:0 auto}
+.aud-home-eyebrow{color:#a7352b;font-size:13px;letter-spacing:.14em;font-weight:850;text-transform:uppercase;margin:0}
+.aud-home h2{font-size:clamp(31px,4vw,49px);line-height:1.14;margin:14px 0;color:#183526;letter-spacing:-.025em}
+.aud-home-intro{font-size:clamp(17px,2vw,20px);max-width:800px;margin:0 0 23px}
+.aud-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.aud-home-card{display:flex;flex-direction:column;border:2px solid #bbd0bc;background:#fff;border-radius:15px;padding:24px;box-shadow:0 5px 18px #25382312}
+.aud-home-tag{font-size:13px!important;color:#9b382e;font-weight:850;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px!important}
+.aud-home-card h3{font-size:clamp(21px,2.1vw,26px);line-height:1.2;color:#193c2a;margin:0 0 13px}
+.aud-home-card p:not(.aud-home-tag){font-size:16px;line-height:1.65;flex:1;color:#3f5547;margin:0 0 22px}
+.aud-home-card a{background:#145b35;border-radius:9px;min-height:52px;padding:12px 15px;color:#fff;font-weight:850;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:9px}
+.aud-home-card a:hover,.aud-home-card a:focus{background:#0c3e26;color:white}
+.aud-home-bottom{text-align:center;font-size:15px;margin:22px auto 0;max-width:850px}
+.aud-home-bottom a{font-weight:850;color:#145b35;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.aud-home-grid{grid-template-columns:1fr}}
