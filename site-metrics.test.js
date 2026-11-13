@@ -14,6 +14,10 @@ assert.equal(m.cleanPage("/meet-brian.html"),"/meet-brian");
 assert.equal(m.cleanPage("/private-report"),null);
 const html="<html><body><main>OK</main></body></html>";
 assert.ok(m.inject(html,"/meet-brian","ai.bossmobilelifecoach.com").includes("site-traffic-client.js"));
+for(const audiencePath of ["/for-business-owners","/for-churches-and-nonprofits","/for-educators-and-workforce"]){
+  assert.equal(m.cleanPage(audiencePath),audiencePath);
+  assert.ok(m.inject(html,audiencePath,"ai.bossmobilelifecoach.com").includes("/site-traffic-client.js"));
+}
 assert.equal(m.inject(html,"/private-report","ai.bossmobilelifecoach.com"),html);
 assert.equal(m.inject(html,"/meet-brian","bossmobility.net"),html);
 assert.ok(m.record("page_view",{page:"/meet-brian",channel:"search"}));
