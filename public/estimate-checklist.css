@@ -1,0 +1,43 @@
+:root{--ink:#182c21;--green:#145b35;--yellow:#f2c230;--red:#aa372d;--cream:#fffaf0;--border:#b5c6b5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--green)}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #e2a021;outline-offset:3px}
+.skip-link{position:absolute;top:-80px;left:14px;background:white;padding:12px;z-index:10}.skip-link:focus{top:10px}
+header{background:#fff3d9;border-bottom:4px solid var(--red)}
+.nav{max-width:1140px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:13px 22px}
+.brand{display:flex;align-items:center;gap:13px;color:var(--ink);font-weight:850;font-size:18px;text-decoration:none}
+.brand img{object-fit:contain}.nav-links{display:flex;flex-wrap:wrap;gap:20px}.nav-links a{font-weight:750}
+.hero{background:linear-gradient(112deg,#192e22,#285139);color:white;padding:clamp(40px,5vw,78px) 20px}
+.wrap{max-width:1100px;margin:0 auto}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.13em;color:var(--yellow);font-weight:850}
+.hero h1{font-size:clamp(31px,4.5vw,56px);line-height:1.12;max-width:900px;letter-spacing:-.02em;margin:17px 0}
+.hero p:last-child{font-size:clamp(17px,2vw,21px);color:#e7eee9;max-width:910px;line-height:1.6}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;padding:22px 18px;margin-top:-23px;position:relative}
+.steps>div{background:#fff;border:1px solid var(--border);box-shadow:0 4px 14px #13231518;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:4px}
+.steps span{color:var(--red);font-size:13px;font-weight:900}.steps strong{font-size:18px}.steps small{color:#45594a;font-size:13px;line-height:1.5}
+.content{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,1fr);align-items:start;gap:24px;padding:28px 20px 72px}
+form,aside{background:#fff;border:1px solid var(--border);border-radius:17px;box-shadow:0 4px 20px #19352211;padding:clamp(18px,3vw,34px)}
+h2{font-size:clamp(23px,3vw,30px);line-height:1.2;margin:0 0 13px}h3{font-size:21px;line-height:1.22}
+.helper{color:#486052;font-size:14px;margin:8px 0 18px}
+.field{margin-top:22px}.field label{display:block;font-weight:800;margin-bottom:7px}
+input,textarea,select{display:block;width:100%;min-height:48px;border:2px solid #9eaf9e;border-radius:9px;padding:10px 13px;font:inherit;background:white;color:var(--ink)}
+textarea{resize:vertical}input[type=checkbox]{width:20px;min-height:20px;flex:0 0 20px;margin-top:3px;accent-color:var(--green)}
+.fields-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.price-panel{background:#fff7dd;border:2px solid #dfbc57;border-radius:11px;margin-top:21px;padding:20px}
+.price-panel h3{margin:0 0 16px}.price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.price-grid>div{background:white;border:1px solid #d9d0b8;border-radius:9px;padding:13px}
+.price-grid small{display:block;font-size:12px;color:#47604d;font-weight:750;line-height:1.3}
+.price-grid strong{display:block;margin-top:6px;font-size:clamp(17px,2vw,23px);color:var(--green)}
+fieldset{border:2px solid #d2ddcf;border-radius:12px;padding:16px 20px;margin:25px 0 18px}
+legend{font-weight:850;padding:0 6px}.check{display:flex;gap:11px;margin:15px 0;align-items:start}
+button[type=submit]{background:var(--green);color:white;border:0;border-radius:10px;padding:14px 24px;min-height:53px;font:inherit;font-weight:850;cursor:pointer;width:100%}
+button[type=submit]:hover{background:#0c4027}button[disabled]{opacity:.6;cursor:not-allowed}
+.status{padding:15px 17px;border-radius:10px;border:1px solid #a0b9a7;background:#edf6ec;margin:15px 0;overflow-wrap:anywhere}
+.status.success{border-color:#3d9661}.status.error{border-color:var(--red);background:#fff0e9}
+.side{position:sticky;top:18px;background:#eef2e8}
+.side ol{margin:18px 0;padding-left:22px}.side li{margin:18px 0}.side p{margin:20px 0;font-size:15px}
+footer{padding:24px 16px;background:var(--ink);color:white;text-align:center}footer a{color:#fbe07d}
+@media(max-width:900px){.content{grid-template-columns:1fr}.side{position:static}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.steps,.fields-two,.price-grid{grid-template-columns:1fr}.nav{align-items:flex-start}.brand{font-size:16px}.nav-links{gap:13px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

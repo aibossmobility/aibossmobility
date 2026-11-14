@@ -3,7 +3,7 @@ const fs=require("fs");
 const path=require("path");
 
 const CANONICAL_HOST="ai.bossmobilelifecoach.com";
-const PAGES=new Set(["/","/for-business-owners","/for-churches-and-nonprofits","/for-educators-and-workforce","/meet-brian","/consulting-services","/journey","/explore","/ask-brian","/digital-courses","/monthly-website-support","/start-project","/ai-consulting-east-bay","/critical-thinking-practice","/consulting-delivery-guide","/glossary","/human-centered-ai-strategy"]);
+const PAGES=new Set(["/","/estimate-checklist","/for-business-owners","/for-churches-and-nonprofits","/for-educators-and-workforce","/meet-brian","/consulting-services","/journey","/explore","/ask-brian","/digital-courses","/monthly-website-support","/start-project","/ai-consulting-east-bay","/critical-thinking-practice","/consulting-delivery-guide","/glossary","/human-centered-ai-strategy"]);
 const TARGETS=new Set(["ai_twin","consulting","estimate","project","email","course","checkout"]);
 const BOT_RE=/bot\b|crawler|spider|scraper|headless|lighthouse|monitor|heartbeat|ploy|curl|wget|node-fetch|python-requests|securityscanner|uptime|preview|scan\b|chatgpt-user|exa(search)?bot|barkrowler|mj12/i;
 const DATE_RE=/^\d{4}-\d\d-\d\d$/;

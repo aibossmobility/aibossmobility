@@ -1,0 +1,481 @@
+{
+  "version": 1,
+  "brand": "AI Boss Mobility Consulting",
+  "policy": {
+    "depositPercent": 50,
+    "finalInvoice": "Upon completion and customer acceptance of agreed deliverables",
+    "noPaymentUntilSigned": true
+  },
+  "offers": [
+    {
+      "id": "service-01",
+      "kind": "project",
+      "number": "01",
+      "title": "AI Clarity Session",
+      "priceCents": 14900,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-02",
+      "kind": "project",
+      "number": "02",
+      "title": "AI Quick Start",
+      "priceCents": 49500,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-03",
+      "kind": "project",
+      "number": "03",
+      "title": "Business Starter Launch",
+      "priceCents": 75000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-04",
+      "kind": "project",
+      "number": "04",
+      "title": "Professional Website Launch",
+      "priceCents": 125000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-05",
+      "kind": "project",
+      "number": "05",
+      "title": "Website + Business Offer & Service Structure",
+      "priceCents": 200000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-06",
+      "kind": "project",
+      "number": "06",
+      "title": "Website + CRM + Payments + Customer Journey",
+      "priceCents": 250000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-07",
+      "kind": "project",
+      "number": "07",
+      "title": "Complete Digital Business Setup",
+      "priceCents": 350000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-08",
+      "kind": "project",
+      "number": "08",
+      "title": "AI Feasibility & Readiness",
+      "priceCents": 35000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-09",
+      "kind": "project",
+      "number": "09",
+      "title": "AI Strategy & Planning",
+      "priceCents": 75000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-10",
+      "kind": "project",
+      "number": "10",
+      "title": "AI Workflow Automation",
+      "priceCents": 125000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-11",
+      "kind": "project",
+      "number": "11",
+      "title": "AI Cost-Benefit & ROI",
+      "priceCents": 45000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "service-12",
+      "kind": "project",
+      "number": "12",
+      "title": "AI Leadership Education",
+      "priceCents": 50000,
+      "deliveryReady": true,
+      "priceType": "listed fixed scope",
+      "source": "/consulting-services"
+    },
+    {
+      "id": "course-01-pdf",
+      "kind": "course",
+      "number": "01",
+      "title": "Make Your First B.I.G. IMPACT With AI | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-01-audio",
+      "kind": "course",
+      "number": "01",
+      "title": "Make Your First B.I.G. IMPACT With AI | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-01-complete",
+      "kind": "course",
+      "number": "01",
+      "title": "Make Your First B.I.G. IMPACT With AI | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-02-pdf",
+      "kind": "course",
+      "number": "02",
+      "title": "Ask Better Questions With ChatGPT | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-02-audio",
+      "kind": "course",
+      "number": "02",
+      "title": "Ask Better Questions With ChatGPT | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-02-complete",
+      "kind": "course",
+      "number": "02",
+      "title": "Ask Better Questions With ChatGPT | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-03-pdf",
+      "kind": "course",
+      "number": "03",
+      "title": "Make an AI Assistant Work for You | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-03-audio",
+      "kind": "course",
+      "number": "03",
+      "title": "Make an AI Assistant Work for You | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-03-complete",
+      "kind": "course",
+      "number": "03",
+      "title": "Make an AI Assistant Work for You | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-04-pdf",
+      "kind": "course",
+      "number": "04",
+      "title": "Simplify Repetitive Work With AI | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-04-audio",
+      "kind": "course",
+      "number": "04",
+      "title": "Simplify Repetitive Work With AI | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-04-complete",
+      "kind": "course",
+      "number": "04",
+      "title": "Simplify Repetitive Work With AI | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-05-pdf",
+      "kind": "course",
+      "number": "05",
+      "title": "Create Responsible AI Marketing | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-05-audio",
+      "kind": "course",
+      "number": "05",
+      "title": "Create Responsible AI Marketing | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-05-complete",
+      "kind": "course",
+      "number": "05",
+      "title": "Create Responsible AI Marketing | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-06-pdf",
+      "kind": "course",
+      "number": "06",
+      "title": "Serve Customers With AI and Humanity | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-06-audio",
+      "kind": "course",
+      "number": "06",
+      "title": "Serve Customers With AI and Humanity | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-06-complete",
+      "kind": "course",
+      "number": "06",
+      "title": "Serve Customers With AI and Humanity | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-07-pdf",
+      "kind": "course",
+      "number": "07",
+      "title": "Build a Clear Online Presence | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-07-audio",
+      "kind": "course",
+      "number": "07",
+      "title": "Build a Clear Online Presence | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-07-complete",
+      "kind": "course",
+      "number": "07",
+      "title": "Build a Clear Online Presence | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-08-pdf",
+      "kind": "course",
+      "number": "08",
+      "title": "Apply AI in Community Organizations | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-08-audio",
+      "kind": "course",
+      "number": "08",
+      "title": "Apply AI in Community Organizations | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-08-complete",
+      "kind": "course",
+      "number": "08",
+      "title": "Apply AI in Community Organizations | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-09-pdf",
+      "kind": "course",
+      "number": "09",
+      "title": "Lead With Purpose in the AI Era | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-09-audio",
+      "kind": "course",
+      "number": "09",
+      "title": "Lead With Purpose in the AI Era | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-09-complete",
+      "kind": "course",
+      "number": "09",
+      "title": "Lead With Purpose in the AI Era | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-10-pdf",
+      "kind": "course",
+      "number": "10",
+      "title": "Launch an AI-Supported Service Idea | Read & Work \u2014 PDF + workbook",
+      "priceCents": 499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-10-audio",
+      "kind": "course",
+      "number": "10",
+      "title": "Launch an AI-Supported Service Idea | Read & Listen \u2014 PDF + MP3",
+      "priceCents": 999,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "course-10-complete",
+      "kind": "course",
+      "number": "10",
+      "title": "Launch an AI-Supported Service Idea | Complete Course \u2014 PDF, audio + video",
+      "priceCents": 1499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "bundle-ai-essentials",
+      "kind": "course",
+      "number": "BUNDLE",
+      "title": "AI Essentials \u2014 Courses 01, 02 & 03",
+      "priceCents": 3499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "bundle-practical-operations",
+      "kind": "course",
+      "number": "BUNDLE",
+      "title": "Practical Operations \u2014 Courses 04, 05 & 06",
+      "priceCents": 3499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "bundle-community-leadership",
+      "kind": "course",
+      "number": "BUNDLE",
+      "title": "Community Leadership \u2014 Courses 07, 08 & 09",
+      "priceCents": 3499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "bundle-service-launch",
+      "kind": "course",
+      "number": "BUNDLE",
+      "title": "Service Launch \u2014 Courses 03, 07 & 10",
+      "priceCents": 3499,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    },
+    {
+      "id": "academy-bundle",
+      "kind": "course",
+      "number": "ALL",
+      "title": "B.I.G. IMPACT Full Academy Bundle",
+      "priceCents": 9900,
+      "deliveryReady": false,
+      "priceType": "pre-launch listed price",
+      "source": "/digital-courses"
+    }
+  ]
+}

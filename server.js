@@ -4,10 +4,12 @@ const path=require("path");
 const {installBossSso,isBossSsoSession}=require("./ai-boss-owner-sso");
 const {addStructuredData}=require("./site-structured-data");
 const siteMetrics=require("./site-metrics");
+const estimateOffers=require("./public/estimate-offers.json").offers;
+const findEstimateOffer=id=>estimateOffers.find(offer=>offer.id===id);
 const {addCopyright}=require("./site-copyright");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
-const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
+const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".json":"application/json; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
 
 function resolveFile(url){
   let clean;
@@ -37,9 +39,40 @@ async function handleGuideLead(req,res){
 async function handleBusinessIntake(req,res){
   try{
     const body=JSON.parse(await readBody(req)||"{}");
-    const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().toLowerCase().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),need=String(body.need||"").trim().slice(0,3000),pathKey=String(body.path||"").trim().slice(0,80);
+    const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().toLowerCase().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),pathKey=String(body.path||"").trim().slice(0,80);
+    let need=String(body.need||"").trim().slice(0,3000),estimateSummary=null;
     if(!name||!email||!email.includes("@"))return json(res,400,{ok:false,error:"Name and valid email are required."});
-    const lead={record_type:"ai_boss_business_intake",name,email,organization,need,path:pathKey,source:"AI Boss Mobility Interactive Homepage",site:"https://ai.bossmobilelifecoach.com",submitted_at:new Date().toISOString()};
+    if(pathKey==="estimate-checklist"){
+      const offer=findEstimateOffer(String(body.offerId||""));
+      const details=body.checklist||{};
+      if(!offer||body.estimateTermsAccepted!==true||typeof details!=="object"||Array.isArray(details))
+        return json(res,422,{ok:false,error:"Choose a listed offer and accept the estimate process terms."});
+      const field=(name,max=700)=>String(details[name]||"").trim().slice(0,max);
+      const goal=field("goal",1200),deliverables=field("deliverables",1200);
+      if(goal.length<12||deliverables.length<10)
+        return json(res,422,{ok:false,error:"Describe your goal and expected deliverables before requesting an estimate."});
+      const deposit=Math.ceil(offer.priceCents/2),balance=offer.priceCents-deposit;
+      const money=cents=>"$"+(cents/100).toFixed(2);
+      const summary=[
+        "ESTIMATE CHECKLIST — no invoice/payment authorization yet",
+        "Offer: "+offer.id+" — "+offer.title,
+        "Catalog total: "+money(offer.priceCents),
+        "50% deposit upon signed agreement: "+money(deposit),
+        "50% remaining invoice after completed/accepted deliverables: "+money(balance),
+        offer.deliveryReady?"Offer status: defined service; scope to confirm.":"OFFER STATUS: DIGITAL COURSE PRE-LAUNCH. Do not invoice until learner materials/access confirmed.",
+        "Goals: "+goal, "Expected deliverables: "+deliverables,
+        "Timing and access needs: "+field("timeline"),
+        "Existing systems / course format needs: "+field("tools"),
+        "Constraints and third-party fees: "+field("constraints"),
+        "Acceptance/quality criteria: "+field("acceptance")
+      ];
+      need=summary.join("\n").slice(0,3000);
+      estimateSummary={offerId:offer.id,offerKind:offer.kind,totalCents:offer.priceCents,
+        depositCents:deposit,finalBalanceCents:balance,
+        state:"estimate_requested_not_signed",prelaunch:!offer.deliveryReady,
+        signedAgreementRequired:true,customerChargeAuthorized:false};
+    }
+    const lead={record_type:"ai_boss_business_intake",name,email,organization,need,path:pathKey,source:"AI Boss Mobility Interactive Homepage",site:"https://ai.bossmobilelifecoach.com",submitted_at:new Date().toISOString(),...(estimateSummary?{estimate:estimateSummary}:{})};
     try{const dataDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");fs.mkdirSync(dataDir,{recursive:true});fs.appendFileSync(path.join(dataDir,"business-intake.ndjson"),JSON.stringify(lead)+"\n","utf8");}catch(err){console.error("Business intake local record failed");}
     const urls=[
       [process.env.GOOGLE_HUB_WEBHOOK,"Google Hub"],
@@ -64,6 +97,7 @@ async function handleBusinessIntake(req,res){
     // conversation or a paying customer from a received form submission.
     if(ghlDelivered){
       siteMetrics.record("outcome",{target:"crm_intake_ack"});
+      if(pathKey==="estimate-checklist")siteMetrics.record("outcome",{target:"estimate"});
       try{
         const receiptsDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");
         fs.mkdirSync(receiptsDir,{recursive:true});
@@ -77,7 +111,7 @@ async function handleBusinessIntake(req,res){
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
     }
-    return json(res,200,{ok:true,crm_received:true});
+    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{})});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
@@ -295,7 +329,7 @@ http.createServer(async(req,res)=>{
     const valid=/^https:\/\/[a-z0-9.-]+\//i.test(url)&&(/(^|\.)leadconnectorhq\.com$/i.test(new URL(url||"https://invalid.local").hostname)||/(^|\.)gohighlevel\.com$/i.test(new URL(url||"https://invalid.local").hostname)||new URL(url||"https://invalid.local").hostname==="link.fastpaydirect.com");
     return json(res,200,{provider:"gohighlevel",available:valid,url:valid?url:null,price_usd:"149.00",verification_ready:false});
   }
-  if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"gohighlevel_hosted_payment_links",checkout_ready:false,project_requests_ready:true,agreement_required:true,reason:"Services 08-12 have active GoHighLevel payment links labeled Signed Agreement Only. Public checkout stays disabled until the agreement-to-payment handoff is validated.",direct_paypal_checkout_enabled:false});
+  if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"gohighlevel_hosted_payment_links",checkout_ready:false,project_requests_ready:true,agreement_required:true,estimate_checklist_ready:true,depositPercent:50,finalInvoice:"After agreed completion and acceptance",reason:"All project and course requests use the estimate checklist. A signed agreement is required before a 50% GoHighLevel deposit invoice; the final 50% is invoiced after agreed completion. Direct checkout remains disabled until signature-to-invoice workflow is verified.",direct_paypal_checkout_enabled:false});
   if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
   if(route==="/api/ai-boss-os/mac-event" || route==="/api/ai-boss-os/daily") return macOSHandler(req,res);
   if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);

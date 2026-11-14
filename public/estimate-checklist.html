@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project & Course Estimate Checklist | AI Boss Mobility Consulting</title>
+<meta name="description" content="Choose an AI Boss Mobility project or digital course. Complete the estimate checklist, review the 50% deposit and 50% final balance, then sign the agreement before payment.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://ai.bossmobilelifecoach.com/estimate-checklist">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/estimate-checklist.css">
+<script src="/estimate-checklist.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#estimate-form">Skip to the estimate checklist</a>
+<header><nav class="nav"><a class="brand" href="/"><img src="/images/ai-boss-journey-logo.webp" width="64" height="55" alt="">AI Boss Mobility Consulting</a><div class="nav-links"><a href="/">Home</a><a href="/consulting-services">Projects</a><a href="/digital-courses">Courses</a><a href="/purchase-help">Support</a></div></nav></header>
+<main>
+<section class="hero">
+ <div class="wrap">
+ <p class="eyebrow">Your project · Your choices · Clear payment milestones</p>
+ <h1>Start with an estimate. Know what's included before paying.</h1>
+ <p>Every AI Boss Mobility consulting project or digital course request follows the same simple checklist. We agree on what's included, you sign the written agreement, and then you pay half to begin. The remaining balance is invoiced after the agreed work is completed and accepted.</p>
+ </div>
+</section>
+<section class="steps wrap" aria-label="How project and course purchasing works">
+ <div><span>01</span><strong>Choose &amp; describe</strong><small>Tell us what you need in the estimate checklist</small></div>
+ <div><span>02</span><strong>Review &amp; sign</strong><small>Approve the scope, timeline and full price in writing</small></div>
+ <div><span>03</span><strong>Pay 50% upfront</strong><small>Pay the approved GoHighLevel invoice after signing</small></div>
+ <div><span>04</span><strong>Complete &amp; invoice</strong><small>After completion and agreed acceptance, pay the remaining 50%</small></div>
+</section>
+<div class="wrap content">
+<form id="estimate-form" novalidate>
+ <h2>Estimate checklist</h2>
+ <p class="helper">This is a request for an estimate—not an invoice or a charge. You will not be asked for a card number here.</p>
+ <div class="field">
+   <label for="offer">1. What would you like?</label>
+   <select id="offer" name="offer" required><option value="">Choose a project, course, or bundle</option></select>
+   <p class="helper">All 12 services and 10 digital courses are listed. Course enrollment is still pre-launch; requesting an estimate does not mean content is ready.</p>
+ </div>
+ <div id="price-panel" class="price-panel" aria-live="polite" hidden>
+  <h3 id="offer-name">Selected offer</h3>
+  <div class="price-grid"><div><small>Listed total</small><strong id="total-price"></strong></div><div><small>50% after signing</small><strong id="deposit-price"></strong></div><div><small>Final invoice, after completion</small><strong id="balance-price"></strong></div></div>
+  <p id="offer-note" class="helper"></p>
+ </div>
+ <div class="fields-two">
+  <div class="field"><label for="name">2. Your name</label><input id="name" name="name" required minlength="2" maxlength="160" autocomplete="name"></div>
+  <div class="field"><label for="email">3. Email address</label><input id="email" name="email" required type="email" autocomplete="email" maxlength="254"></div>
+ </div>
+ <div class="field"><label for="organization">4. Business, organization, or individual</label><input id="organization" name="organization" required maxlength="160" placeholder="Business name, church/nonprofit, school, or Individual"></div>
+ <div class="field"><label for="goal">5. What would you like to accomplish?</label><textarea id="goal" name="goal" required minlength="12" maxlength="1200" rows="3" placeholder="Describe the situation and the result you're seeking."></textarea></div>
+ <div class="field"><label for="deliverables">6. What should you receive when it is finished?</label><textarea id="deliverables" name="deliverables" required minlength="10" maxlength="1200" rows="3" placeholder="List expected pages, training materials, videos, automations, reports, course format, or other deliverables."></textarea></div>
+ <div class="fields-two">
+  <div class="field"><label for="timeline">7. Timing or preferred completion date</label><input id="timeline" name="timeline" maxlength="300" placeholder="Include any important deadline"></div>
+  <div class="field"><label for="tools">8. Existing tools, content, or format needs</label><input id="tools" name="tools" maxlength="500" placeholder="Website, CRM, PDF/audio/video, existing materials"></div>
+ </div>
+ <div class="field"><label for="constraints">9. Budget, access permissions, accessibility or outside fees to consider</label><textarea id="constraints" name="constraints" rows="2" maxlength="700" placeholder="We won't buy subscriptions or access private systems without your approval."></textarea></div>
+ <div class="field"><label for="acceptance">10. How will you know the work is complete?</label><textarea id="acceptance" name="acceptance" rows="2" maxlength="700" placeholder="Describe the checklist or result you will use to review delivery."></textarea></div>
+ <fieldset>
+  <legend>Before we prepare your written estimate</legend>
+  <label class="check"><input id="scope-ack" type="checkbox" required><span>I understand the written estimate must specify the work, total price, timeline, deliverables, quality criteria, and any separately approved third-party costs.</span></label>
+  <label class="check"><input id="payment-ack" type="checkbox" required><span>I understand I must sign/accept the written agreement before receiving a 50% upfront invoice. The final 50% is invoiced only after agreed completion and acceptance.</span></label>
+  <label class="check"><input id="contact-ack" type="checkbox" required><span>I authorize AI Boss Mobility to contact me about this estimate. I am not consenting to unrelated marketing.</span></label>
+ </fieldset>
+ <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+ <button id="submit" type="submit">Submit my estimate checklist — no payment now</button>
+ <p class="helper">No work starts until the written agreement is signed and the deposit is independently verified. No automatic charge or subscription is created by this form.</p>
+</form>
+<aside class="side">
+ <h2>What happens next?</h2>
+ <ol><li><strong>Estimate prepared:</strong> Your submission reaches our client system; the detailed written scope and price are confirmed.</li>
+ <li><strong>Agreement signed:</strong> You approve the scope, milestones and completion criteria.</li>
+ <li><strong>First invoice:</strong> You receive the secure GoHighLevel payment request for 50%, not the full amount.</li>
+ <li><strong>Work and review:</strong> We deliver the agreed work and check it against the signed checklist.</li>
+ <li><strong>Final invoice:</strong> The remaining 50% is invoiced after completion and agreed acceptance.</li></ol>
+ <p><strong>For courses:</strong> The digital academy is currently pre-launch. Course requests can be recorded, but payment must not be collected before deliverables and access are ready and an agreement is signed.</p>
+ <p><a href="/consulting-services">Compare project services</a> · <a href="/digital-courses">Browse courses</a></p>
+</aside>
+</div>
+</main>
+<footer><span>AI Boss Mobility Consulting · Clear scope. Fair milestones. Human accountability.</span> <a href="/privacy">Privacy</a> · <a href="/purchase-help">Service help</a></footer>
+</body></html>
