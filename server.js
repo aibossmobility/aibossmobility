@@ -39,6 +39,9 @@ async function handleGuideLead(req,res){
 async function handleBusinessIntake(req,res){
   try{
     const body=JSON.parse(await readBody(req)||"{}");
+    if(body.path==="estimate-checklist" && body.offerId==="service-01") {
+      return json(res,409,{ok:false,error:"Please use the AI Clarity Session inquiry form at /clarity-session. This older form cannot route Clarity inquiries.",inquiry_url:"/clarity-session"});
+    }
     const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().toLowerCase().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),pathKey=String(body.path||"").trim().slice(0,80);
     let need=String(body.need||"").trim().slice(0,3000),estimateSummary=null;
     if(!name||!email||!email.includes("@"))return json(res,400,{ok:false,error:"Name and valid email are required."});
@@ -299,6 +302,9 @@ function applySecurityHeaders(res){for(const [name,value] of Object.entries(SECU
 http.createServer(async(req,res)=>{
   applySecurityHeaders(res);
   const route=(req.url||"").split("?")[0];
+  if((req.method==="GET"||req.method==="HEAD") && ["/estimate-checklist","/estimate-checklist.html"].includes(route) && new URL(req.url,"http://localhost").searchParams.get("offer")==="service-01") {
+    res.writeHead(302,{Location:"/clarity-session","Cache-Control":"no-store"}); return res.end();
+  }
   if(req.method==="POST"&&route==="/api/site-traffic/event")return siteMetrics.acceptEvent(req,res);
   if(req.method==="GET"&&route==="/api/site-traffic/report")return siteMetrics.serveReport(req,res,isBossSsoSession(req));
   // The Trellis trial is an AI Boss-only, reversible, default-off module.

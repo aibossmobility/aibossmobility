@@ -14,6 +14,7 @@
     const panel = byId("price-panel");
     panel.hidden = !selected;
     if (!selected) return;
+    if (selected.id === "service-01") { location.assign("/clarity-session"); return; }
     const deposit = Math.ceil(selected.priceCents / 2);
     const balance = selected.priceCents - deposit;
     byId("offer-name").textContent = selected.title;
