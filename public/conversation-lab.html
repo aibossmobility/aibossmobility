@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101715">
+<meta name="description" content="AI Boss Mobility guided conversation practice for businesses, community organizations, and educators. No login or purchase needed.">
+<title>Conversation Lab | AI Boss Mobility</title>
+<style>
+:root{color-scheme:dark;--bg:#101715;--surface:#1c2824;--line:#3e5049;--text:#f4f7ef;--muted:#c3d0c8;--yellow:#ffdc58;--green:#87d6a0;--red:#ff7979}*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0}a{color:var(--yellow)}
+main{max-width:900px;margin:0 auto;padding:23px 17px 50px}
+header{border:1px solid var(--line);border-radius:24px;padding:28px 25px;background:linear-gradient(130deg,#26382e,#101715 85%)}
+.brand{color:var(--yellow);font-weight:900;letter-spacing:.09em;font-size:.85rem}h1{font-size:clamp(2rem,5vw,3.35rem);line-height:1.13;margin:15px 0 12px}
+h2{font-size:1.45rem;line-height:1.22;margin:0 0 12px}h3{font-size:1.1rem;margin:0 0 7px}p{margin:8px 0 14px}
+.muted{color:var(--muted)}.eyebrow{color:var(--green);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.card{background:var(--surface);border:1px solid var(--line);padding:24px;border-radius:19px;margin-top:17px}
+label{display:block;font-weight:700;margin:18px 0 7px}
+select,textarea,input{width:100%;font:inherit;color:var(--text);background:#0d1612;border:1px solid #698174;border-radius:12px;padding:13px;outline-offset:3px}textarea{min-height:98px;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+button,.btn{display:inline-block;border:1px solid transparent;border-radius:11px;padding:12px 16px;min-height:45px;background:var(--yellow);color:#192017;font:inherit;font-weight:800;cursor:pointer;text-align:center;text-decoration:none}
+button.secondary,.btn.secondary{background:transparent;color:var(--text);border-color:var(--line)}
+button:focus-visible,a:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.step{border-left:4px solid var(--green);padding:4px 0 4px 14px;margin-top:12px}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#0c1511;border:1px solid var(--line);border-radius:13px;padding:15px;line-height:1.56;font-size:.94rem}
+ul{padding-left:21px}li{margin:8px 0}.alert{border-left:4px solid var(--yellow);padding:10px 14px;background:#28291e;border-radius:6px;color:#f5ebc2}
+.tag{display:inline-block;padding:5px 10px;border-radius:999px;border:1px solid var(--line);font-size:.83rem;color:var(--muted)}
+footer{margin-top:25px;color:var(--muted);font-size:.86rem}#results[hidden],#copyStatus[hidden]{display:none}
+@media(max-width:600px){header,.card{padding:19px}.grid{grid-template-columns:1fr}.actions>*{flex:1 1 145px}h1{font-size:2rem}}
+</style>
+</head>
+<body><main>
+<header>
+<div class="brand">AI BOSS MOBILITY CONSULTING</div>
+<div class="eyebrow">Human connection comes first</div>
+<h1>Listen first. Find one useful next step.</h1>
+<p>Try a hands-on conversation about a real organizational challenge. No avatar, subscription, or sales pressure required.</p>
+<span class="tag">Meeting pilot • November 2026</span> <span class="tag">Works without an AI connection</span>
+</header>
+<section class="card">
+<h2>Start with your world</h2>
+<p class="muted">Choose a pathway, then describe one challenge. This page prepares an original question and a practical AI exercise for you to try together. It does not send or store what you type.</p>
+<label for="audience">Your organization</label>
+<select id="audience">
+<option value="fathers">Fatherhood program / community nonprofit</option>
+<option value="education">Adult education / workforce development</option>
+<option value="business">Small business / entrepreneur</option>
+</select>
+<label for="focus">What would you like to improve?</label>
+<select id="focus">
+<option value="follow">Responding to inquiries and following up</option>
+<option value="organize">Organizing information and reducing busywork</option>
+<option value="train">Training or communicating more clearly</option>
+</select>
+<label for="challenge">In your own words, what is difficult right now?</label>
+<textarea id="challenge" maxlength="750" placeholder="Example: We want our volunteers to have a clear way to follow up with people who ask for information."></textarea>
+<p class="muted"><small>Please don't enter participants' names, family histories, medical details, student records, or confidential information.</small></p>
+<div class="actions">
+<button id="prepare" type="button">Prepare a practical example</button>
+<button id="example" class="secondary" type="button">Fill with a fictional example</button>
+<button id="clear" class="secondary" type="button">Clear</button>
+</div>
+</section>
+<section class="card" id="results" hidden aria-live="polite">
+<div class="eyebrow">Practice together</div><h2 id="scenarioTitle">Your conversation</h2>
+<div class="step"><h3>1. Listen</h3><p id="listen"></p></div>
+<div class="step"><h3>2. Try a small, safe example</h3><p id="practice"></p><p><strong>Fictional data (for practice only):</strong> <span id="sample"></span></p></div>
+<div class="step"><h3>3. Ask AI for one useful idea</h3><p>Copy this original prompt, then paste it into ChatGPT or Gemini. You can ask it aloud and critique the answer together.</p></div>
+<div class="output" id="promptOutput"></div>
+<div class="actions">
+<button id="copy" type="button">Copy prompt</button>
+<a class="btn secondary" href="https://chatgpt.com/" target="_blank" rel="noopener">Open ChatGPT</a>
+<a class="btn secondary" href="https://gemini.google.com/app" target="_blank" rel="noopener">Open Gemini</a>
+</div>
+<p id="copyStatus" hidden role="status"></p>
+<div class="step"><h3>4. Decide together</h3><p id="next"></p></div>
+<p class="alert"><strong>Human review is required.</strong> This demo does not send emails, enroll people, collect leads, or promise any result. If the organization wants help afterward, Brian can personally discuss a scope and next step.</p>
+<p><a id="services" href="/for-churches-and-nonprofits">See the matching AI Boss Mobility services</a> · <a href="/start-project">Optional project inquiry</a></p>
+</section>
+<section class="card">
+<h2>What we're testing</h2>
+<ul>
+<li>Can we hear the person's actual question rather than lead with software?</li>
+<li>Can AI make one task easier using approved, non-confidential example information?</li>
+<li>Can people check the answer for accuracy and decide whether further help is useful?</li>
+</ul>
+<p><strong>For fatherhood leaders:</strong> Family relationships stay personal. This is not therapy, automated counseling, or a system for deciding what a father should feel.</p>
+<p><strong>For adult educators:</strong> AI literacy means checking accuracy, preserving student privacy, and keeping instructor judgment in control.</p>
+</section>
+<footer>AI Boss Mobility Consulting • Original meeting practice page. No third-party agent scripts or SEADS material are used. <a href="/">Return to AI Boss Mobility</a>.</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var audience=document.getElementById("audience"),focus=document.getElementById("focus"),challenge=document.getElementById("challenge");
+var plans={
+fathers:{name:"Fatherhood program / community nonprofit",url:"/for-churches-and-nonprofits", question:"Who needs a clearer, more personal response, and which part of that follow-up takes the most time?",examples:{follow:"We have inquiries from fathers and community partners but no consistent, permission-based follow-up process.",organize:"Our team needs a simpler way to turn meeting notes into assigned actions without exposing private stories.",train:"We want to explain our fatherhood programming clearly to volunteers without losing the human connection."},samples:{follow:"12 people requested program information; 7 requested a reply; 5 did not opt in. No names or contact details are provided.",organize:"Four fictional meeting notes mention venue confirmation, volunteer orientation, participant materials, and a follow-up deadline.",train:"A fictional volunteer orientation covers listening, privacy, referrals, and consent."}},
+education:{name:"Adult education / workforce development",url:"/for-educators-and-workforce",question:"What should learners be able to do after one small lesson, and how will you know it helped?",examples:{follow:"We need a straightforward response to an adult learner asking whether our introductory workshop fits their goals.",organize:"We need to summarize a proposed workshop and a few learning objectives for an internal review.",train:"We want a short AI literacy exercise that builds critical thinking without using students' private information."},samples:{follow:"Eight fictional inquiries ask about schedule, accessibility, required experience, and learning outcomes.",organize:"A fictional 30-minute introductory workshop covers listening, guided practice, reflection, and evaluation.",train:"Fifteen fictional learners practice evaluating an AI-generated paragraph; five ask for more guided practice."}},
+business:{name:"Small business / entrepreneur",url:"/for-business-owners",question:"What recurring task costs you the most time, and what would a useful improvement look like?",examples:{follow:"We receive new service questions but sometimes forget to reply or track who needs attention.",organize:"We want a clearer weekly summary of requests without changing all our software.",train:"We need to help a small team use AI for drafting while checking facts and protecting customer privacy."},samples:{follow:"Twelve fictional customer requests: eight answered, three waiting for review, one duplicate.",organize:"Five fictional weekly activities: new inquiry, estimate request, phone callback, project update, and invoice review.",train:"Three fictional staff roles need guidance on drafting, fact-checking, and approval."}}
+};
+var focusNames={follow:"Personal follow-up",organize:"Organizing work",train:"Responsible training"};
+var action={follow:"Draft a short response people can actually send only after a person reviews it; define who should follow up and who did not consent.",organize:"Turn the example into a short summary with one owner, one next action, and a due-date question for each item.",train:"Prepare a 10-minute learning exercise with one demonstration, one fact-check, and one reflection question."};
+var prompt="";
+document.getElementById("example").onclick=function(){challenge.value=plans[audience.value].examples[focus.value];challenge.focus();};
+document.getElementById("clear").onclick=function(){challenge.value="";document.getElementById("results").hidden=true;document.getElementById("copyStatus").hidden=true;};
+document.getElementById("prepare").onclick=function(){
+var p=plans[audience.value],f=focus.value,statement=challenge.value.trim();
+if(!statement){statement=p.examples[f];challenge.value=statement;}
+document.getElementById("scenarioTitle").textContent=p.name+" — "+focusNames[f];
+document.getElementById("listen").textContent=p.question+" You said: “"+statement+"”";
+document.getElementById("practice").textContent=action[f];
+document.getElementById("sample").textContent=p.samples[f];
+document.getElementById("next").textContent="Ask: “Does this address the real problem, or should we adjust it?” If useful, agree on one next action. Brian can discuss a scoped, optional follow-up separately.";
+document.getElementById("services").href=p.url;
+prompt=[
+"You are helping with a short, human-led AI Boss Mobility demonstration for "+p.name+".",
+"This is a conversation with the person, not automated sales. Be warm, practical, transparent that you are AI, and do not impersonate Brian Keith Hill.",
+"The person's challenge (not verified): "+statement,
+"First acknowledge what they asked and ask ONE clarifying question. Once they answer, propose ONE small realistic way to help using tools they already have.",
+"For our hands-on example, use ONLY this explicitly fictional practice data: "+p.samples[f],
+"Suggested kind of task: "+action[f],
+"Do not invent outcomes, testimonials, prices, access, scheduling, or facts about the person's organization.",
+"Do not request private information about fathers, students, clients or members. Do not send messages, schedule events or make purchases.",
+"Keep the response short, invite corrections and let the person choose whether to continue."
+].join("\n\n");
+document.getElementById("promptOutput").textContent=prompt;
+document.getElementById("results").hidden=false;
+document.getElementById("copyStatus").hidden=true;
+document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
+};
+document.getElementById("copy").onclick=async function(){
+var el=document.getElementById("copyStatus");
+try{await navigator.clipboard.writeText(prompt);el.textContent="Prompt copied. Open ChatGPT or Gemini and paste it into a new conversation.";}
+catch(e){var ta=document.createElement("textarea");ta.value=prompt;document.body.appendChild(ta);ta.select();var ok=document.execCommand("copy");ta.remove();el.textContent=ok?"Prompt copied. Paste it in a new AI conversation.":"Copy unavailable. Select the prompt text above and copy manually.";}
+el.hidden=false;
+};
+})();
+</script></body></html>
