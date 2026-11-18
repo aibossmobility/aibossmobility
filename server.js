@@ -9,7 +9,7 @@ const findEstimateOffer=id=>estimateOffers.find(offer=>offer.id===id);
 const {addCopyright}=require("./site-copyright");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
-const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".json":"application/json; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"};
+const mime={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"application/javascript; charset=utf-8",".json":"application/json; charset=utf-8",".xml":"application/xml; charset=utf-8",".txt":"text/plain; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".mp4":"video/mp4",".m4v":"video/x-m4v",".mp3":"audio/mpeg",".wav":"audio/wav"};
 
 function resolveFile(url){
   let clean;
@@ -349,5 +349,42 @@ http.createServer(async(req,res)=>{
   if(req.method!=="GET"&&req.method!=="HEAD")return json(res,405,{ok:false,error:"Method not allowed"});
   if(route==="/favicon.ico"){res.writeHead(302,{Location:"/favicon.svg","Cache-Control":"public, max-age=86400"});return res.end();}
   const file=resolveFile(req.url);if(!file){res.writeHead(400);return res.end("Bad request");}
+  // Stream videos with byte-range support so browser players can seek and play
+  // without buffering the entire file. All other pages keep their existing handling.
+  if(path.extname(file).toLowerCase()===".mp4"){
+    return fs.stat(file,(err,stat)=>{
+      if(err||!stat.isFile()){
+        return fs.readFile(path.join(root,"404.html"),(_,fallback)=>{
+          res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});
+          res.end(fallback||"Not found");
+        });
+      }
+      const total=stat.size;
+      const headers={"Content-Type":"video/mp4","Accept-Ranges":"bytes","Cache-Control":"public, max-age=3600"};
+      const value=req.headers.range;
+      let start=0,end=total-1,status=200;
+      if(value!==undefined){
+        const m=/^bytes=(\d*)-(\d*)$/.exec(String(value));
+        if(!m||(!m[1]&&!m[2])){
+          res.writeHead(416,{...headers,"Content-Range":`bytes */${total}`});
+          return res.end();
+        }
+        start=m[1]?Number(m[1]):Math.max(0,total-Number(m[2]));
+        end=m[1]&&m[2]?Math.min(total-1,Number(m[2])):total-1;
+        if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||end<start||start>=total){
+          res.writeHead(416,{...headers,"Content-Range":`bytes */${total}`});
+          return res.end();
+        }
+        status=206;
+      }
+      const responseHeaders={...headers,"Content-Length":end-start+1};
+      if(status===206)responseHeaders["Content-Range"]=`bytes ${start}-${end}/${total}`;
+      res.writeHead(status,responseHeaders);
+      if(req.method==="HEAD")return res.end();
+      const stream=fs.createReadStream(file,{start,end});
+      stream.on("error",()=>res.destroy());
+      stream.pipe(res);
+    });
+  }
   fs.readFile(file,(err,data)=>{if(!err){res.writeHead(200,{"Content-Type":mime[path.extname(file).toLowerCase()]||"application/octet-stream","X-Content-Type-Options":"nosniff","Referrer-Policy":"strict-origin-when-cross-origin"});const payload=path.extname(file).toLowerCase()===".html"?siteMetrics.inject(addCopyright(addStructuredData(data.toString("utf8"),req.url),req.url),req.url,req.headers.host):data;return res.end(req.method==="HEAD"?"":payload);}fs.readFile(path.join(root,"404.html"),(_,fallback)=>{res.writeHead(404,{"Content-Type":"text/html; charset=utf-8"});res.end(fallback||"Not found");});});
 }).listen(port,"0.0.0.0",()=>console.log(`AI Boss Mobility listening on ${port}`));
