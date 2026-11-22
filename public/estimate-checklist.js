@@ -29,9 +29,9 @@
       const r = await fetch("/estimate-offers.json", {cache:"no-store"});
       if (!r.ok) throw Error("Catalog unavailable.");
       const payload = await r.json();
-      if (!Array.isArray(payload.offers) || payload.offers.length !== 12) throw Error("Catalog incomplete.");
+      if (!Array.isArray(payload.offers) || payload.offers.length !== 13) throw Error("Catalog incomplete.");
       const projects = document.createElement("optgroup");
-      projects.label = "Consulting projects (01–12)";
+      projects.label = "Consulting projects (01–13)";
       for (const offer of payload.offers) {
         offers.set(offer.id, offer);
         const option = document.createElement("option");

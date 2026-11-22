@@ -44,7 +44,7 @@ for(const filename of fs.readdirSync(folder).filter(f=>f.endsWith(".html"))){
     "https://ai.bossmobilelifecoach.com/meet-brian#brian");
   if(route==="/consulting-services"){
     assert.equal(page["@type"],"CollectionPage");
-    assert(updated.includes('"numberOfItems": 12'),"Retain existing 12 service offers");
+    assert(updated.includes('"numberOfItems": 13'),"Validate 13 service offers");
   }
   verified.add(pageName);
 }
