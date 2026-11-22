@@ -127,6 +127,16 @@
       "deliveryReady": true,
       "priceType": "listed fixed scope",
       "source": "/consulting-services"
+    },
+    {
+      "id": "service-13",
+      "kind": "project",
+      "number": "13",
+      "title": "Smart Outreach & Relationship Management System Setup",
+      "priceCents": 99500,
+      "deliveryReady": true,
+      "priceType": "starting price for defined core scope",
+      "source": "/smart-outreach"
     }
   ]
 }
