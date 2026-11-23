@@ -7,6 +7,7 @@ const siteMetrics=require("./site-metrics");
 const estimateOffers=require("./public/estimate-offers.json").offers;
 const findEstimateOffer=id=>estimateOffers.find(offer=>offer.id===id);
 const {qualifySmartOutreach}=require("./smart-outreach-qualifier");
+const {buildSmartOutreachScopePacket}=require("./smart-outreach-scope-packet");
 const {addCopyright}=require("./site-copyright");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
@@ -143,7 +144,24 @@ async function handleBusinessIntake(req,res){
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
     }
-    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{}),...(qualification?{qualification}:{}) , ...(aiQualification?{aiQualification}:{})});
+    let scopePacket=null;
+    // Make a deterministic, nonbinding scope packet available instantly only
+    // when both screenings allow the single-workflow standard service.
+    if(qualification?.status==="standard_scope_candidate" &&
+       (!aiQualification || aiQualification.status==="standard_scope_candidate")){
+      try {
+        scopePacket=buildSmartOutreachScopePacket({
+          name,organization,goal:String(body.checklist?.goal||""),
+          deliverables:String(body.checklist?.deliverables||""),
+          qualification
+        });
+      } catch(error){console.error("Smart Outreach preliminary scope packet unavailable");}
+    }
+    return json(res,200,{ok:true,crm_received:true,
+      ...(estimateSummary?{estimate:estimateSummary}:{}),
+      ...(qualification?{qualification}:{}),
+      ...(aiQualification?{aiQualification}:{}),
+      ...(scopePacket?{scopePacket}:{})});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
