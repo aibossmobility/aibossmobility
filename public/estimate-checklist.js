@@ -93,9 +93,18 @@
       const deposit = Math.ceil(selected.priceCents / 2);
       const balance = selected.priceCents - deposit;
       status.className = "status success";
-      status.textContent = "Your consulting-project estimate checklist was accepted by our client system. No payment was taken. Your listed total is " + money(selected.priceCents) +
-        "; the planned first invoice is " + money(deposit) + " only after the written estimate/agreement is signed. The remaining " +
-        money(balance) + " is invoiced after agreed completion and acceptance.";
+      const q = selected.id === "service-13" ? result.qualification : null;
+      if (q && q.status === "custom_quote_required") {
+        status.textContent = "Your Smart Outreach request was received. The requested work may be outside the $995 single-workflow package. We will not invoice you for the standard package without a suitable written scope. Next question: " + (q.customerQuestions[0] || "Which single workflow do you need first?");
+      } else if (q && q.status === "clarification_required") {
+        status.textContent = "Your Smart Outreach request was received. We need a little more detail before providing the defined $995 scope. " + q.customerQuestions.join(" ") + " No payment was taken.";
+      } else if (q && q.status === "standard_scope_candidate") {
+        status.textContent = "Your Smart Outreach request matches the initial $995 single-workflow scope screening. This is not yet a signed estimate or payment request. The $497.50 deposit is due only after an agreement is signed. " + q.customerQuestions.join(" ");
+      } else {
+        status.textContent = "Your consulting-project estimate checklist was accepted by our client system. No payment was taken. Your listed total is " + money(selected.priceCents) +
+          "; the planned first invoice is " + money(deposit) + " only after the written estimate/agreement is signed. The remaining " +
+          money(balance) + " is invoiced after agreed completion and acceptance.";
+      }
       submit.textContent = "Estimate checklist submitted";
       form.querySelectorAll("input,textarea,select").forEach(el => {el.disabled=true;});
     } catch {

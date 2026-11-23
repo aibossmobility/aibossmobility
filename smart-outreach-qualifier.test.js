@@ -1,0 +1,11 @@
+const assert=require("node:assert/strict");
+const {test}=require("node:test");
+const {qualifySmartOutreach}=require("./smart-outreach-qualifier");
+const core={offerId:"service-13",goal:"Route authorized inbound inquiries from our contact form into our CRM for timely follow-up.",deliverables:"One contact form, a CRM record, a scheduling link, and a simple reporting view.",tools:"We already use GoHighLevel CRM and Calendly with a current website.",constraints:"Only people who submit an inbound inquiry or opt-in should receive a message."};
+test("standard core candidate is never payment-authorized",()=>{const q=qualifySmartOutreach(core);assert.equal(q.status,"standard_scope_candidate");assert.equal(q.depositCents,49750);assert.equal(q.readyForAutomaticInvoice,false);assert.equal(q.requiresFounderApproval,false);});
+test("new website requires a custom quote",()=>assert.equal(qualifySmartOutreach({...core,goal:"Build a new website and our inbound CRM"}).status,"custom_quote_required"));
+test("unsolicited blasts require custom review",()=>assert.equal(qualifySmartOutreach({...core,constraints:"Send mass SMS blast to purchased leads"}).status,"custom_quote_required"));
+test("sensitive records require custom quote",()=>assert.equal(qualifySmartOutreach({...core,goal:"Connect our HIPAA patient data with appointment messages"}).status,"custom_quote_required"));
+test("missing consent path asks customer to clarify",()=>assert.equal(qualifySmartOutreach({...core,constraints:"No scope defined yet.",goal:"We want a workflow to collect and route inbound inquiries from the site."}).status,"clarification_required"));
+test("unknown offer isn't priced by Smart Outreach logic",()=>assert.equal(qualifySmartOutreach({...core,offerId:"service-04"}).status,"other_service"));
+test("missing details don't get a quote",()=>assert.equal(qualifySmartOutreach({...core,goal:"Help",deliverables:"Website"}).readyForAutomaticInvoice,false));
