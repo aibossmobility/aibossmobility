@@ -93,7 +93,14 @@
       const deposit = Math.ceil(selected.priceCents / 2);
       const balance = selected.priceCents - deposit;
       status.className = "status success";
-      const q = selected.id === "service-13" ? result.qualification : null;
+      const preliminary = selected.id === "service-13" ? result.qualification : null;
+      const verifiedAi = result.aiQualification && result.aiQualification.origin === "ai" ? result.aiQualification : null;
+      // The protected AI model can downgrade scope only; customer sees its real
+      // questions when available, never an invented payment approval.
+      const q = preliminary && verifiedAi ? {
+        ...preliminary, status:verifiedAi.status,
+        customerQuestions:verifiedAi.questions && verifiedAi.questions.length ? verifiedAi.questions : preliminary.customerQuestions
+      } : preliminary;
       if (q && q.status === "custom_quote_required") {
         status.textContent = "Your Smart Outreach request was received. The requested work may be outside the $995 single-workflow package. We will not invoice you for the standard package without a suitable written scope. Next question: " + (q.customerQuestions[0] || "Which single workflow do you need first?");
       } else if (q && q.status === "clarification_required") {

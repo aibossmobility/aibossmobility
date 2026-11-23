@@ -25,6 +25,26 @@ function json(res,status,payload){res.writeHead(status,{"Content-Type":"applicat
 function readBody(req){return new Promise((resolve,reject)=>{let raw="";req.on("data",chunk=>{raw+=chunk;if(raw.length>25000){reject(new Error("payload too large"));req.destroy();}});req.on("end",()=>resolve(raw));req.on("error",reject);});}
 async function postWebhook(url,payload,label,extraHeaders={}){if(!url)return false;try{const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(payload)});if(!response.ok){let detail="";try{const raw=await response.text();try{const parsed=JSON.parse(raw);detail=String(parsed.error||parsed.message||"");}catch{detail=String(raw||"");}}catch{}detail=detail.replace(/\s+/g," ").trim();console.error(`${label} webhook failed`,response.status,detail.slice(0,400));}return response.ok;}catch(err){console.error(`${label} webhook error`,err);return false;}}
 
+async function postGhlIntakeWebhook(url,payload,extraHeaders={}) {
+  try {
+    const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(payload)});
+    let data={};
+    try{data=await response.json();}catch{}
+    if(!response.ok){
+      const msg=String((data&&data.error)||(data&&data.message)||"").replace(/\s+/g," ").slice(0,200);
+      console.error("GoHighLevel intake webhook failed",response.status,msg);
+    }
+    const scope=data&&typeof data==="object"?data.scope_classification:null;
+    const allowed=["standard_scope_candidate","clarification_required","custom_quote_required"];
+    const qualification=scope&&allowed.includes(scope.status)&&["ai","website_preflight"].includes(scope.origin)
+      ?{status:scope.status,origin:scope.origin,
+        reason:String(scope.reason||"").slice(0,180),
+        questions:Array.isArray(scope.questions)?scope.questions.filter(q=>typeof q==="string").map(q=>q.slice(0,180)).slice(0,3):[]}
+      :null;
+    return {ok:response.ok,qualification};
+  }catch(error){console.error("GoHighLevel intake request failed",String(error).slice(0,180));return {ok:false,qualification:null};}
+}
+
 async function handleGuideLead(req,res){
   try{
     const body=JSON.parse(await readBody(req)||"{}");
@@ -94,15 +114,13 @@ async function handleBusinessIntake(req,res){
       [process.env.AIRTABLE_GUIDE_WEBHOOK,"Current lead fallback"]
     ].filter(([url],index,arr)=>url&&arr.findIndex(([candidate])=>candidate===url)===index);
     const results=await Promise.all(urls.map(([url,label])=>postWebhook(url,lead,label)));
+    let aiQualification=null;
     if(process.env.GHL_INTAKE_WEBHOOK){
       const secret=String(process.env.AI_BOSS_INTAKE_SECRET||"").trim();
-      const ghlOk=await postWebhook(
-        process.env.GHL_INTAKE_WEBHOOK,
-        lead,
-        "GoHighLevel",
-        secret?{"X-AI-Boss-Intake-Secret":secret}:{}
-      );
-      results.push(ghlOk);
+      const ghlResult=await postGhlIntakeWebhook(process.env.GHL_INTAKE_WEBHOOK,lead,
+        secret?{"X-AI-Boss-Intake-Secret":secret}:{});
+      results.push(ghlResult.ok);
+      aiQualification=ghlResult.qualification;
     }
     const routed=results.filter(Boolean).length;
     const ghlConfigured=Boolean(process.env.GHL_INTAKE_WEBHOOK);
@@ -125,7 +143,7 @@ async function handleBusinessIntake(req,res){
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
     }
-    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{}),...(qualification?{qualification}:{})});
+    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{}),...(qualification?{qualification}:{}) , ...(aiQualification?{aiQualification}:{})});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
