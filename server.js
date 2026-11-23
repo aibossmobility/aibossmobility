@@ -6,6 +6,7 @@ const {addStructuredData}=require("./site-structured-data");
 const siteMetrics=require("./site-metrics");
 const estimateOffers=require("./public/estimate-offers.json").offers;
 const findEstimateOffer=id=>estimateOffers.find(offer=>offer.id===id);
+const {qualifySmartOutreach}=require("./smart-outreach-qualifier");
 const {addCopyright}=require("./site-copyright");
 const root=path.join(__dirname,"public");
 const port=process.env.PORT||3000;
@@ -43,7 +44,7 @@ async function handleBusinessIntake(req,res){
       return json(res,409,{ok:false,error:"Please use the AI Clarity Session inquiry form at /clarity-session. This older form cannot route Clarity inquiries.",inquiry_url:"/clarity-session"});
     }
     const name=String(body.name||"").trim().slice(0,160),email=String(body.email||"").trim().toLowerCase().slice(0,254),organization=String(body.organization||"").trim().slice(0,240),pathKey=String(body.path||"").trim().slice(0,80);
-    let need=String(body.need||"").trim().slice(0,3000),estimateSummary=null;
+    let need=String(body.need||"").trim().slice(0,3000),estimateSummary=null,qualification=null;
     if(!name||!email||!email.includes("@"))return json(res,400,{ok:false,error:"Name and valid email are required."});
     if(pathKey==="estimate-checklist"){
       const offer=findEstimateOffer(String(body.offerId||""));
@@ -70,12 +71,22 @@ async function handleBusinessIntake(req,res){
         "Acceptance/quality criteria: "+field("acceptance")
       ];
       need=summary.join("\n").slice(0,3000);
+      // Safe automatic scope preflight: asks the customer for missing details or
+      // routes complex projects for custom scoping. It never authorizes a charge.
+      if(offer.id==="service-13"){
+        qualification=qualifySmartOutreach({offerId:offer.id,goal,deliverables,
+          tools:field("tools"),constraints:field("constraints"),
+          timeline:field("timeline"),acceptance:field("acceptance")});
+        need=("${need}\nAUTOMATED SCOPE PREFLIGHT: ${qualification.status}\n" +
+          qualification.reasons.join("; ") +
+          "\nCustomer questions: " + qualification.customerQuestions.join("; ")).slice(0,3000);
+      }
       estimateSummary={offerId:offer.id,offerKind:offer.kind,totalCents:offer.priceCents,
         depositCents:deposit,finalBalanceCents:balance,
         state:"estimate_requested_not_signed",prelaunch:!offer.deliveryReady,
         signedAgreementRequired:true,customerChargeAuthorized:false};
     }
-    const lead={record_type:"ai_boss_business_intake",name,email,organization,need,path:pathKey,source:"AI Boss Mobility Interactive Homepage",site:"https://ai.bossmobilelifecoach.com",submitted_at:new Date().toISOString(),...(estimateSummary?{estimate:estimateSummary}:{})};
+    const lead={record_type:"ai_boss_business_intake",name,email,organization,need,path:pathKey,source:"AI Boss Mobility Interactive Homepage",site:"https://ai.bossmobilelifecoach.com",submitted_at:new Date().toISOString(),...(estimateSummary?{estimate:estimateSummary}:{}),...(qualification?{qualification}:{})};
     try{const dataDir=process.env.RAILWAY_VOLUME_MOUNT_PATH||path.join(__dirname,"data");fs.mkdirSync(dataDir,{recursive:true});fs.appendFileSync(path.join(dataDir,"business-intake.ndjson"),JSON.stringify(lead)+"\n","utf8");}catch(err){console.error("Business intake local record failed");}
     const urls=[
       [process.env.GOOGLE_HUB_WEBHOOK,"Google Hub"],
@@ -114,7 +125,7 @@ async function handleBusinessIntake(req,res){
       console.error("Business intake CRM delivery unconfirmed",{ghlConfigured,otherEndpointsAcknowledged:routed-(ghlDelivered?1:0)});
       return json(res,503,{ok:false,error:"We couldn't confirm delivery to our client system. Please email brian@bossmobility.net directly."});
     }
-    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{})});
+    return json(res,200,{ok:true,crm_received:true,...(estimateSummary?{estimate:estimateSummary}:{}),...(qualification?{qualification}:{})});
   }catch(err){console.error("Business intake error",err);return json(res,400,{ok:false,error:"Unable to process request."});}
 }
 
