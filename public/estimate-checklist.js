@@ -112,6 +112,20 @@
           "; the planned first invoice is " + money(deposit) + " only after the written estimate/agreement is signed. The remaining " +
           money(balance) + " is invoiced after agreed completion and acceptance.";
       }
+      // This is a customer-held preliminary scope summary, not a binding
+      // agreement or payment link. Customer chooses whether to download it.
+      if (q && q.status === "standard_scope_candidate" &&
+          result.scopePacket?.kind === "preliminary_scope_not_contract" &&
+          result.scopePacket.readyToInvoice === false &&
+          result.scopePacket.readyToBuild === false) {
+        const link = document.createElement("a");
+        link.textContent = "Download preliminary Smart Outreach scope summary (not an agreement)";
+        link.download = "AI-Boss-Smart-Outreach-Preliminary-Scope.txt";
+        link.href = URL.createObjectURL(new Blob([result.scopePacket.text], {type:"text/plain;charset=utf-8"}));
+        link.style.display = "block";
+        link.style.marginTop = "12px";
+        status.after(link);
+      }
       submit.textContent = "Estimate checklist submitted";
       form.querySelectorAll("input,textarea,select").forEach(el => {el.disabled=true;});
     } catch {
