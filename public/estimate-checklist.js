@@ -106,10 +106,10 @@
       } else if (q && q.status === "clarification_required") {
         status.textContent = "Your Smart Outreach request was received. We need a little more detail before providing the defined $995 scope. " + q.customerQuestions.join(" ") + " No payment was taken.";
       } else if (q && q.status === "standard_scope_candidate") {
-        status.textContent = "Your Smart Outreach request matches the initial $995 single-workflow scope screening. This is not yet a signed estimate or payment request. The $497.50 deposit is due only after an agreement is signed. " + q.customerQuestions.join(" ");
+        status.textContent = "Your Smart Outreach request matches the initial $995 single-workflow scope screening. This is not yet a signed estimate or payment request. The $497.50 deposit is requested only after proposed scope approval; the matching agreement is signed after independently verified payment. No fulfillment is authorized by this screen. " + q.customerQuestions.join(" ");
       } else {
         status.textContent = "Your consulting-project estimate checklist was accepted by our client system. No payment was taken. Your listed total is " + money(selected.priceCents) +
-          "; the planned first invoice is " + money(deposit) + " only after the written estimate/agreement is signed. The remaining " +
+          "; the planned first invoice is " + money(deposit) + " only after the proposed scope is agreed; the matching agreement is signed after independently verified payment. No work begins until both verified records match. The remaining " +
           money(balance) + " is invoiced after agreed completion and acceptance.";
       }
       // This is a customer-held preliminary scope summary, not a binding

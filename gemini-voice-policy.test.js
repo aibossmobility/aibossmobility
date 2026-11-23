@@ -1,0 +1,11 @@
+"use strict";
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const source=fs.readFileSync("public/gemini-voice.js","utf8");
+assert(source.includes("November 23, 2026 Service 13 policy checkpoint"));
+assert(source.includes("not a live Google Drive connection"));
+assert(source.includes("50 percent deposit request, then independent provider confirmation"));
+assert(source.includes("explicit verified customer acceptance must precede authorizing the final 50 percent invoice"));
+assert(!source.includes("50 percent deposit after signature"));
+assert(!source.includes("final 50 percent before delivery"));
+console.log("PASS: Gemini voice instructions align with November 23 deposit-first and acceptance-first policy (local-only).");

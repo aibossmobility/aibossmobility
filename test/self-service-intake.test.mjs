@@ -14,12 +14,11 @@ test("fixed-price self-service entrypoint is present with valid client script",(
  const code=page.match(/<script>([\s\S]*?)<\/script>/)?.[1];
  assert(code);assert.doesNotThrow(()=>new vm.Script(code));
 });
-test("five new services are fixed price and route to a private intake, not unverified payment",()=>{
- for(const code of ["ai.feasibility.readiness","ai.strategy.planning","ai.workflow.automation","ai.cost.benefit.roi","ai.leadership.education"])
-  assert(services.includes("/start-project?service="+code),code);
+test("services 08–13 route to the safe estimate checklist, not unverified payment",()=>{
+ for(let i=8;i<=13;i++){const id="service-"+String(i).padStart(2,"0");assert(services.includes("/estimate-checklist?offer="+id),id);}
  for(const price of ["$350 fixed package","$750 fixed package","$1,250 fixed package","$450 fixed package","$500 fixed package"])
   assert(services.includes(price),price);
- assert.match(services,/Payment checkout is not yet active for these packages/);
- assert.match(page,/Checkout safety/);
+ assert.match(services,/Online full-price checkout is intentionally disabled/);
+ assert.match(page,/No charge occurred/);
  assert.doesNotMatch(page,/fastpaydirect\.com/);
 });

@@ -5,6 +5,7 @@ const original={name:"Internal Tester",organization:"AI Boss Mobility Internal Q
 test("standard scope packet is fixed-price, nonbinding and unchargeable",()=>{
  const q=buildSmartOutreachScopePacket(original);
  assert.equal(q.totalCents,99500);assert.equal(q.depositCents,49750);assert.equal(q.readyToInvoice,false);assert.match(q.text,/not a signed agreement/i);assert.match(q.text,/New websites/);
+ assert.match(q.text,/SIGNATURE FOLLOWS VERIFIED DEPOSIT/);assert.match(q.text,/customer then signs the matching agreement/);assert.match(q.text,/verified one-time link/);
 });
 test("cannot create standard scope for custom quote",()=>assert.throws(()=>buildSmartOutreachScopePacket({...original,qualification:{...original.qualification,status:"custom_quote_required"}})));
 test("cannot treat a payment-authorized result as scope-only",()=>assert.throws(()=>buildSmartOutreachScopePacket({...original,qualification:{...original.qualification,readyForAutomaticInvoice:true}})));

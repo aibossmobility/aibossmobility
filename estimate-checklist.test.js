@@ -6,9 +6,9 @@ const http = require("node:http");
 const os = require("node:os");
 const {spawn} = require("node:child_process");
 const catalog = require("./public/estimate-offers.json");
-assert.equal(catalog.offers.filter(x=>x.kind==="project").length,12);
+assert.equal(catalog.offers.filter(x=>x.kind==="project").length,13);
 assert.equal(catalog.offers.filter(x=>x.kind==="course").length,0);
-assert.equal(catalog.offers.length,12);
+assert.equal(catalog.offers.length,13);
 assert.equal(catalog.scope,"custom consulting and project services only");
 assert(new Set(catalog.offers.map(x=>x.id)).size===catalog.offers.length);
 for(const offer of catalog.offers){
@@ -16,7 +16,7 @@ for(const offer of catalog.offers){
  assert.equal(half+balance,offer.priceCents);
  assert(half>=balance && half-balance<=1);
 }
-for(const id of ["service-01","service-08","service-12"]) {
+for(const id of ["service-01","service-08","service-12","service-13"]) {
  assert(catalog.offers.some(x=>x.id===id));
 }
 for(const id of ["course-01-pdf","course-10-complete","academy-bundle","bundle-ai-essentials"]) {
@@ -24,7 +24,7 @@ for(const id of ["course-01-pdf","course-10-complete","academy-bundle","bundle-a
 }
 const main=fs.readFileSync("./public/consulting-services.html","utf8");
 const courses=fs.readFileSync("./public/digital-courses.html","utf8");
-for(let n=1;n<=12;n++)assert(main.includes("/estimate-checklist?offer=service-"+String(n).padStart(2,"0")));
+for(let n=1;n<=13;n++)assert(main.includes("/estimate-checklist?offer=service-"+String(n).padStart(2,"0")));
 assert(!courses.includes("/estimate-checklist?offer="),"digital courses and bundles cannot use consulting estimates");
 assert.equal((courses.match(/Coming soon · One-time payment only when the course is ready/g)||[]).length,10);
 assert.equal((courses.match(/Coming soon · One-time purchase when available/g)||[]).length,5);

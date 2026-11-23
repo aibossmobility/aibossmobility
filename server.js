@@ -82,7 +82,7 @@ async function handleBusinessIntake(req,res){
         "ESTIMATE CHECKLIST — no invoice/payment authorization yet",
         "Offer: "+offer.id+" — "+offer.title,
         "Catalog total: "+money(offer.priceCents),
-        "50% deposit upon signed agreement: "+money(deposit),
+        "50% deposit after agreed estimate/scope; signature follows verified deposit: "+money(deposit),
         "50% remaining invoice after completed/accepted deliverables: "+money(balance),
         offer.deliveryReady?"Offer status: defined service; scope to confirm.":"OFFER STATUS: DIGITAL COURSE PRE-LAUNCH. Do not invoice until learner materials/access confirmed.",
         "Goals: "+goal, "Expected deliverables: "+deliverables,
@@ -382,7 +382,7 @@ http.createServer(async(req,res)=>{
     const valid=/^https:\/\/[a-z0-9.-]+\//i.test(url)&&(/(^|\.)leadconnectorhq\.com$/i.test(new URL(url||"https://invalid.local").hostname)||/(^|\.)gohighlevel\.com$/i.test(new URL(url||"https://invalid.local").hostname)||new URL(url||"https://invalid.local").hostname==="link.fastpaydirect.com");
     return json(res,200,{provider:"gohighlevel",available:valid,url:valid?url:null,price_usd:"149.00",verification_ready:false});
   }
-  if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"gohighlevel_hosted_payment_links",checkout_ready:false,project_requests_ready:true,agreement_required:true,estimate_checklist_ready:true,depositPercent:50,finalInvoice:"After agreed completion and acceptance",reason:"Custom consulting project requests use the estimate checklist. Fixed-price digital products are separate and do not require deposits or estimates. A signed agreement is required before a 50% GoHighLevel deposit invoice; the final 50% is invoiced after agreed completion. Direct checkout remains disabled until signature-to-invoice workflow is verified.",direct_paypal_checkout_enabled:false});
+  if(req.method==="GET"&&route==="/api/payments/provider")return json(res,200,{provider:"gohighlevel",processor:"gohighlevel_hosted_payment_links",checkout_ready:false,project_requests_ready:true,agreement_required:true,estimate_checklist_ready:true,depositPercent:50,finalInvoice:"After agreed completion and acceptance",reason:"Custom consulting project requests use the estimate checklist. Fixed-price digital products are separate and do not require deposits or estimates. After estimate/scope approval the 50% deposit invoice may be requested, without charging automatically. The customer signs the exact agreement after the deposit. Work remains blocked until the matching successful deposit and signed agreement are independently verified. The final 50% invoice remains blocked until completed-work preview delivery, independent QA, and verified customer acceptance. Direct checkout remains disabled until all provider-backed authorization gates are verified.",direct_paypal_checkout_enabled:false});
   if(req.method==="GET"&&route==="/api/paypal/status")return json(res,200,{configured:paypalReady(),mode:process.env.PAYPAL_MODE==="live"?"live":"sandbox",live_enabled:paypalReady()&&process.env.PAYPAL_MODE==="live"});
   if(route==="/api/ai-boss-os/mac-event" || route==="/api/ai-boss-os/daily") return macOSHandler(req,res);
   if(req.method==="POST"&&route==="/api/paypal/create-order")return paypalCheckout(req,res);
