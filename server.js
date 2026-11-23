@@ -31,10 +31,10 @@ async function postGhlIntakeWebhook(url,payload,extraHeaders={}) {
     let data={};
     try{data=await response.json();}catch{}
     if(!response.ok){
-      const msg=String(data.error||data.message||"").replace(/\s+/g," ").slice(0,200);
+      const msg=String((data&&data.error)||(data&&data.message)||"").replace(/\s+/g," ").slice(0,200);
       console.error("GoHighLevel intake webhook failed",response.status,msg);
     }
-    const scope=data.scope_classification;
+    const scope=data&&typeof data==="object"?data.scope_classification:null;
     const allowed=["standard_scope_candidate","clarification_required","custom_quote_required"];
     const qualification=scope&&allowed.includes(scope.status)&&["ai","website_preflight"].includes(scope.origin)
       ?{status:scope.status,origin:scope.origin,
