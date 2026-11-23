@@ -2,7 +2,7 @@
 
 // Conservative, no-charge scope guard for AI Boss Mobility's defined $995
 // Smart Outreach core package. This preflight is NOT a contract or an AI quote.
-const CUSTOM=/\b(website|web site|webpage|landing page|ecommerce|e-commerce|online store|mobile app|app development|chatbot|voice bot|voice assistant|multiple systems|multiple crm|complex integration|custom api|scrap(?:e|ing)|buy leads|purchased leads|cold email|blast|mass sms|bulk outreach|unsolicited|guaranteed leads|guaranteed sales)\b/i;
+const CUSTOM=/\b((?:new|build(?:ing)?|create|redesign|develop)\s+(?:a\s+)?(?:website|web site|webpage|landing page)|ecommerce|e-commerce|online store|mobile app|app development|chatbot|voice bot|voice assistant|multiple systems|multiple crm|complex integration|custom api|scrap(?:e|ing)|buy leads|purchased leads|cold email|blast|mass sms|bulk outreach|unsolicited|guaranteed leads|guaranteed sales)\b/i;
 const SENSITIVE=/\b(health records|medical records|patient data|hipaa|social security number|ssn|credit card numbers|bank login|passwords|financial account|minor(?:s)? data)\b/i;
 const EXISTING=/\b(existing|already|currently|we use|our crm|hubspot|gohighlevel|highlevel|google workspace|gmail|salesforce|zoho|airtable|notion|spreadsheet|sheets|mailchimp|calendly|website|wordpress|wix|squarespace)\b/i;
 const PERMISSION=/\b(consent|opt.in|inbound|inquiry|contact form|people who ask|existing customers|authorized|permission)\b/i;
