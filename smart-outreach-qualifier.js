@@ -24,7 +24,7 @@ function qualifySmartOutreach({offerId,goal,deliverables,tools,constraints,timel
   result.customerQuestions.push("What should start the automation, and what exact outcome should happen?");
   return result;
  }
- if(!EXISTING.test(detail[2])||!PERMISSION.test(full)){
+ if(!EXISTING.test(detail[2])||!PERMISSION.test(detail[3])){
   result.status="clarification_required";
   result.reasons.push("Existing system or permission-based communication path is not confirmed.");
   result.customerQuestions.push("Which existing website, inbox, CRM, and scheduler should we connect?");
