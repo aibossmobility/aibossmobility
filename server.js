@@ -77,7 +77,7 @@ async function handleBusinessIntake(req,res){
         qualification=qualifySmartOutreach({offerId:offer.id,goal,deliverables,
           tools:field("tools"),constraints:field("constraints"),
           timeline:field("timeline"),acceptance:field("acceptance")});
-        need=("${need}\nAUTOMATED SCOPE PREFLIGHT: ${qualification.status}\n" +
+        need=(need+"\nAUTOMATED SCOPE PREFLIGHT: "+qualification.status+"\n" +
           qualification.reasons.join("; ") +
           "\nCustomer questions: " + qualification.customerQuestions.join("; ")).slice(0,3000);
       }
