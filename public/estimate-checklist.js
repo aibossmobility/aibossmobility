@@ -126,8 +126,18 @@
         link.style.marginTop = "12px";
         status.after(link);
       }
-      submit.textContent = "Estimate checklist submitted";
-      form.querySelectorAll("input,textarea,select").forEach(el => {el.disabled=true;});
+      // Customers with missing or oversized requirements can revise and rerun
+      // the AI scope review immediately, without waiting for founder approval.
+      // No payment link or implementation access is offered by this loop.
+      if (selected.id === "service-13" && q &&
+          (q.status === "clarification_required" || q.status === "custom_quote_required")) {
+        status.textContent += " You can update your answers above and submit again to check a narrower or clarified request.";
+        submit.textContent = "Update answers and recheck automatically";
+        submit.disabled = false;
+      } else {
+        submit.textContent = "Estimate checklist submitted";
+        form.querySelectorAll("input,textarea,select").forEach(el => {el.disabled=true;});
+      }
     } catch {
       status.className = "status error";
       status.textContent = "We could not confirm delivery to the client system. Your request may have been recorded locally; please contact Service help with the selected offer. Do not submit payment or repeat the request until its status is confirmed.";
