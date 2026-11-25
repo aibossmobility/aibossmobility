@@ -48,6 +48,7 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 .sso-link{display:inline-block;border-radius:8px;background:#145b35;color:#fff!important;font-weight:750;padding:12px 18px;text-decoration:none}.sso-link:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
 </style>
 <script src="/ai-boss-os.js?v=20261109-papa-owner-sso" defer></script>
+<script src="/personal-album.js?v=20261125" defer></script>
 </head>
 <body>
 <header class="header"><div class="container">
@@ -65,6 +66,18 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 <p id="message" role="status"></p>
 </section>
 <div id="workspace" hidden>
+<section class="panel" aria-label="Personal album player" style="background:var(--black);color:white;border-top:5px solid var(--yellow)">
+<p class="brandline">Keep Your Humanity. Think Critically. Use AI Wisely.</p>
+<h2 style="color:white">Brian Keith Hill’s AI Album of 2026</h2><p>16 songs · Free continuous listening</p>
+<button id="album-start" type="button" style="background:var(--yellow);color:var(--black)">▶ Listen Free</button>
+<label for="album-select" style="margin-top:12px">Choose a song</label>
+<select id="album-select" style="width:100%;padding:12px;border-radius:8px;background:#fff;color:#111"></select>
+<p id="album-title" style="font-weight:750;margin-bottom:0"></p><p id="album-credit" style="color:#ddd;font-size:13px"></p>
+<audio id="album-audio" controls preload="none" aria-label="Personal music playback" style="width:100%"></audio>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:10px">
+<button id="album-prev" type="button" class="secondary">← Previous</button><button id="album-next" type="button" class="secondary">Next →</button>
+<label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="album-repeat" style="margin:0">Repeat album</label>
+<a href="https://papalifecoach.com/music-room#lyrics" target="_blank" rel="noopener noreferrer" style="color:var(--yellow)">Full lyrics</a></div><p id="album-status" role="status"></p></section>
 <section class="panel">
 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between">
 <div><h2 style="margin-bottom:6px">Today's verified activity</h2><span class="status" id="mac-status">Checking Mac report</span></div>
