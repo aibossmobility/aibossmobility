@@ -349,6 +349,27 @@ function applySecurityHeaders(res){for(const [name,value] of Object.entries(SECU
 http.createServer(async(req,res)=>{
   applySecurityHeaders(res);
   const route=(req.url||"").split("?")[0];
+  // Owner directive 2026-11-25: no new custom consulting sales during transition.
+  // Historical records, customer support, owner tools and educational resources remain intact.
+  let salesPath=route;
+  try { salesPath=decodeURIComponent(route); } catch {}
+  salesPath=path.posix.normalize(salesPath).replace(/\/+$/,"").replace(/\.html$/i,"").toLowerCase();
+  const pausedPages=new Set(["/smart-outreach","/consulting-services","/estimate-checklist","/monthly-website-support","/start-project","/clarity-session","/consulting-delivery-guide","/for-business-owners","/for-churches-and-nonprofits","/for-educators-and-workforce","/ai-consulting-east-bay","/human-centered-ai-strategy","/explore","/start","/journey","/site-directory","/recommended-software-hosting"]);
+  if (["GET","HEAD"].includes(req.method) && (salesPath==="" || salesPath==="/" || salesPath==="/index" || pausedPages.has(salesPath))){
+    const notice=fs.readFileSync(path.join(root,"service-transition.html"));
+    res.writeHead(200,{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","X-Robots-Tag":salesPath===""||salesPath==="/"||salesPath==="/index"?"all":"noindex"});
+    return res.end(req.method==="HEAD"?"":notice);
+  }
+  if (salesPath==="/estimate-offers.json" || salesPath==="/estimate-offers"){
+    return json(res,200,{offers:[],sales_paused:true});
+  }
+  if (salesPath==="/api/business-intake" || salesPath==="/api/paypal/create-order" || salesPath==="/api/paypal/capture-order"){
+    return json(res,503,{ok:false,sales_paused:true,error:"New consulting requests and payments are paused. No payment was taken. For an existing purchase, use /purchase-help."});
+  }
+  if (salesPath==="/api/payments/clarity-checkout" || salesPath==="/api/payments/provider" || salesPath==="/api/paypal/status"){
+    return json(res,200,{available:false,configured:false,checkout_ready:false,project_requests_ready:false,estimate_checklist_ready:false,live_enabled:false,direct_paypal_checkout_enabled:false,sales_paused:true,reason:"New consulting sales are paused."});
+  }
+
   if((req.method==="GET"||req.method==="HEAD") && ["/estimate-checklist","/estimate-checklist.html"].includes(route) && new URL(req.url,"http://localhost").searchParams.get("offer")==="service-01") {
     res.writeHead(302,{Location:"/clarity-session","Cache-Control":"no-store"}); return res.end();
   }
