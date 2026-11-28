@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Boss Mobility OS | Brian's Private Mac-Led Daily Picture</title>
+<title>AI Boss Mobility OS | Brian's Private Mac-Led Activity Reports</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <link rel="canonical" href="https://ai.bossmobilelifecoach.com/ai-boss-os">
 <link rel="stylesheet" href="/styles.css">
@@ -23,11 +23,16 @@ h3{font-size:16px;margin:0 0 5px}
 p{margin:8px 0 14px}
 form{display:flex;align-items:end;flex-wrap:wrap;gap:12px}
 label{display:block;font-size:14px;font-weight:750}
-input{display:block;padding:12px;border:1px solid #8ca38b;border-radius:8px;margin-top:5px;max-width:100%;background:#fff;color:#111}
+input,select{display:block;padding:12px;border:1px solid #8ca38b;border-radius:8px;margin-top:5px;max-width:100%;background:#fff;color:#111}
 button{border:0;border-radius:8px;background:#145b35;color:#fff;font:750 15px system-ui;padding:12px 18px;cursor:pointer}
 button.secondary{border:1px solid #145b35;background:white;color:#145b35}
 button:disabled{opacity:.5}
-button:focus-visible,input:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
+.report-table{overflow-x:auto;margin-bottom:18px}
+.report-table table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}
+.report-table th,.report-table td{padding:6px 10px;border-bottom:1px solid #d6dbcf}
+.report-table button{background:transparent;color:#145b35;padding:5px;text-decoration:underline;white-space:nowrap}
+.report-table button[aria-pressed="true"]{background:#e5eee3}
 .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}
 .metric{border-radius:12px;padding:20px;background:#f4f1e4;border:1px solid #e6dfcb}
 .metric strong{display:block;font-size:30px;color:#145b35}
@@ -47,7 +52,7 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 @media(max-width:440px){.metrics,.two{grid-template-columns:1fr}}
 .sso-link{display:inline-block;border-radius:8px;background:#145b35;color:#fff!important;font-weight:750;padding:12px 18px;text-decoration:none}.sso-link:focus-visible{outline:3px solid #f9cd3e;outline-offset:2px}
 </style>
-<script src="/ai-boss-os.js?v=20261109-papa-owner-sso" defer></script>
+<script src="/ai-boss-os.js?v=20261127-report-periods" defer></script>
 <script src="/personal-album.js?v=20261125" defer></script>
 </head>
 <body>
@@ -80,17 +85,27 @@ footer{text-align:center;margin:35px 0;color:#58635c}
 <a href="https://papalifecoach.com/music-room#lyrics" target="_blank" rel="noopener noreferrer" style="color:var(--yellow)">Full lyrics</a></div><p id="album-status" role="status"></p></section>
 <section class="panel">
 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between">
-<div><h2 style="margin-bottom:6px">Today's verified activity</h2><span class="status" id="mac-status">Checking Mac report</span></div>
-<form id="controls"><label>Report date <input id="report-date" type="date" required></label>
+<div><h2 style="margin-bottom:6px">Verified activity</h2><span class="status" id="mac-status">Checking Mac report</span></div>
+<form id="controls"><label>Report period <select id="report-period"><option value="day">Day</option><option value="week">Week</option><option value="month">Month</option></select></label><label>Report date <input id="report-date" type="date" required></label>
 <button type="submit">Refresh report</button><button type="button" class="secondary" id="lock">Sign out of AI Boss</button></form>
 </div>
+<p id="report-range" class="muted" aria-live="polite"></p>
+<section id="period-overview" hidden>
+  <h3>Activity by day</h3>
+  <p class="muted">Select a date for the full daily report. A dash indicates unavailable data.</p>
+  <div class="report-table"><table>
+    <thead><tr><th>Date</th><th>Mac proof</th><th>Voice recaps</th><th>Conversations</th><th>Website intakes</th><th>Gmail matches</th><th>Calendar events</th><th>CRM handoffs</th></tr></thead>
+    <tbody id="period-days"></tbody>
+  </table></div>
+  <h3 id="daily-detail"></h3>
+</section>
 <div class="metrics">
 <div class="metric"><strong id="proof">—</strong><span>Mac worker-proof records (local evidence)</span></div>
 <div class="metric"><strong id="voice">—</strong><span>Approved Mac voice recaps</span></div>
-<div class="metric"><strong id="outreach">—</strong><span>Private conversations dated today</span></div>
+<div class="metric"><strong id="outreach">—</strong><span>Private conversations on the report date</span></div>
 <div class="metric"><strong id="intake">—</strong><span>Website business intake records</span></div>
 <div class="metric"><strong id="gmail-matches">—</strong><span>Gmail messages matching AI Boss recipient addresses (not conversations)</span></div>
-<div class="metric"><strong id="calendar-matches">—</strong><span>AI Boss-labeled Calendar events dated today (not attendance)</span></div>
+<div class="metric"><strong id="calendar-matches">—</strong><span>AI Boss-labeled Calendar events on the report date (not attendance)</span></div>
 <div class="metric"><strong id="ghl-acks">—</strong><span>Confirmed GoHighLevel intake handoffs (not conversions)</span></div>
 <div class="metric"><strong id="ghl-contacts">—</strong><span>Contacts visible in the AI Boss GHL location (not verified customers)</span></div>
 <div class="metric"><strong id="ghl-filtered">—</strong><span>Opportunities in the selected GHL view (possibly filtered)</span></div>
