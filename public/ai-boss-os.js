@@ -16,15 +16,54 @@ function line(li,main,secondary){
  const strong=document.createElement("strong");strong.textContent=main;li.append(strong);
  if(secondary){const p=document.createElement("p");p.className="muted";p.textContent=secondary;li.append(p);}
 }
+function reportRangeLabel(dates) {
+  if (!dates.length) return "";
+  const format = new Intl.DateTimeFormat("en-US", {dateStyle: "medium", timeZone: "UTC"});
+  const start = new Date(dates[0] + "T00:00:00Z");
+  const end = new Date(dates[dates.length - 1] + "T00:00:00Z");
+  return format.formatRange(start, end) + " (Pacific time)";
+}
+
+function renderPeriod(date, days) {
+ const overview = $("period-overview");
+ overview.hidden = !days;
+ text("report-range", reportRangeLabel(days ? days.map(day => day.date) : [date]));
+ text("daily-detail", "Daily details for " + date);
+ const table = $("period-days");
+ table.replaceChildren();
+ for (const day of days || []) {
+   const row = table.insertRow();
+   const button = document.createElement("button");
+   button.type = "button";
+   button.textContent = day.date;
+   button.setAttribute("aria-pressed", String(day.date === date));
+   button.addEventListener("click", () => {
+     $("report-date").value = day.date;
+     $("controls").requestSubmit();
+   });
+   row.insertCell().append(button);
+   for (const key of ["proof", "mac_voice_recaps", "private_conversations_dated", "website_business_intakes",
+     "gmail_message_matches", "calendar_ai_boss_events", "gohighlevel_webhook_acks"]) {
+     row.insertCell().textContent = day[key] ?? "—";
+   }
+ }
+}
+let requestNumber = 0;
 async function load(){
+ const request = ++requestNumber;
  const date=$("report-date").value;
- const response=await fetch("/api/ai-boss-os/daily?date="+encodeURIComponent(date),{
+ const period = $("report-period").value;
+ if (!date) return;
+ const query = new URLSearchParams({date, period});
+ const response=await fetch("/api/ai-boss-os/daily?"+query,{
   cache:"no-store",credentials:"same-origin"
  });
  let data={};try{data=await response.json();}catch{}
+ if(request !== requestNumber) return;
  if(response.status===401){const e=new Error("Your Papa Life owner sign-in is required.");e.authRequired=true;throw e;}
  if(!response.ok||!data.ok)throw Error(data.error||"Daily report is unavailable.");
  $("login").hidden=true;$("workspace").hidden=false;
+ renderPeriod(date, data.days);
  text("proof",data.mac.worker_proof?.proof_records ?? "—");
  text("voice",String(data.summary.mac_voice_recaps));
  text("outreach",String(data.summary.private_conversations_dated));
@@ -66,7 +105,14 @@ $("controls").addEventListener("submit",async e=>{
  try{await load();}
  catch(e){if(e.authRequired)signIn();else setMessage(e.message,true);}
 });
+for (const id of ["report-period", "report-date"]) {
+ $(id).addEventListener("change", () => {
+   if ($("report-date").value) $("controls").requestSubmit();
+ });
+}
 $("lock").addEventListener("click",async()=>{
+ requestNumber++;
+ $("period-days").replaceChildren();
  try{await fetch("/auth/papa/logout",{method:"POST",cache:"no-store",credentials:"same-origin"});}catch{}
  $("workspace").hidden=true;$("login").hidden=false;
  $("coverage").replaceChildren();$("recaps").replaceChildren();$("conversations").replaceChildren();

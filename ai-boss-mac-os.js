@@ -187,6 +187,8 @@ function acceptMacEvent(payload,file=stateFile(),now=new Date()){
   persist(state,file);
   return {accepted:true,duplicate:false};
 }
+const { reportDates } = require("./report-dates");
+
 function dailyReport(day,file=stateFile(),dir=dataDirectory()){
   if(!isDate(day))throw Error("Invalid report date");
   const state=load(file);
@@ -285,7 +287,19 @@ function installMacOS({readBody,json,isAdmin}){
         return json(res,403,{ok:false,error:"Open AI Boss OS on its verified site"});
       try{
         const params=new URL(req.url,"https://ai.bossmobilelifecoach.com").searchParams;
-        return json(res,200,dailyReport(params.get("date")||pacificDay()));
+        const date = params.get("date") || pacificDay();
+        const period = params.get("period") || "day";
+        const dates = reportDates(date, period);
+        if (!dates.length || !["day", "week", "month"].includes(period)) {
+          return json(res,400,{ok:false,error:"Invalid report date or period"});
+        }
+        const report = dailyReport(date);
+        if (period === "day") return json(res,200,report);
+        const days = dates.map(day => {
+          const daily = day === date ? report : dailyReport(day);
+          return { date: day, proof: daily.mac.worker_proof?.proof_records ?? null, ...daily.summary };
+        });
+        return json(res,200,{...report,days});
       }catch(e){return json(res,503,{ok:false,error:"Private daily report could not be read"});}
     }
     return json(res,405,{ok:false,error:"Method not allowed"});
